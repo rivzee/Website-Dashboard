@@ -1,0 +1,9 @@
+@echo off
+echo [INFO] Stopping running node processes...
+taskkill /F /IM node.exe >nul 2>&1
+
+echo [INFO] Generating Prisma Client...
+call npm run prisma:generate
+
+echo [INFO] Starting Development Server...
+call .\start-dev.bat

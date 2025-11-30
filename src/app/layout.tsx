@@ -1,0 +1,36 @@
+import './globals.css';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import { ToastProvider } from '@/hooks/useToast';
+import { ThemeProvider } from '@/context/ThemeContext';
+
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+  title: 'RISA BUR - Kantor Jasa Akuntan',
+  description: 'Platform akuntansi modern untuk mengelola keuangan bisnis Anda dengan mudah',
+  icons: {
+    icon: '/logo-risabur.png',
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="id">
+      <body className={inter.className}>
+        <ErrorBoundary>
+          <ThemeProvider>
+            <ToastProvider>
+              {children}
+            </ToastProvider>
+          </ThemeProvider>
+        </ErrorBoundary>
+      </body>
+    </html>
+  );
+}

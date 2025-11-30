@@ -1,0 +1,743 @@
+'use client';
+
+import { motion, useScroll, useTransform } from 'framer-motion';
+import Link from 'next/link';
+import {
+  ArrowRight,
+  TrendingUp,
+  Shield,
+  Zap,
+  Users,
+  Sparkles,
+  Star,
+  Clock,
+  Award,
+  FileText,
+  BookOpen,
+  Calculator,
+  ClipboardCheck,
+  Phone,
+  Mail,
+  MapPin,
+  ChevronDown,
+  Quote,
+  CheckCircle2,
+  Building2,
+  Target,
+  Heart,
+  Check
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
+import LandingNavbar from '@/components/LandingNavbar';
+import LandingFooter from '@/components/LandingFooter';
+import FloatingWhatsApp from '@/components/FloatingWhatsApp';
+import ClientLogos from '@/components/ClientLogos';
+
+export default function LandingPage() {
+  const [mounted, setMounted] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  const stats = [
+    { value: '1,200+', label: 'Klien Aktif', icon: Users },
+    { value: '98%', label: 'Kepuasan', icon: Star },
+    { value: '24/7', label: 'Support', icon: Clock },
+    { value: '15+', label: 'Tahun Pengalaman', icon: Award }
+  ];
+
+  const services = [
+    {
+      title: 'Jasa Penyusunan Laporan Keuangan',
+      description: 'Laporan keuangan akurat sesuai standar akuntansi',
+      icon: FileText,
+      href: '/layanan/laporan-keuangan',
+      popular: true
+    },
+    {
+      title: 'Jasa Pembukuan',
+      description: 'Pencatatan transaksi keuangan sistematis dan teratur',
+      icon: BookOpen,
+      href: '/layanan/pembukuan'
+    },
+    {
+      title: 'Jasa Pendampingan',
+      description: 'Bimbingan intensif penyusunan laporan keuangan',
+      icon: Users,
+      href: '/layanan/pendampingan'
+    },
+    {
+      title: 'Jasa Perpajakan',
+      description: 'Konsultasi dan pengurusan perpajakan lengkap',
+      icon: Calculator,
+      href: '/layanan/perpajakan',
+      popular: true
+    },
+    {
+      title: 'Jasa Audit Internal',
+      description: 'Evaluasi sistem pengendalian internal perusahaan',
+      icon: ClipboardCheck,
+      href: '/layanan/audit-internal'
+    }
+  ];
+
+  const testimonials = [
+    {
+      name: 'Budi Santoso',
+      position: 'CEO PT Maju Jaya',
+      image: '👨‍💼',
+      rating: 5,
+      text: 'RISA BUR sangat membantu kami dalam mengelola keuangan perusahaan. Tim yang profesional dan responsif!'
+    },
+    {
+      name: 'Siti Nurhaliza',
+      position: 'Owner Toko Berkah',
+      image: '👩‍💼',
+      rating: 5,
+      text: 'Laporan keuangan yang akurat dan tepat waktu. Sangat puas dengan layanan yang diberikan.'
+    },
+    {
+      name: 'Ahmad Wijaya',
+      position: 'Direktur CV Sejahtera',
+      image: '👨‍💼',
+      rating: 5,
+      text: 'Pelayanan terbaik! Membantu kami mengurus perpajakan dengan mudah dan cepat.'
+    }
+  ];
+
+  const portfolio = [
+    {
+      company: 'PT Teknologi Maju',
+      industry: 'Teknologi',
+      service: 'Laporan Keuangan & Audit',
+      result: 'Efisiensi 40% dalam proses pelaporan'
+    },
+    {
+      company: 'CV Retail Sukses',
+      industry: 'Retail',
+      service: 'Pembukuan & Perpajakan',
+      result: 'Penghematan pajak hingga 25%'
+    },
+    {
+      company: 'UD Manufaktur Prima',
+      industry: 'Manufaktur',
+      service: 'Audit Internal',
+      result: 'Peningkatan kontrol internal 60%'
+    },
+    {
+      company: 'PT Jasa Konsultan',
+      industry: 'Konsultan',
+      service: 'Pendampingan Keuangan',
+      result: 'Tim internal lebih kompeten'
+    }
+  ];
+
+  const faqs = [
+    {
+      question: 'Apa saja layanan yang ditawarkan RISA BUR?',
+      answer: 'Kami menawarkan berbagai layanan akuntansi profesional termasuk penyusunan laporan keuangan, pembukuan, pendampingan, perpajakan, dan audit internal.'
+    },
+    {
+      question: 'Berapa lama waktu pengerjaan laporan keuangan?',
+      answer: 'Waktu pengerjaan bervariasi tergantung kompleksitas, namun umumnya 5-7 hari kerja untuk laporan keuangan standar.'
+    },
+    {
+      question: 'Apakah data perusahaan kami aman?',
+      answer: 'Ya, kami menggunakan sistem keamanan tingkat enterprise dengan enkripsi data dan kepatuhan terhadap standar keamanan informasi.'
+    },
+    {
+      question: 'Apakah ada garansi untuk layanan yang diberikan?',
+      answer: 'Ya, kami memberikan garansi akurasi 100% untuk semua laporan keuangan yang kami susun.'
+    },
+    {
+      question: 'Bagaimana cara memulai menggunakan layanan RISA BUR?',
+      answer: 'Anda dapat memulai dengan konsultasi gratis melalui telepon atau email. Tim kami akan membantu menentukan layanan yang sesuai dengan kebutuhan Anda.'
+    }
+  ];
+
+  const team = [
+    {
+      name: 'Risa Bur',
+      role: 'Founder & CEO',
+      initials: 'RB'
+    },
+    {
+      name: 'Andi Pratama',
+      role: 'Senior Accountant',
+      initials: 'AP'
+    },
+    {
+      name: 'Budi Santoso',
+      role: 'Tax Consultant',
+      initials: 'BS'
+    },
+    {
+      name: 'Citra Dewi',
+      role: 'Internal Auditor',
+      initials: 'CD'
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-950 text-white overflow-hidden">
+      {/* Scroll Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 origin-left z-[100]"
+        style={{ scaleX: scrollYProgress }}
+      />
+
+      <LandingNavbar />
+      <FloatingWhatsApp />
+
+      {/* Hero Section */}
+      <section className="relative z-10 min-h-screen flex items-center justify-center px-6 pt-20 pb-32">
+        {/* Animated Background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-pink-500/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+        </div>
+
+        <motion.div
+          style={{ opacity, scale }}
+          className="max-w-6xl mx-auto text-center relative z-10"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-8"
+          >
+            <Sparkles size={16} className="text-yellow-400" />
+            <span className="text-sm">Dipercaya oleh 1,200+ Bisnis di Indonesia</span>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="text-6xl md:text-8xl font-bold mb-6 leading-tight"
+          >
+            Kelola Keuangan
+            <br />
+            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Lebih Mudah
+            </span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-xl md:text-2xl text-gray-400 mb-12 max-w-3xl mx-auto"
+          >
+            Platform akuntansi modern yang menghubungkan Anda dengan akuntan profesional.
+            Laporan keuangan akurat, cepat, dan terpercaya.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+          >
+            <Link
+              href="/register"
+              className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl font-bold text-lg hover:opacity-90 transition shadow-2xl shadow-blue-500/30 flex items-center justify-center gap-2"
+            >
+              Mulai Sekarang
+              <ArrowRight className="group-hover:translate-x-1 transition" size={20} />
+            </Link>
+            <Link
+              href="/layanan"
+              className="px-8 py-4 bg-white/10 backdrop-blur-sm rounded-2xl font-bold text-lg hover:bg-white/20 transition border border-white/20"
+            >
+              Lihat Layanan
+            </Link>
+          </motion.div>
+
+          {/* Stats */}
+          <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6">
+            {stats.map((stat, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 + idx * 0.1 }}
+                whileHover={{ y: -10, scale: 1.05 }}
+                className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300"
+              >
+                <stat.icon className="w-8 h-8 text-blue-400 mb-3 mx-auto" />
+                <div className="text-3xl font-bold mb-1">{stat.value}</div>
+                <div className="text-sm text-gray-400">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Client Logos Marquee */}
+      <ClientLogos />
+
+      {/* About Section */}
+      <section className="relative z-10 py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-5xl font-bold mb-6">
+              Tentang <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">RISA BUR</span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Kantor Jasa Akuntan terpercaya dengan pengalaman lebih dari 15 tahun melayani berbagai industri di Indonesia
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {[
+              {
+                icon: Target,
+                title: 'Visi Kami',
+                description: 'Menjadi mitra terpercaya dalam pengelolaan keuangan bisnis di Indonesia dengan standar profesional tertinggi.'
+              },
+              {
+                icon: Heart,
+                title: 'Misi Kami',
+                description: 'Memberikan solusi akuntansi yang akurat, efisien, dan terpercaya untuk mendukung pertumbuhan bisnis klien.'
+              },
+              {
+                icon: Award,
+                title: 'Nilai Kami',
+                description: 'Integritas, profesionalisme, dan komitmen untuk memberikan layanan terbaik kepada setiap klien.'
+              }
+            ].map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300"
+              >
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
+                  <item.icon size={32} />
+                </div>
+                <h3 className="text-2xl font-bold mb-4">{item.title}</h3>
+                <p className="text-gray-400">{item.description}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/about"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm rounded-2xl font-bold text-lg hover:bg-white/20 transition border border-white/20"
+            >
+              Pelajari Lebih Lanjut
+              <ArrowRight size={20} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section className="relative z-10 py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-5xl font-bold mb-6">
+              Tim <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Ahli</span> Kami
+            </h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Didukung oleh tenaga profesional yang berpengalaman dan bersertifikat di bidangnya
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-4 gap-8">
+            {team.map((member, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                whileHover={{ y: -10 }}
+                className="group relative"
+              >
+                <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-6 hover:bg-white/10 transition-all duration-300 text-center">
+                  <div className="w-32 h-32 mx-auto bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mb-6 text-3xl font-bold shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300">
+                    {member.initials}
+                  </div>
+                  <h3 className="text-xl font-bold mb-1">{member.name}</h3>
+                  <p className="text-blue-400 text-sm font-medium">{member.role}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="relative z-10 py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-5xl font-bold mb-6">
+              Layanan <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Profesional</span> Kami
+            </h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Solusi lengkap untuk semua kebutuhan akuntansi dan keuangan bisnis Anda
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {services.map((service, idx) => {
+              const Icon = service.icon;
+              return (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  whileHover={{ y: -10 }}
+                  className="relative group"
+                >
+                  {service.popular && (
+                    <div className="absolute -top-4 -right-4 z-10">
+                      <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                        <Star size={12} fill="currentColor" />
+                        Popular
+                      </div>
+                    </div>
+                  )}
+                  <Link href={service.href} className="block h-full">
+                    <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 h-full">
+                      <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
+                        <Icon size={32} />
+                      </div>
+                      <h3 className="text-xl font-bold mb-3">{service.title}</h3>
+                      <p className="text-gray-400 mb-4">{service.description}</p>
+                      <div className="flex items-center text-blue-400 group-hover:text-blue-300 transition">
+                        <span className="text-sm font-semibold">Pelajari Lebih Lanjut</span>
+                        <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition" />
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <Link
+              href="/layanan"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl font-bold text-lg hover:opacity-90 transition shadow-2xl shadow-blue-500/30"
+            >
+              Lihat Semua Layanan
+              <ArrowRight size={20} />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="relative z-10 py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-5xl font-bold mb-6">
+              Apa Kata <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Klien Kami</span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Testimoni dari klien yang puas dengan layanan kami
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {testimonials.map((testimonial, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300"
+              >
+                <Quote className="text-blue-400 mb-4" size={32} />
+                <p className="text-gray-300 mb-6 italic">{testimonial.text}</p>
+                <div className="flex items-center gap-4">
+                  <div className="text-4xl">{testimonial.image}</div>
+                  <div>
+                    <div className="font-bold">{testimonial.name}</div>
+                    <div className="text-sm text-gray-400">{testimonial.position}</div>
+                    <div className="flex gap-1 mt-1">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star key={i} size={14} fill="currentColor" className="text-yellow-400" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/testimoni"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm rounded-2xl font-bold text-lg hover:bg-white/20 transition border border-white/20"
+            >
+              Lihat Lebih Banyak Testimoni
+              <ArrowRight size={20} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Portfolio Section */}
+      <section className="relative z-10 py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-5xl font-bold mb-6">
+              Portfolio <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Klien</span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Beberapa klien yang telah mempercayai layanan kami
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            {portfolio.map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: idx % 2 === 0 ? -50 : 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300"
+              >
+                <div className="flex items-start gap-4 mb-4">
+                  <Building2 className="text-blue-400 flex-shrink-0" size={32} />
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2">{item.company}</h3>
+                    <div className="text-sm text-gray-400 mb-4">{item.industry}</div>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="text-green-400" size={20} />
+                    <span className="text-gray-300">{item.service}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="text-blue-400" size={20} />
+                    <span className="text-gray-300">{item.result}</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/portfolio"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm rounded-2xl font-bold text-lg hover:bg-white/20 transition border border-white/20"
+            >
+              Lihat Portfolio Lengkap
+              <ArrowRight size={20} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="relative z-10 py-32 px-6">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-5xl font-bold mb-6">
+              Pertanyaan <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Umum</span>
+            </h2>
+            <p className="text-xl text-gray-400">
+              Jawaban untuk pertanyaan yang sering diajukan
+            </p>
+          </motion.div>
+
+          <div className="space-y-4 mb-12">
+            {faqs.map((faq, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl overflow-hidden"
+              >
+                <button
+                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                  className="w-full px-8 py-6 flex items-center justify-between hover:bg-white/5 transition text-left"
+                >
+                  <span className="text-lg font-semibold">{faq.question}</span>
+                  <ChevronDown
+                    className={`flex-shrink-0 transition-transform ${openFaq === idx ? 'rotate-180' : ''}`}
+                    size={24}
+                  />
+                </button>
+                {openFaq === idx && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="px-8 pb-6"
+                  >
+                    <p className="text-gray-400">{faq.answer}</p>
+                  </motion.div>
+                )}
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/faq"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm rounded-2xl font-bold text-lg hover:bg-white/20 transition border border-white/20"
+            >
+              Lihat FAQ Lengkap
+              <ArrowRight size={20} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section className="relative z-10 py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-5xl font-bold mb-6">
+              Hubungi <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Kami</span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Siap membantu Anda dengan solusi akuntansi terbaik
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {[
+              {
+                icon: Phone,
+                title: 'Telepon',
+                content: '+62 812-3456-7890',
+                link: 'tel:+6281234567890'
+              },
+              {
+                icon: Mail,
+                title: 'Email',
+                content: 'cs@kja-risabur.com',
+                link: 'mailto:cs@kja-risabur.com'
+              },
+              {
+                icon: MapPin,
+                title: 'Alamat',
+                content: 'Jl. Pemuda 43E, Olo, Padang Barat, Padang, Sumbar 25117',
+                link: '#'
+              }
+            ].map((contact, idx) => (
+              <motion.a
+                key={idx}
+                href={contact.link}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                whileHover={{ y: -10 }}
+                className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 text-center block"
+              >
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                  <contact.icon size={32} />
+                </div>
+                <h3 className="text-xl font-bold mb-2">{contact.title}</h3>
+                <p className="text-gray-400">{contact.content}</p>
+              </motion.a>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm rounded-2xl font-bold text-lg hover:bg-white/20 transition border border-white/20"
+            >
+              Hubungi Kami
+              <ArrowRight size={20} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="relative z-10 py-32 px-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="max-w-5xl mx-auto text-center backdrop-blur-xl bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-white/20 rounded-3xl p-16"
+        >
+          <h2 className="text-5xl font-bold mb-6">
+            Siap Untuk Memulai?
+          </h2>
+          <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
+            Bergabunglah dengan ribuan bisnis yang sudah mempercayai kami untuk mengelola keuangan mereka
+          </p>
+          <Link
+            href="/register"
+            className="inline-flex items-center gap-2 px-10 py-5 bg-white text-gray-900 rounded-2xl font-bold text-lg hover:bg-gray-100 transition shadow-2xl"
+          >
+            Daftar Gratis Sekarang
+            <ArrowRight size={20} />
+          </Link>
+        </motion.div>
+      </section>
+
+      <LandingFooter />
+    </div>
+  );
+}

@@ -1,0 +1,120 @@
+// 1. Konfigurasi Client & Database
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 2. Enum (Dihapus karena SQLite tidak support Enum, ganti jadi String)
+// Role: ADMIN, ACCOUNTANT, CLIENT
+// OrderStatus: PENDING_PAYMENT, PAID, IN_PROGRESS, REVIEW, COMPLETED, CANCELLED
+// PaymentStatus: UNPAID, PAID, FAILED
+
+// 3. Model Data Utama
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // Password terenkripsi (Hashed)
+  fullName  String
+  role      String   @default("KLIEN") // Ganti Role jadi String
+  phone     String?  // Opsional: untuk kontak WA
+  address   String?  // Opsional: alamat user
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relasi (Satu User bisa punya banyak...)
+  clientOrders     Order[]       @relation("ClientOrders")
+  accountantOrders Order[]       @relation("AccountantOrders")
+  logs             ActivityLog[] // Log aktifitas user
+  uploads          Document[]    // Dokumen yang diupload user ini
+}
+
+model ServicePackage {
+  id          String   @id @default(uuid())
+  name        String   // Contoh: "Laporan SPT Tahunan"
+  description String
+  price       Decimal
+  duration    String?  // Durasi layanan (e.g., "1 Month", "3 Months")
+  category    String?  // Kategori layanan (e.g., "Pembukuan", "Pajak")
+  isActive    Boolean  @default(true)     // Agar admin bisa sembunyikan layanan tanpa hapus data
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orders      Order[]
+}
+
+model Order {
+  id            String      @id @default(uuid())
+  status        String      @default("PENDING_PAYMENT") // Ganti OrderStatus jadi String
+  totalAmount   Decimal
+  notes         String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  // Relasi ke Klien (Pemesan)
+  clientId      String
+  client        User        @relation("ClientOrders", fields: [clientId], references: [id])
+
+  // Relasi ke Akuntan (Pengerja) - Boleh kosong (null) saat awal order
+  accountantId  String?
+  accountant    User?       @relation("AccountantOrders", fields: [accountantId], references: [id])
+
+  // Relasi ke Paket Layanan
+  serviceId     String
+  service       ServicePackage @relation(fields: [serviceId], references: [id])
+
+  // Relasi lain
+  documents     Document[]
+  payment       Payment?
+}
+
+model Document {
+  id         String   @id @default(uuid())
+  fileName   String
+  fileUrl    String   // URL file (disimpan di folder public atau S3)
+  fileType   String   // e.g., "application/pdf", "image/jpeg"
+  
+  // Penanda Dokumen:
+  // false = Dokumen Mentah dari Klien (Bukti potong, Rekening koran)
+  // true  = Hasil Kerja Akuntan (Laporan Laba Rugi, SPT)
+  isResult   Boolean  @default(false) 
+  
+  uploadedAt DateTime @default(now())
+
+  // Relasi
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  uploaderId String
+  uploader   User     @relation(fields: [uploaderId], references: [id])
+}
+
+model Payment {
+  id            String        @id @default(uuid())
+  amount        Decimal
+  status        String        @default("UNPAID") // Ganti PaymentStatus jadi String
+  paymentMethod String?       // e.g., "TRANSFER_BCA", "MIDTRANS", "MANUAL"
+  proofUrl      String?       // URL Bukti Transfer (jika manual)
+  paidAt        DateTime?
+  createdAt     DateTime      @default(now())
+
+  // Relasi One-to-One dengan Order
+  orderId       String        @unique
+  order         Order         @relation(fields: [orderId], references: [id])
+}
+
+// Tabel Log untuk fitur "Melihat Laporan Aktifitas" (Admin Requirement)
+model ActivityLog {
+  id          String   @id @default(uuid())
+  action      String   // e.g., "LOGIN", "CREATE_ORDER", "UPLOAD_RESULT"
+  description String?
+  ipAddress   String?  // Opsional: Alamat IP user
+  timestamp   DateTime @default(now())
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+}
