@@ -6,8 +6,8 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { Permission } from '@/utils/permissions';
-import { usePermissions } from '@/hooks/usePermissions';
+import { Permission } from '@/client/utils/permissions';
+import { usePermissions } from '@/client/hooks/usePermissions';
 
 interface ProtectedProps {
     children: ReactNode;

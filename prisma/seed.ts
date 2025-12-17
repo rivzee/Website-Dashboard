@@ -18,15 +18,13 @@ async function main() {
     console.log('⚠️ Warning cleaning db:', error);
   }
 
-  // 2. Create Users (PASSWORD PLAIN TEXT "123456")
-  const password = '123456';
-
+  // 2. Create Users with role-specific passwords
   // Admin
   const admin = await prisma.user.create({
     data: {
       fullName: 'Admin Utama',
       email: 'admin@akuntan.com',
-      password: password, // Plain text
+      password: 'admin123', // Plain text
       role: 'ADMIN',
       phone: '081234567890',
       address: 'Kantor Pusat Jakarta',
@@ -38,7 +36,7 @@ async function main() {
     data: {
       fullName: 'Budi Akuntan',
       email: 'akuntan@akuntan.com',
-      password: password, // Plain text
+      password: 'akuntan123', // Plain text
       role: 'AKUNTAN',
       phone: '081234567891',
       address: 'Cabang Bandung',
@@ -49,15 +47,18 @@ async function main() {
   const client = await prisma.user.create({
     data: {
       fullName: 'PT Maju Jaya',
-      email: 'klien@akuntan.com',
-      password: password, // Plain text
+      email: 'client@akuntan.com',
+      password: 'client123', // Plain text
       role: 'KLIEN',
       phone: '081234567892',
       address: 'Kawasan Industri Cikarang',
     },
   });
 
-  console.log('� Users created with password "123456"');
+  console.log('👥 Users created:');
+  console.log('  - admin@akuntan.com / admin123');
+  console.log('  - akuntan@akuntan.com / akuntan123');
+  console.log('  - client@akuntan.com / client123');
 
   // 3. Create Services
   const services = [

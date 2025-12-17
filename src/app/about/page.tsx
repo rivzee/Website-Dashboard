@@ -2,8 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { Target, Heart, Award } from 'lucide-react';
-import LandingNavbar from '@/components/LandingNavbar';
-import LandingFooter from '@/components/LandingFooter';
+import LandingNavbar from '@/client/components/LandingNavbar';
+import LandingFooter from '@/client/components/LandingFooter';
 
 export default function AboutPage() {
     return (

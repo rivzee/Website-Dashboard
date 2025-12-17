@@ -12,13 +12,13 @@ export default function OrderPage() {
   useEffect(() => {
     const u = localStorage.getItem('user');
     if (u) setUser(JSON.parse(u));
-    axios.get('http://localhost:3001/services').then(res => setServices(res.data));
+    axios.get('/api/services').then(res => setServices(res.data));
   }, []);
 
   const handleOrder = async (serviceId: string) => {
     if (!confirm('Lanjutkan pemesanan layanan ini?')) return;
     try {
-      await axios.post('http://localhost:3001/orders', { clientId: user.id, serviceId, notes: 'Order Dashboard' });
+      await axios.post('/api/orders', { clientId: user.id, serviceId, notes: 'Order Dashboard' });
       router.push('/dashboard/my-orders');
     } catch (e) { alert('Gagal'); }
   };

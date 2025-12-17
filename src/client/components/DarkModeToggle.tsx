@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sun, Moon } from 'lucide-react';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/client/context/ThemeContext';
 
 export function DarkModeToggle() {
     const { theme, toggleTheme } = useTheme();

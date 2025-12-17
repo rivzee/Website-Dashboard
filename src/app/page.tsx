@@ -28,10 +28,10 @@ import {
   Check
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import LandingNavbar from '@/components/LandingNavbar';
-import LandingFooter from '@/components/LandingFooter';
-import FloatingWhatsApp from '@/components/FloatingWhatsApp';
-import ClientLogos from '@/components/ClientLogos';
+import LandingNavbar from '@/client/components/LandingNavbar';
+import LandingFooter from '@/client/components/LandingFooter';
+import FloatingWhatsApp from '@/client/components/FloatingWhatsApp';
+import ClientLogos from '@/client/components/ClientLogos';
 
 export default function LandingPage() {
   const [mounted, setMounted] = useState(false);

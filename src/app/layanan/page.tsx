@@ -18,9 +18,9 @@ import {
     ShieldCheck,
     Clock
 } from 'lucide-react';
-import LandingNavbar from '@/components/LandingNavbar';
-import LandingFooter from '@/components/LandingFooter';
-import FloatingWhatsApp from '@/components/FloatingWhatsApp';
+import LandingNavbar from '@/client/components/LandingNavbar';
+import LandingFooter from '@/client/components/LandingFooter';
+import FloatingWhatsApp from '@/client/components/FloatingWhatsApp';
 
 interface Service {
     id: string;

@@ -8,7 +8,7 @@
 import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, X, Check, Trash2, Settings, Filter } from 'lucide-react';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/client/hooks/useToast';
 
 export interface Notification {
     id: string;
@@ -202,8 +202,8 @@ export function NotificationCenter() {
                                     <button
                                         onClick={() => setFilter('all')}
                                         className={`flex-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${filter === 'all'
-                                                ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                                                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                            ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                                             }`}
                                     >
                                         All ({notifications.length})
@@ -211,8 +211,8 @@ export function NotificationCenter() {
                                     <button
                                         onClick={() => setFilter('unread')}
                                         className={`flex-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${filter === 'unread'
-                                                ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                                                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                            ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                                             }`}
                                     >
                                         Unread ({unreadCount})
@@ -259,8 +259,8 @@ export function NotificationCenter() {
                                                     animate={{ opacity: 1, x: 0 }}
                                                     exit={{ opacity: 0, x: 20 }}
                                                     className={`p-3 mb-2 rounded-xl cursor-pointer transition-colors ${notification.read
-                                                            ? 'bg-gray-50 dark:bg-gray-700/50'
-                                                            : 'bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800'
+                                                        ? 'bg-gray-50 dark:bg-gray-700/50'
+                                                        : 'bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800'
                                                         } hover:bg-gray-100 dark:hover:bg-gray-700`}
                                                     onClick={() => markAsRead(notification.id)}
                                                 >

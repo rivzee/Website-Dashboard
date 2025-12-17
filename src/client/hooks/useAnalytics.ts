@@ -6,7 +6,7 @@
 'use client';
 
 import { useEffect, useCallback } from 'react';
-import { APP_CONFIG } from '@/config/api.config';
+import { APP_CONFIG } from '@/client/config/api.config';
 
 interface AnalyticsEvent {
     category: string;

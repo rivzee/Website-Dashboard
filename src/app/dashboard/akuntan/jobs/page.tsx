@@ -16,7 +16,7 @@ export default function AkuntanJobsPage() {
 
     const fetchJobs = async () => {
         try {
-            const res = await axios.get('http://localhost:3001/orders');
+            const res = await axios.get('/api/orders');
             // Accountant only cares about PAID, IN_PROGRESS, COMPLETED
             // But realistically, they should see all relevant to work.
             // For now, let's show all but filter visually.
@@ -31,7 +31,7 @@ export default function AkuntanJobsPage() {
     const handleStartJob = async (jobId: string) => {
         if (!confirm('Mulai kerjakan tugas ini?')) return;
         try {
-            await axios.put(`http://localhost:3001/orders/${jobId}/status`, { status: 'IN_PROGRESS' });
+            await axios.put(`/api/orders/${jobId}/status`, { status: 'IN_PROGRESS' });
             setJobs(jobs.map(j => j.id === jobId ? { ...j, status: 'IN_PROGRESS' } : j));
         } catch (error) {
             alert('Gagal update status');
@@ -54,7 +54,7 @@ export default function AkuntanJobsPage() {
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 const fakeUrl = `https://storage.example.com/results/${file.name}`;
 
-                await axios.post('http://localhost:3001/documents', {
+                await axios.post('/api/documents', {
                     fileName: file.name,
                     fileUrl: fakeUrl,
                     fileType: file.type || 'application/pdf',
@@ -64,7 +64,7 @@ export default function AkuntanJobsPage() {
                 });
 
                 // 2. Update Status to COMPLETED
-                await axios.put(`http://localhost:3001/orders/${jobId}/status`, { status: 'COMPLETED' });
+                await axios.put(`/api/orders/${jobId}/status`, { status: 'COMPLETED' });
 
                 setJobs(jobs.map(j => j.id === jobId ? { ...j, status: 'COMPLETED' } : j));
                 alert('Pekerjaan selesai & laporan terkirim!');

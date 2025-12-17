@@ -23,7 +23,7 @@ export default function UploadPage() {
     const fetchOrder = async (id: string) => {
         try {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            const res = await axios.get(`http://localhost:3001/orders/my/${user.id}`);
+            const res = await axios.get(`/api/orders/my/${user.id}`);
             const found = res.data.find((o: any) => o.id === id);
             setOrder(found);
         } catch (error) {
@@ -46,7 +46,7 @@ export default function UploadPage() {
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 const fakeUrl = `https://storage.example.com/docs/${file.name}`;
 
-                await axios.post('http://localhost:3001/documents', {
+                await axios.post('/api/documents', {
                     fileName: file.name,
                     fileUrl: fakeUrl,
                     fileType: file.type || 'application/pdf',

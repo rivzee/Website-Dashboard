@@ -21,7 +21,7 @@ export default function MyOrdersPage() {
 
     const fetchMyOrders = async (clientId: string) => {
         try {
-            const res = await axios.get(`http://localhost:3001/orders/my/${clientId}`);
+            const res = await axios.get(`/api/orders/my/${clientId}`);
             setOrders(res.data);
         } catch (error) {
             console.error('Error fetching orders:', error);

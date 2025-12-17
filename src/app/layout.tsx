@@ -1,9 +1,9 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import ErrorBoundary from '@/components/ErrorBoundary';
-import { ToastProvider } from '@/hooks/useToast';
-import { ThemeProvider } from '@/context/ThemeContext';
+import ErrorBoundary from '@/client/components/ErrorBoundary';
+import { ToastProvider } from '@/client/hooks/useToast';
+import { ThemeProvider } from '@/client/context/ThemeContext';
 
 const inter = Inter({ subsets: ['latin'] });
 

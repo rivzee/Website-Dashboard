@@ -2,8 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { Building2, CheckCircle2, TrendingUp } from 'lucide-react';
-import LandingNavbar from '@/components/LandingNavbar';
-import LandingFooter from '@/components/LandingFooter';
+import LandingNavbar from '@/client/components/LandingNavbar';
+import LandingFooter from '@/client/components/LandingFooter';
 
 export default function PortfolioPage() {
     const portfolio = [

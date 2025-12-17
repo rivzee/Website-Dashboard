@@ -11,7 +11,7 @@ import {
     TrendingDown,
     DollarSign
 } from 'lucide-react';
-import { showToast } from '@/components/NotificationSystem';
+import toast from 'react-hot-toast';
 
 type ReportType = 'tax' | 'balance-sheet' | 'income-statement' | 'cash-flow';
 
@@ -40,12 +40,12 @@ export default function DocumentGenerator({ type = 'tax' }: DocumentGeneratorPro
         // Simulate document generation
         await new Promise(resolve => setTimeout(resolve, 2000));
 
-        showToast(`${reportTypes.find(r => r.id === selectedType)?.label} berhasil dibuat!`, 'success');
+        toast.success(`${reportTypes.find(r => r.id === selectedType)?.label} berhasil dibuat!`);
         setGenerating(false);
     };
 
     const downloadPDF = () => {
-        showToast('Downloading PDF...', 'info');
+        toast('Downloading PDF...');
     };
 
     const printDocument = () => {
@@ -151,8 +151,8 @@ export default function DocumentGenerator({ type = 'tax' }: DocumentGeneratorPro
                             whileTap={{ scale: 0.98 }}
                             onClick={() => setSelectedType(report.id as ReportType)}
                             className={`p-4 rounded-2xl border-2 transition-all ${selectedType === report.id
-                                    ? `border-${report.color}-500 bg-${report.color}-50 dark:bg-${report.color}-900/20`
-                                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                                ? `border-${report.color}-500 bg-${report.color}-50 dark:bg-${report.color}-900/20`
+                                : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                                 }`}
                         >
                             <Icon size={32} className={`text-${report.color}-600 dark:text-${report.color}-400 mb-2`} />
@@ -365,8 +365,8 @@ export default function DocumentGenerator({ type = 'tax' }: DocumentGeneratorPro
                         </div>
 
                         <div className={`flex justify-between py-4 px-6 rounded-lg ${netIncome >= 0
-                                ? 'bg-green-100 dark:bg-green-900/30'
-                                : 'bg-red-100 dark:bg-red-900/30'
+                            ? 'bg-green-100 dark:bg-green-900/30'
+                            : 'bg-red-100 dark:bg-red-900/30'
                             }`}>
                             <span className="text-xl font-bold text-gray-900 dark:text-white">
                                 {netIncome >= 0 ? 'LABA BERSIH' : 'RUGI BERSIH'}

@@ -1,5 +1,5 @@
 /**
- * Service Management Page - CRUD
+ * Halaman Kelola Layanan - CRUD
  * Complete service management with create, read, update, delete
  */
 
@@ -21,11 +21,11 @@ import {
   Package,
   Tag,
 } from 'lucide-react';
-import { DataTable, Column } from '@/components/DataTable';
-import { ExportButton } from '@/components/ExportButton';
-import { useToast } from '@/hooks/useToast';
-import apiService from '@/services/api.service';
-import { DashboardSkeleton } from '@/components/Skeletons';
+import { DataTable, Column } from '@/client/components/DataTable';
+import { ExportButton } from '@/client/components/ExportButton';
+import { useToast } from '@/client/hooks/useToast';
+import apiService from '@/client/services/api.service';
+import { DashboardSkeleton } from '@/client/components/Skeletons';
 
 interface Service {
   id: string;
@@ -81,10 +81,10 @@ export default function ServiceManagementPage() {
     try {
       const data = await apiService.services.getAll();
       setServices(data);
-      toast.success('Services loaded successfully');
+      toast.success('Layanan berhasil dimuat');
     } catch (error) {
       console.error('Error fetching services:', error);
-      toast.error('Failed to load services');
+      toast.error('Gagal memuat layanan');
     } finally {
       setIsLoading(false);
     }
@@ -272,7 +272,7 @@ export default function ServiceManagementPage() {
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium shadow-lg transition-colors"
           >
             <Plus size={20} />
-            Add Service
+            Tambah Layanan
           </motion.button>
         </div>
       </div>
@@ -280,9 +280,9 @@ export default function ServiceManagementPage() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
-          { label: 'Total Services', value: stats.total, color: 'from-blue-500 to-cyan-500', icon: Package },
-          { label: 'Active', value: stats.active, color: 'from-green-500 to-teal-500', icon: Briefcase },
-          { label: 'Inactive', value: stats.inactive, color: 'from-red-500 to-pink-500', icon: Briefcase },
+          { label: 'Total Layanan', value: stats.total, color: 'from-blue-500 to-cyan-500', icon: Package },
+          { label: 'Aktif', value: stats.active, color: 'from-green-500 to-teal-500', icon: Briefcase },
+          { label: 'Nonaktif', value: stats.inactive, color: 'from-red-500 to-pink-500', icon: Briefcase },
         ].map((stat, idx) => {
           const Icon = stat.icon;
           return (

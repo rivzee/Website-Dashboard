@@ -20,7 +20,7 @@ export default function OrderDetailPage() {
 
     const fetchOrder = async (id: string) => {
         try {
-            const res = await axios.get(`http://localhost:3001/orders/${id}`);
+            const res = await axios.get(`/api/orders/${id}`);
             setOrder(res.data);
         } catch (error) {
             console.error(error);

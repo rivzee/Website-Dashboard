@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ShoppingCart, Clock, CheckCircle, Package, TrendingUp, Calendar, ArrowRight, Sparkles } from 'lucide-react';
 import axios from 'axios';
-import { EnhancedPieChart } from '@/components/EnhancedCharts';
+import { EnhancedPieChart } from '@/client/components/EnhancedCharts';
 import Link from 'next/link';
 
 export default function KlienDashboard() {
@@ -28,7 +28,7 @@ export default function KlienDashboard() {
 
     const fetchStats = async (clientId: string) => {
         try {
-            const orders = await axios.get(`http://localhost:3001/orders/my/${clientId}`);
+            const orders = await axios.get(`/api/orders/my/${clientId}`);
             const data = orders.data;
 
             setRecentOrders(data.slice(0, 4)); // Get 4 recent orders

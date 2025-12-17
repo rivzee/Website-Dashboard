@@ -4,22 +4,22 @@
  */
 
 export const API_CONFIG = {
-    BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
+    BASE_URL: process.env.NEXT_PUBLIC_API_URL || '',
     TIMEOUT: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || '30000'),
 
     // Endpoints
     ENDPOINTS: {
         AUTH: {
-            LOGIN: '/auth/login',
-            REGISTER: '/auth/register',
-            LOGOUT: '/auth/logout',
-            REFRESH: '/auth/refresh',
+            LOGIN: '/api/auth/login',
+            REGISTER: '/api/auth/register',
+            LOGOUT: '/api/auth/logout',
+            REFRESH: '/api/auth/refresh',
         },
-        USERS: '/users',
-        SERVICES: '/services',
-        ORDERS: '/orders',
-        PAYMENTS: '/payments',
-        NOTIFICATIONS: '/notifications',
+        USERS: '/api/users',
+        SERVICES: '/api/services',
+        ORDERS: '/api/orders',
+        PAYMENTS: '/api/payments',
+        NOTIFICATIONS: '/api/notifications',
     },
 
     // Security

@@ -56,7 +56,7 @@ export default function ProfilePage() {
                 updateData.password = formData.password;
             }
 
-            const response = await axios.put(`http://localhost:3001/users/${user.id}`, updateData);
+            const response = await axios.put(`/api/users/${user.id}`, updateData);
 
             // Update local storage
             const updatedUser = { ...user, ...response.data };

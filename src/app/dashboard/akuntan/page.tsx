@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, CheckCircle, Clock, TrendingUp, Calendar } from 'lucide-react';
 import axios from 'axios';
-import { EnhancedAreaChart } from '@/components/EnhancedCharts';
+import { EnhancedAreaChart } from '@/client/components/EnhancedCharts';
 
 export default function AkuntanDashboard() {
     const [stats, setStats] = useState({
@@ -21,7 +21,7 @@ export default function AkuntanDashboard() {
 
     const fetchStats = async () => {
         try {
-            const orders = await axios.get('http://localhost:3001/orders');
+            const orders = await axios.get('/api/orders');
             const data = orders.data;
 
             // Filter jobs that are PAID (ready to start) or IN_PROGRESS

@@ -6,7 +6,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { createPermissionService, Permission, Role } from '@/utils/permissions';
+import { createPermissionService, Permission, Role } from '@/client/utils/permissions';
 
 interface User {
     role: Role;

@@ -28,7 +28,7 @@ export default function PaymentPage() {
             // we might need to fetch all and find, or use the admin one if accessible (unlikely).
             // Let's try the admin/general one if it's not protected, or just fetch all my orders.
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            const res = await axios.get(`http://localhost:3001/orders/my/${user.id}`);
+            const res = await axios.get(`/api/orders/my/${user.id}`);
             const found = res.data.find((o: any) => o.id === id);
             setOrder(found);
         } catch (error) {
@@ -49,7 +49,7 @@ export default function PaymentPage() {
         const fakeUrl = `https://storage.example.com/proof-${Date.now()}.jpg`;
 
         try {
-            await axios.post('http://localhost:3001/payments', {
+            await axios.post('/api/payments', {
                 amount: Number(order.totalAmount),
                 paymentMethod: 'TRANSFER_BCA',
                 proofUrl: fakeUrl,

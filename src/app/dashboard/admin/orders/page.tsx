@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { DataTable } from '@/components/DataTable';
+import { DataTable } from '@/client/components/DataTable';
 import { FileText, DollarSign, Users, TrendingUp, Download } from 'lucide-react';
 import axios from 'axios';
 
@@ -16,7 +16,7 @@ export default function OrdersPage() {
 
     const fetchOrders = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/orders');
+            const response = await axios.get('/api/orders');
             setOrders(response.data);
         } catch (error) {
             console.error('Error fetching orders:', error);

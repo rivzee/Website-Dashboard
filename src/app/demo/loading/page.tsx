@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import LoadingAnimation from '@/components/LoadingAnimation';
-import PageLoader from '@/components/PageLoader';
+import LoadingAnimation from '@/client/components/LoadingAnimation';
+import PageLoader from '@/client/components/PageLoader';
 import { motion } from 'framer-motion';
 
 export default function LoadingDemo() {

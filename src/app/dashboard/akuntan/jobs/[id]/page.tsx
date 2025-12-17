@@ -20,7 +20,7 @@ export default function JobDetailPage() {
 
     const fetchJob = async (id: string) => {
         try {
-            const res = await axios.get(`http://localhost:3001/orders/${id}`);
+            const res = await axios.get(`/api/orders/${id}`);
             setJob(res.data);
         } catch (error) {
             console.error(error);
@@ -38,7 +38,7 @@ export default function JobDetailPage() {
     const handleStartJob = async () => {
         if (!confirm('Mulai kerjakan tugas ini?')) return;
         try {
-            await axios.put(`http://localhost:3001/orders/${job.id}/status`, { status: 'IN_PROGRESS' });
+            await axios.put(`/api/orders/${job.id}/status`, { status: 'IN_PROGRESS' });
             setJob({ ...job, status: 'IN_PROGRESS' });
         } catch (error) {
             alert('Gagal update status');
@@ -58,7 +58,7 @@ export default function JobDetailPage() {
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 const fakeUrl = `https://storage.example.com/results/${file.name}`;
 
-                await axios.post('http://localhost:3001/documents', {
+                await axios.post('/api/documents', {
                     fileName: file.name,
                     fileUrl: fakeUrl,
                     fileType: file.type || 'application/pdf',
@@ -67,7 +67,7 @@ export default function JobDetailPage() {
                     uploaderId: user.id
                 });
 
-                await axios.put(`http://localhost:3001/orders/${job.id}/status`, { status: 'COMPLETED' });
+                await axios.put(`/api/orders/${job.id}/status`, { status: 'COMPLETED' });
                 setJob({ ...job, status: 'COMPLETED' });
                 alert('Pekerjaan selesai & laporan terkirim!');
                 fetchJob(job.id); // Refresh to see new doc

@@ -1,5 +1,5 @@
 /**
- * User Management Page - CRUD
+ * Halaman Kelola Akun - CRUD
  * Complete user management with create, read, update, delete
  */
 
@@ -22,11 +22,11 @@ import {
     Save,
     UserPlus,
 } from 'lucide-react';
-import { DataTable, Column } from '@/components/DataTable';
-import { ExportButton } from '@/components/ExportButton';
-import { useToast } from '@/hooks/useToast';
-import apiService from '@/services/api.service';
-import { DashboardSkeleton } from '@/components/Skeletons';
+import { DataTable, Column } from '@/client/components/DataTable';
+import { ExportButton } from '@/client/components/ExportButton';
+import { useToast } from '@/client/hooks/useToast';
+import apiService from '@/client/services/api.service';
+import { DashboardSkeleton } from '@/client/components/Skeletons';
 
 interface User {
     id: string;
@@ -72,10 +72,10 @@ export default function UserManagementPage() {
         try {
             const data = await apiService.users.getAll();
             setUsers(data);
-            toast.success('Users loaded successfully');
+            toast.success('Pengguna berhasil dimuat');
         } catch (error) {
             console.error('Error fetching users:', error);
-            toast.error('Failed to load users');
+            toast.error('Gagal memuat pengguna');
         } finally {
             setIsLoading(false);
         }
@@ -226,7 +226,7 @@ export default function UserManagementPage() {
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Kelola Akun</h1>
                     <p className="text-gray-600 dark:text-gray-400 mt-1">
-                        Manage user accounts and permissions
+                        Kelola akun pengguna dan hak akses
                     </p>
                 </div>
 
@@ -245,7 +245,7 @@ export default function UserManagementPage() {
                         className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium shadow-lg transition-colors"
                     >
                         <Plus size={20} />
-                        Add User
+                        Tambah Pengguna
                     </motion.button>
                 </div>
             </div>
@@ -253,10 +253,10 @@ export default function UserManagementPage() {
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 {[
-                    { label: 'Total Users', value: users.length, color: 'from-blue-500 to-cyan-500', icon: Users },
-                    { label: 'Admins', value: users.filter(u => u.role === 'ADMIN').length, color: 'from-purple-500 to-pink-500', icon: Shield },
-                    { label: 'Accountants', value: users.filter(u => u.role === 'AKUNTAN').length, color: 'from-blue-500 to-indigo-500', icon: Users },
-                    { label: 'Clients', value: users.filter(u => u.role === 'KLIEN').length, color: 'from-green-500 to-teal-500', icon: Users },
+                    { label: 'Total Pengguna', value: users.length, color: 'from-blue-500 to-cyan-500', icon: Users },
+                    { label: 'Admin', value: users.filter(u => u.role === 'ADMIN').length, color: 'from-purple-500 to-pink-500', icon: Shield },
+                    { label: 'Akuntan', value: users.filter(u => u.role === 'AKUNTAN').length, color: 'from-blue-500 to-indigo-500', icon: Users },
+                    { label: 'Klien', value: users.filter(u => u.role === 'KLIEN').length, color: 'from-green-500 to-teal-500', icon: Users },
                 ].map((stat, idx) => {
                     const Icon = stat.icon;
                     return (

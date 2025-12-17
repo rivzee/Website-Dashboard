@@ -4,7 +4,7 @@
  */
 
 import axios, { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios';
-import { API_CONFIG } from '@/config/api.config';
+import { API_CONFIG } from '@/client/config/api.config';
 
 // Custom error class
 export class ApiError extends Error {

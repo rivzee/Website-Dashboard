@@ -5,7 +5,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Clock, CheckCircle, AlertCircle, Search, Filter, Eye, Calendar, User, Package } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { TableSkeleton } from '@/components/Skeletons';
+import { TableSkeleton } from '@/client/components/Skeletons';
 
 interface Order {
   id: string;
@@ -29,7 +29,7 @@ export default function JobsPage() {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:3001/orders');
+      const res = await axios.get('/api/orders');
       setOrders(res.data);
     } catch (error) {
       toast.error('Gagal memuat pesanan');
@@ -122,8 +122,8 @@ export default function JobsPage() {
                 key={status}
                 onClick={() => setStatusFilter(status)}
                 className={`px-4 py-3 rounded-xl font-semibold transition ${statusFilter === status
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                    : 'bg-white/50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                  : 'bg-white/50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
                   }`}
               >
                 {status === 'ALL' ? 'Semua' : statusConfig(status).label}

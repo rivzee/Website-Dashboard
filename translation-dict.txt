@@ -1,0 +1,48 @@
+# Daftar Terjemahan Umum
+
+## Dashboard & Navigation
+- "Dashboard" → "Dasbor"
+- "Admin Dashboard" → "Dasbor Admin"
+- "Total Users" → "Total Pengguna"
+- "Total Services" → "Total Layanan"
+- "Total Orders" → "Total Pesanan"
+- "Completed Orders" → "Pesanan Selesai"
+- "Pending Orders" → "Pesanan Pending"
+- "Revenue" → "Pendapatan"
+
+## Actions
+- "Add User" → "Tambah Pengguna"
+- "Add Service" → "Tambah Layanan"
+- "Edit" → "Ubah"
+- "Delete" → "Hapus"
+- "Save" → "Simpan"
+- "Cancel" → "Batal"
+- "Export" → "Ekspor"
+- "Import" → "Impor"
+
+## Status
+- "Active" → "Aktif"
+- "Inactive" → "Nonaktif"
+- "Pending" → "Menunggu"
+- "Completed" → "Selesai"
+- "Processing" → "Diproses"
+
+## Forms
+- "Full Name" → "Nama Lengkap"
+- "Email Address" → "Alamat Email"
+- "Password" → "Kata Sandi"
+- "Phone Number" → "Nomor Telepon"
+- "Address" → "Alamat"
+
+## Time
+- "Today" → "Hari Ini"
+- "Yesterday" → "Kemarin"
+- "Last Week" → "Minggu Lalu"
+- "Last Month" → "Bulan Lalu"
+
+## Messages
+- "Loading..." → "Memuat..."
+- "No data available" → "Tidak ada data"
+- "Success" → "Berhasil"
+- "Error" → "Gagal"
+- "Are you sure?" → "Apakah Anda yakin?"

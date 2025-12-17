@@ -63,7 +63,7 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3001/users', {
+      const response = await axios.post('/api/users', {
         ...form,
         role: 'KLIEN'
       });
@@ -390,7 +390,7 @@ export default function RegisterPage() {
 
               {/* Google Login Button */}
               <motion.a
-                href="http://localhost:3001/auth/google"
+                href="/api/auth/google"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="w-full bg-white text-gray-900 py-3 rounded-xl font-semibold flex items-center justify-center gap-3 hover:bg-gray-100 transition-all cursor-pointer"

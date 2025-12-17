@@ -28,7 +28,7 @@ export default function UploadResultPage() {
 
     const fetchOrderDetail = async () => {
         try {
-            const res = await axios.get(`http://localhost:3001/orders/${orderId}`);
+            const res = await axios.get(`/api/orders/${orderId}`);
             setOrder(res.data);
         } catch (error) {
             toast.error('Gagal memuat detail pesanan');
@@ -65,7 +65,7 @@ export default function UploadResultPage() {
         try {
             const fileUrl = `/uploads/results/${file.name}`;
 
-            await axios.post('http://localhost:3001/documents', {
+            await axios.post('/api/documents', {
                 fileName: file.name,
                 fileUrl: fileUrl,
                 fileType: file.type,
@@ -74,7 +74,7 @@ export default function UploadResultPage() {
                 uploaderId: user.id,
             });
 
-            await axios.put(`http://localhost:3001/orders/${orderId}/status`, {
+            await axios.put(`/api/orders/${orderId}/status`, {
                 status: 'COMPLETED',
             });
 
@@ -182,8 +182,8 @@ export default function UploadResultPage() {
                 <div
                     {...getRootProps()}
                     className={`border-2 border-dashed rounded-3xl p-12 text-center transition-all duration-300 cursor-pointer ${isDragActive
-                            ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
-                            : 'border-gray-300 dark:border-gray-600 hover:border-green-500 dark:hover:border-green-400'
+                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                        : 'border-gray-300 dark:border-gray-600 hover:border-green-500 dark:hover:border-green-400'
                         }`}
                 >
                     <input {...getInputProps()} />

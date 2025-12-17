@@ -8,8 +8,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, FileSpreadsheet, FileText, File } from 'lucide-react';
-import { exportData, ExportOptions } from '@/utils/export';
-import { useToast } from '@/hooks/useToast';
+import { exportData, ExportOptions } from '@/client/utils/export';
+import { useToast } from '@/client/hooks/useToast';
 
 interface ExportButtonProps {
     data: any[];

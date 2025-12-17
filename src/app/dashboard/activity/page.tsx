@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { DataTable } from '@/components/DataTable';
+import { DataTable } from '@/client/components/DataTable';
 import {
     Activity,
     User,

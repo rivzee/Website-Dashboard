@@ -29,17 +29,14 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@server/*": [
-        "./src/server/*"
+      "@/lib/*": [
+        "./src/lib/*"
       ],
-      "@client/*": [
+      "@/client/*": [
         "./src/client/*"
-      ],
-      "@shared/*": [
-        "./src/shared/*"
       ],
       "@/*": [
-        "./src/client/*"
+        "./src/*"
       ]
     },
     "plugins": [

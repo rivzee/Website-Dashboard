@@ -17,13 +17,13 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:3001/auth/login', form);
+      const res = await axios.post('/api/auth/login', form);
       localStorage.setItem('user', JSON.stringify(res.data));
       await new Promise(r => setTimeout(r, 500));
       router.push('/dashboard');
     } catch (err: any) {
       console.error(err);
-      alert(err.response?.data?.message || 'Login gagal');
+      alert(err.response?.data?.error || err.response?.data?.message || 'Login gagal');
     } finally {
       setLoading(false);
     }
@@ -324,7 +324,7 @@ export default function LoginPage() {
 
                   {/* Google Login Button */}
                   <motion.a
-                    href="http://localhost:3001/auth/google"
+                    href="/api/auth/google"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     className="w-full bg-white text-gray-900 py-3 rounded-xl font-semibold flex items-center justify-center gap-3 hover:bg-gray-100 transition-all cursor-pointer"

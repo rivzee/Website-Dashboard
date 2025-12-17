@@ -15,7 +15,7 @@ import {
     Copy,
     RefreshCw
 } from 'lucide-react';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/client/hooks/useToast';
 
 export default function SettingsPage() {
     const [activeTab, setActiveTab] = useState('company');

@@ -8,7 +8,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, X } from 'lucide-react';
-import { usePWA } from '@/hooks/usePWA';
+import { usePWA } from '@/client/hooks/usePWA';
 
 export function PWAInstallPrompt() {
     const { isInstallable, promptInstall } = usePWA();

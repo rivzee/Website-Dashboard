@@ -21,11 +21,11 @@ import {
     Star,
     ArrowRight
 } from 'lucide-react';
-import { EnhancedLineChart, EnhancedBarChart, EnhancedPieChart } from '@/components/EnhancedCharts';
+import { EnhancedLineChart, EnhancedBarChart, EnhancedPieChart } from '@/client/components/EnhancedCharts';
 import Link from 'next/link';
-import { useToast } from '@/hooks/useToast';
-import apiService from '@/services/api.service';
-import { DashboardSkeleton } from '@/components/Skeletons';
+import { useToast } from '@/client/hooks/useToast';
+import apiService from '@/client/services/api.service';
+import { DashboardSkeleton } from '@/client/components/Skeletons';
 
 export default function AdminDashboard() {
     const [stats, setStats] = useState({
@@ -157,8 +157,8 @@ export default function AdminDashboard() {
                         <img src="/logo-risabur.png" alt="RISA BUR Logo" className="w-full h-full object-contain" />
                     </div>
                     <div>
-                        <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-1">
-                            Admin Dashboard
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 animate-gradient">
+                            Dasbor Admin
                         </h1>
                         <p className="text-gray-600 dark:text-gray-400">RISA BUR - Kantor Jasa Akuntan</p>
                     </div>
