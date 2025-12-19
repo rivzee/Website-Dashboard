@@ -11,6 +11,7 @@ import {
     FileText,
     User,
     Download,
+    AlertTriangle,
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -36,6 +37,15 @@ export default function PendingPaymentsPage() {
     const [payments, setPayments] = useState<PendingPayment[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedProof, setSelectedProof] = useState<string | null>(null);
+    const [confirmModal, setConfirmModal] = useState<{
+        show: boolean;
+        type: 'approve' | 'reject';
+        paymentId: string;
+        serviceName: string;
+        clientName: string;
+        amount: number;
+    } | null>(null);
+    const [processing, setProcessing] = useState(false);
 
     useEffect(() => {
         fetchPendingPayments();
@@ -52,35 +62,44 @@ export default function PendingPaymentsPage() {
         }
     };
 
-    const handleApprove = async (paymentId: string) => {
-        if (!confirm('Setujui pembayaran ini?')) return;
-
-        try {
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            await axios.patch(`/api/payments/${paymentId}/approve`, {
-                adminId: user.id,
-                action: 'approve',
-            });
-            alert('Pembayaran berhasil disetujui!');
-            fetchPendingPayments();
-        } catch (error: any) {
-            alert(error.response?.data?.error || 'Gagal menyetujui pembayaran');
-        }
+    const handleApprove = async (payment: PendingPayment) => {
+        setConfirmModal({
+            show: true,
+            type: 'approve',
+            paymentId: payment.id,
+            serviceName: payment.order.service.name,
+            clientName: payment.order.client.fullName,
+            amount: payment.amount,
+        });
     };
 
-    const handleReject = async (paymentId: string) => {
-        if (!confirm('Tolak pembayaran ini?')) return;
+    const handleReject = async (payment: PendingPayment) => {
+        setConfirmModal({
+            show: true,
+            type: 'reject',
+            paymentId: payment.id,
+            serviceName: payment.order.service.name,
+            clientName: payment.order.client.fullName,
+            amount: payment.amount,
+        });
+    };
+
+    const confirmAction = async () => {
+        if (!confirmModal) return;
+        setProcessing(true);
 
         try {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            await axios.patch(`/api/payments/${paymentId}/approve`, {
+            await axios.patch(`/api/payments/${confirmModal.paymentId}/approve`, {
                 adminId: user.id,
-                action: 'reject',
+                action: confirmModal.type,
             });
-            alert('Pembayaran ditolak');
+            setConfirmModal(null);
             fetchPendingPayments();
         } catch (error: any) {
-            alert(error.response?.data?.error || 'Gagal menolak pembayaran');
+            alert(error.response?.data?.error || 'Gagal memproses pembayaran');
+        } finally {
+            setProcessing(false);
         }
     };
 
@@ -201,14 +220,14 @@ export default function PendingPaymentsPage() {
                             {/* Actions */}
                             <div className="flex gap-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                                 <button
-                                    onClick={() => handleApprove(payment.id)}
+                                    onClick={() => handleApprove(payment)}
                                     className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition"
                                 >
                                     <CheckCircle size={20} />
                                     Setujui Pembayaran
                                 </button>
                                 <button
-                                    onClick={() => handleReject(payment.id)}
+                                    onClick={() => handleReject(payment)}
                                     className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition"
                                 >
                                     <XCircle size={20} />
@@ -240,6 +259,97 @@ export default function PendingPaymentsPage() {
                         </button>
                     </div>
                 </div>
+            )}
+
+            {/* Confirmation Modal */}
+            {confirmModal && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+                    onClick={() => !processing && setConfirmModal(null)}
+                >
+                    <motion.div
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.9, opacity: 0 }}
+                        transition={{ type: 'spring', damping: 20 }}
+                        className="bg-white dark:bg-gray-800 rounded-3xl p-8 max-w-md w-full shadow-2xl"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Icon */}
+                        <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${confirmModal.type === 'approve'
+                                ? 'bg-green-100 dark:bg-green-900/30'
+                                : 'bg-red-100 dark:bg-red-900/30'
+                            }`}>
+                            {confirmModal.type === 'approve' ? (
+                                <CheckCircle className="w-10 h-10 text-green-600 dark:text-green-400" />
+                            ) : (
+                                <AlertTriangle className="w-10 h-10 text-red-600 dark:text-red-400" />
+                            )}
+                        </div>
+
+                        {/* Title */}
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-2">
+                            {confirmModal.type === 'approve' ? 'Setujui Pembayaran?' : 'Tolak Pembayaran?'}
+                        </h2>
+
+                        {/* Payment Details */}
+                        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 mb-6 space-y-2">
+                            <div className="flex justify-between">
+                                <span className="text-gray-500 dark:text-gray-400 text-sm">Layanan</span>
+                                <span className="font-medium text-gray-900 dark:text-white text-sm">{confirmModal.serviceName}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-500 dark:text-gray-400 text-sm">Klien</span>
+                                <span className="font-medium text-gray-900 dark:text-white text-sm">{confirmModal.clientName}</span>
+                            </div>
+                            <div className="flex justify-between border-t border-gray-200 dark:border-gray-600 pt-2">
+                                <span className="text-gray-500 dark:text-gray-400 text-sm">Total</span>
+                                <span className="font-bold text-blue-600 dark:text-blue-400">Rp {confirmModal.amount.toLocaleString()}</span>
+                            </div>
+                        </div>
+
+                        {/* Warning Text */}
+                        <p className="text-center text-gray-500 dark:text-gray-400 text-sm mb-6">
+                            {confirmModal.type === 'approve'
+                                ? 'Pesanan akan diproses setelah pembayaran disetujui.'
+                                : 'Klien akan diminta untuk mengupload ulang bukti pembayaran.'}
+                        </p>
+
+                        {/* Buttons */}
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setConfirmModal(null)}
+                                disabled={processing}
+                                className="flex-1 px-4 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition disabled:opacity-50"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                onClick={confirmAction}
+                                disabled={processing}
+                                className={`flex-1 px-4 py-3 text-white rounded-xl font-medium transition flex items-center justify-center gap-2 disabled:opacity-50 ${confirmModal.type === 'approve'
+                                        ? 'bg-green-600 hover:bg-green-700'
+                                        : 'bg-red-600 hover:bg-red-700'
+                                    }`}
+                            >
+                                {processing ? (
+                                    <>
+                                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                        Memproses...
+                                    </>
+                                ) : (
+                                    <>
+                                        {confirmModal.type === 'approve' ? <CheckCircle size={20} /> : <XCircle size={20} />}
+                                        {confirmModal.type === 'approve' ? 'Setujui' : 'Tolak'}
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    </motion.div>
+                </motion.div>
             )}
         </div>
     );
