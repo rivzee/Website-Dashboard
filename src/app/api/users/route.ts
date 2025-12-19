@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { sendWelcomeEmail } from '@/lib/email';
 
+export const dynamic = 'force-dynamic';
+
+
 // GET /api/users - Get all users
 // POST /api/users - Create new user (register)
 export async function GET(request: NextRequest) {

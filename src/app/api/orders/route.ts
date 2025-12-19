@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { sendOrderNotification } from '@/lib/email';
 
+export const dynamic = 'force-dynamic';
+
+
 // GET /api/orders - Get all orders
 // POST /api/orders - Create new order
 export async function GET(request: NextRequest) {
