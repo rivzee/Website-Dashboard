@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { CreditCard, Upload, ArrowLeft, CheckCircle } from 'lucide-react';
+import { CreditCard, Upload, ArrowLeft, CheckCircle, Clock, Shield } from 'lucide-react';
 
 export default function PaymentPage() {
     const params = useParams();
@@ -14,6 +14,7 @@ export default function PaymentPage() {
     const [uploading, setUploading] = useState(false);
     const [file, setFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
+    const [showSuccess, setShowSuccess] = useState(false);
 
     useEffect(() => {
         if (params.id) {
@@ -65,8 +66,8 @@ export default function PaymentPage() {
                 orderId: order.id
             });
 
-            alert('Pembayaran Berhasil Dikirim! Menunggu verifikasi admin.');
-            router.push('/dashboard/my-orders');
+            // Show success modal instead of alert
+            setShowSuccess(true);
         } catch (error: any) {
             console.error(error);
             alert(error.response?.data?.error || 'Gagal mengirim pembayaran');
@@ -180,6 +181,52 @@ export default function PaymentPage() {
                     </button>
                 </form>
             </motion.div>
+
+            {/* Success Modal */}
+            {showSuccess && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+                >
+                    <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ type: 'spring', damping: 20 }}
+                        className="bg-white dark:bg-gray-800 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl"
+                    >
+                        <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <CheckCircle className="w-10 h-10 text-green-600 dark:text-green-400" />
+                        </div>
+
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                            Pembayaran Berhasil Dikirim!
+                        </h2>
+
+                        <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-xl p-4 mb-6">
+                            <div className="flex items-center justify-center gap-2 text-orange-600 dark:text-orange-400 mb-2">
+                                <Clock className="w-5 h-5" />
+                                <span className="font-semibold">Menunggu Verifikasi</span>
+                            </div>
+                            <p className="text-sm text-orange-700 dark:text-orange-300">
+                                Bukti pembayaran Anda sedang ditinjau oleh Admin. Anda akan mendapat notifikasi setelah diverifikasi.
+                            </p>
+                        </div>
+
+                        <div className="flex items-center justify-center gap-2 text-gray-500 dark:text-gray-400 text-sm mb-6">
+                            <Shield className="w-4 h-4" />
+                            <span>Proses verifikasi 1x24 jam kerja</span>
+                        </div>
+
+                        <button
+                            onClick={() => router.push('/dashboard/my-orders')}
+                            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-bold hover:opacity-90 transition"
+                        >
+                            Lihat Pesanan Saya
+                        </button>
+                    </motion.div>
+                </motion.div>
+            )}
         </div>
     );
 }
