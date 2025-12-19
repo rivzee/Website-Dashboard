@@ -13,6 +13,7 @@ export default function PaymentPage() {
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
     const [file, setFile] = useState<File | null>(null);
+    const [preview, setPreview] = useState<string | null>(null);
 
     useEffect(() => {
         if (params.id) {
@@ -119,20 +120,40 @@ export default function PaymentPage() {
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Upload Bukti Transfer
                         </label>
-                        <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition cursor-pointer bg-gray-50 dark:bg-gray-800/50">
+                        <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center hover:border-blue-500 transition cursor-pointer bg-gray-50 dark:bg-gray-800/50">
                             <input
                                 type="file"
                                 accept="image/*"
-                                onChange={(e) => setFile(e.target.files?.[0] || null)}
+                                onChange={(e) => {
+                                    const selectedFile = e.target.files?.[0] || null;
+                                    setFile(selectedFile);
+                                    if (selectedFile) {
+                                        const reader = new FileReader();
+                                        reader.onloadend = () => {
+                                            setPreview(reader.result as string);
+                                        };
+                                        reader.readAsDataURL(selectedFile);
+                                    } else {
+                                        setPreview(null);
+                                    }
+                                }}
                                 className="hidden"
                                 id="file-upload"
                             />
                             <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
-                                {file ? (
-                                    <>
-                                        <CheckCircle className="w-10 h-10 text-green-500 mb-2" />
-                                        <span className="text-sm font-medium text-gray-900 dark:text-white">{file.name}</span>
-                                    </>
+                                {preview ? (
+                                    <div className="space-y-3">
+                                        <img
+                                            src={preview}
+                                            alt="Preview Bukti Pembayaran"
+                                            className="max-h-48 rounded-lg mx-auto shadow-lg"
+                                        />
+                                        <div className="flex items-center justify-center gap-2 text-green-500">
+                                            <CheckCircle className="w-5 h-5" />
+                                            <span className="text-sm font-medium">{file?.name}</span>
+                                        </div>
+                                        <p className="text-xs text-gray-500">Klik untuk ganti gambar</p>
+                                    </div>
                                 ) : (
                                     <>
                                         <Upload className="w-10 h-10 text-gray-400 mb-2" />
