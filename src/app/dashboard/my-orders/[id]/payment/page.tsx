@@ -44,23 +44,31 @@ export default function PaymentPage() {
 
         setUploading(true);
 
-        // SIMULATE UPLOAD
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        const fakeUrl = `https://storage.example.com/proof-${Date.now()}.jpg`;
-
         try {
+            // REAL UPLOAD - Send file to server
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('type', 'payment');
+
+            const uploadRes = await axios.post('/api/upload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            const proofUrl = uploadRes.data.url;
+
+            // Create payment record with the uploaded proof URL
             await axios.post('/api/payments', {
                 amount: Number(order.totalAmount),
                 paymentMethod: 'TRANSFER_BCA',
-                proofUrl: fakeUrl,
+                proofUrl: proofUrl,
                 orderId: order.id
             });
 
             alert('Pembayaran Berhasil Dikirim! Menunggu verifikasi admin.');
             router.push('/dashboard/my-orders');
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            alert('Gagal mengirim pembayaran');
+            alert(error.response?.data?.error || 'Gagal mengirim pembayaran');
         } finally {
             setUploading(false);
         }
