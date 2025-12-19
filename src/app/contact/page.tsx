@@ -42,13 +42,13 @@ export default function ContactPage() {
                             >
                                 <h3 className="text-2xl font-bold mb-6">Informasi Kontak</h3>
                                 <div className="space-y-6">
-                                    <a href="tel:+6281234567890" className="flex items-start gap-4 group">
+                                    <a href="tel:+6282287910202" className="flex items-start gap-4 group">
                                         <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center group-hover:bg-blue-500/30 transition">
                                             <Phone className="text-blue-400" size={24} />
                                         </div>
                                         <div>
                                             <div className="font-semibold text-lg">Telepon</div>
-                                            <div className="text-gray-400 group-hover:text-blue-400 transition">+62 812-3456-7890</div>
+                                            <div className="text-gray-400 group-hover:text-blue-400 transition">+62 822-8791-0202</div>
                                         </div>
                                     </a>
 
@@ -94,14 +94,21 @@ export default function ContactPage() {
                                 initial={{ opacity: 0, x: -50 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.3 }}
-                                className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 h-[300px] relative overflow-hidden group"
+                                className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-2 h-[400px] relative overflow-hidden group"
                             >
-                                {/* Placeholder for Map */}
-                                <div className="absolute inset-0 bg-gray-800 flex items-center justify-center group-hover:scale-105 transition duration-700">
-                                    <span className="text-gray-500 flex items-center gap-2">
-                                        <MapPin size={20} />
-                                        Peta Lokasi (Google Maps Embed)
-                                    </span>
+                                <h3 className="text-xl font-bold mb-2 px-6 pt-4">Lokasi Kami</h3>
+                                {/* Google Maps Embed */}
+                                <div className="w-full h-[calc(100%-60px)] rounded-2xl overflow-hidden">
+                                    <iframe
+                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.3080987757326!2d100.36215707475949!3d-0.9449999990662487!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2fd4b925c238f6e7%3A0x8f8f8f8f8f8f8f8f!2sJl.%20Pemuda%20No.43E%2C%20Olo%2C%20Kec.%20Padang%20Bar.%2C%20Kota%20Padang%2C%20Sumatera%20Barat%2025117!5e0!3m2!1sid!2sid!4v1680000000000!5m2!1sid!2sid"
+                                        width="100%"
+                                        height="100%"
+                                        style={{ border: 0 }}
+                                        allowFullScreen
+                                        loading="lazy"
+                                        referrerPolicy="no-referrer-when-downgrade"
+                                        className="grayscale hover:grayscale-0 transition-all duration-500"
+                                    />
                                 </div>
                             </motion.div>
                         </div>

@@ -39,7 +39,7 @@ export default function LandingFooter() {
                     <div>
                         <h4 className="font-bold mb-4">Kontak</h4>
                         <ul className="space-y-2 text-sm text-gray-400">
-                            <li>+62 812-3456-7890</li>
+                            <li>+62 822-8791-0202</li>
                             <li>cs@kja-risabur.com</li>
                             <li>Jl. Pemuda 43E, Olo, Padang Barat, Padang, Sumbar 25117</li>
                         </ul>

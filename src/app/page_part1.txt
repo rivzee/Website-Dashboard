@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
@@ -32,7 +32,6 @@ import LandingNavbar from '@/client/components/LandingNavbar';
 import LandingFooter from '@/client/components/LandingFooter';
 import FloatingWhatsApp from '@/client/components/FloatingWhatsApp';
 import ClientLogos from '@/client/components/ClientLogos';
-import GoogleMap from '@/client/components/GoogleMap';
 
 export default function LandingPage() {
   const [mounted, setMounted] = useState(false);
@@ -93,21 +92,21 @@ export default function LandingPage() {
     {
       name: 'Budi Santoso',
       position: 'CEO PT Maju Jaya',
-      image: '👨‍💼',
+      image: 'ðŸ‘¨â€ðŸ’¼',
       rating: 5,
       text: 'RISA BUR sangat membantu kami dalam mengelola keuangan perusahaan. Tim yang profesional dan responsif!'
     },
     {
       name: 'Siti Nurhaliza',
       position: 'Owner Toko Berkah',
-      image: '👩‍💼',
+      image: 'ðŸ‘©â€ðŸ’¼',
       rating: 5,
       text: 'Laporan keuangan yang akurat dan tepat waktu. Sangat puas dengan layanan yang diberikan.'
     },
     {
       name: 'Ahmad Wijaya',
       position: 'Direktur CV Sejahtera',
-      image: '👨‍💼',
+      image: 'ðŸ‘¨â€ðŸ’¼',
       rating: 5,
       text: 'Pelayanan terbaik! Membantu kami mengurus perpajakan dengan mudah dan cepat.'
     }
@@ -667,8 +666,8 @@ export default function LandingPage() {
               {
                 icon: Phone,
                 title: 'Telepon',
-                content: '+62 822-8791-0202',
-                link: 'tel:+6282287910202'
+                content: '+62 812-3456-7890',
+                link: 'tel:+6281234567890'
               },
               {
                 icon: Mail,
@@ -702,46 +701,5 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Google Maps Section */}
-          <GoogleMap />
-
           <div className="text-center">
             <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm rounded-2xl font-bold text-lg hover:bg-white/20 transition border border-white/20"
-            >
-              Hubungi Kami
-              <ArrowRight size={20} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative z-10 py-32 px-6">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="max-w-5xl mx-auto text-center backdrop-blur-xl bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-white/20 rounded-3xl p-16"
-        >
-          <h2 className="text-5xl font-bold mb-6">
-            Siap Untuk Memulai?
-          </h2>
-          <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
-            Bergabunglah dengan ribuan bisnis yang sudah mempercayai kami untuk mengelola keuangan mereka
-          </p>
-          <Link
-            href="/register"
-            className="inline-flex items-center gap-2 px-10 py-5 bg-white text-gray-900 rounded-2xl font-bold text-lg hover:bg-gray-100 transition shadow-2xl"
-          >
-            Daftar Gratis Sekarang
-            <ArrowRight size={20} />
-          </Link>
-        </motion.div>
-      </section>
-
-      <LandingFooter />
-    </div>
-  );
-}
