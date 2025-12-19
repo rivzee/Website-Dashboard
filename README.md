@@ -1,62 +1,123 @@
-# RISA BUR - Sistem Informasi Kantor Jasa Akuntan
+# RISA BUR - Sistem Informasi Manajemen Kantor Jasa Akuntan
 
-Platform manajemen layanan akuntansi modern yang terintegrasi, dirancang untuk memfasilitasi interaksi antara Klien, Akuntan, dan Administrator. Aplikasi ini mencakup Landing Page publik dan Dashboard manajemen yang komprehensif.
+Platform manajemen layanan akuntansi modern berbasis web yang dirancang untuk memfasilitasi interaksi antara Klien, Akuntan, dan Administrator dalam mengelola layanan akuntansi secara efisien dan terstruktur.
 
 ![RISA BUR Dashboard](public/logo-risabur.png)
 
+## 🌟 Tentang Proyek
+
+RISA BUR adalah sistem informasi terintegrasi yang menggabungkan Landing Page publik dengan Dashboard manajemen komprehensif, dibangun menggunakan teknologi modern untuk memberikan pengalaman pengguna yang optimal dan performa yang cepat.
+
 ## 🚀 Fitur Utama
 
-### 1. Public Landing Page
-- **Modern UI/UX**: Desain responsif dengan animasi halus (Framer Motion).
-- **Layanan**: Informasi detail mengenai jasa Laporan Keuangan, Pembukuan, Perpajakan, dll.
-- **Interaktif**: Formulir kontak dan integrasi WhatsApp.
+### 📱 Landing Page Publik
+- **Modern UI/UX**: Desain responsif dengan dark mode dan glassmorphism effect
+- **Animasi Halus**: Implementasi Framer Motion untuk transisi yang smooth
+- **Katalog Layanan**: Menampilkan detail layanan akuntansi (Laporan Keuangan, Pembukuan, Perpajakan, dll.)
+- **Halaman Detail Layanan**: Setiap layanan memiliki halaman khusus dengan informasi lengkap
+- **Halaman Kontak**: Formulir kontak dengan integrasi Google Maps
+- **WhatsApp Integration**: Floating button WhatsApp untuk komunikasi cepat
+- **SEO Optimized**: Meta tags dan semantic HTML untuk SEO terbaik
 
-### 2. Dashboard Admin
-- **Overview Statistik**: Pendapatan, total pesanan, dan kinerja layanan.
-- **Manajemen User**: Mengelola akun Klien dan Akuntan.
-- **Manajemen Pesanan**: Memantau status pengerjaan proyek.
-- **Laporan Keuangan**: Grafik tren pendapatan dan aktivitas.
+### 👥 Dashboard Admin
+- **Overview & Analytics**: Statistik pendapatan, pesanan, dan performa layanan
+- **Manajemen User**: Kelola akun Klien dan Akuntan (CRUD)
+- **Manajemen Layanan**: Tambah, edit, hapus layanan yang ditawarkan
+- **Manajemen Pesanan**: Monitor dan update status pengerjaan proyek
+- **Manajemen Pembayaran**: Tracking pembayaran dari semua klien
+- **Export Data**: Export ke PDF dan Excel untuk laporan
+- **Grafik Interaktif**: Visualisasi data menggunakan Recharts
 
-### 3. Dashboard Klien
-- **Order Layanan**: Memesan layanan akuntansi secara online.
-- **Tracking Progress**: Memantau status pengerjaan laporan keuangan.
-- **Upload Dokumen**: Mengirim bukti transaksi dan dokumen pendukung.
-- **Riwayat Pembayaran**: Melihat status pembayaran dan invoice.
+### 💼 Dashboard Klien
+- **Order Layanan**: Memesan layanan akuntansi secara online
+- **Tracking Progress**: Monitor status pengerjaan real-time
+- **Upload Dokumen**: Upload bukti transaksi dan dokumen pendukung via drag & drop
+- **Riwayat Pesanan**: Lihat semua pesanan yang pernah dibuat
+- **Riwayat Pembayaran**: Detail pembayaran dan invoice
+- **Notifikasi**: Update status pesanan
 
-### 4. Dashboard Akuntan
-- **Task Management**: Melihat daftar pekerjaan yang ditugaskan.
-- **Update Progress**: Memperbarui status pengerjaan untuk dilihat klien.
+### 📊 Dashboard Akuntan
+- **Task Management**: Daftar pekerjaan yang ditugaskan
+- **Update Progress**: Update status pengerjaan untuk visibility klien
+- **Upload Hasil**: Upload deliverables dan laporan
+- **Manajemen Pesanan**: Lihat detail pesanan yang ditugaskan
 
 ## 🛠 Tech Stack
 
-**Frontend:**
-- **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
+### Frontend
+- **Framework**: [Next.js 14](https://nextjs.org/) dengan App Router
+- **Language**: TypeScript
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components**: Custom components dengan glassmorphism design
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Animation**: [Framer Motion](https://www.framer.com/motion/)
 - **Charts**: [Recharts](https://recharts.org/)
+- **Form Handling**: React Hook Form + Zod validation
+- **File Upload**: React Dropzone
+- **HTTP Client**: Axios dengan TanStack React Query
+- **PDF Export**: jsPDF + jsPDF-AutoTable
+- **Excel Export**: XLSX
 
-**Backend:**
-- **Framework**: [NestJS](https://nestjs.com/)
+### Backend Integration
 - **Database**: [PostgreSQL](https://www.postgresql.org/)
 - **ORM**: [Prisma](https://www.prisma.io/)
-- **Auth**: JWT & Google OAuth
+- **Authentication**: JWT & Google OAuth 2.0
+- **Email**: MailerSend integration
 
-**Monorepo Structure:**
-- Frontend dan Backend terintegrasi dalam satu repositori untuk kemudahan pengembangan.
+### Development Tools
+- **Linting**: ESLint + Prettier
+- **Type Safety**: TypeScript strict mode
+- **Git**: Version control dengan best practices
 
-## 📦 Instalasi & Menjalankan Local
+## 📁 Struktur Proyek
+
+```
+Website-Dashboard/
+├── prisma/
+│   ├── schema.prisma      # Database schema
+│   └── seed.ts            # Database seeding
+├── public/                # Static assets
+│   ├── images/           # Gambar dan logo
+│   └── ...
+├── src/
+│   ├── app/              # Next.js App Router
+│   │   ├── (auth)/      # Auth pages (login, register)
+│   │   ├── contact/     # Halaman kontak
+│   │   ├── dashboard/   # Dashboard pages
+│   │   │   ├── admin/   # Admin dashboard
+│   │   │   ├── akuntan/ # Akuntan dashboard
+│   │   │   └── klien/   # Klien dashboard
+│   │   ├── services/    # Service detail pages
+│   │   └── page.tsx     # Landing page
+│   ├── client/
+│   │   ├── components/  # Reusable components
+│   │   ├── context/     # React context providers
+│   │   └── hooks/       # Custom React hooks
+│   └── server/
+│       ├── actions/     # Server actions
+│       └── lib/         # Utility functions
+├── .env                  # Environment variables
+├── .env.example         # Environment template
+├── next.config.js       # Next.js configuration
+├── tailwind.config.js   # Tailwind configuration
+└── package.json         # Dependencies
+
+```
+
+## 📦 Instalasi & Setup
 
 ### Prerequisites
-- Node.js (v18+)
+- Node.js v18.0.0 atau lebih tinggi
+- npm v9.0.0 atau lebih tinggi
 - PostgreSQL Database
+- Google Cloud Console account (untuk OAuth & Maps)
 
-### Langkah-langkah
+### Langkah Setup
 
 1. **Clone Repository**
    ```bash
-   git clone https://github.com/username/akuntasi-mitra.git
-   cd akuntasi-mitra
+   git clone https://github.com/rivzee/Website-Dashboard.git
+   cd Website-Dashboard
    ```
 
 2. **Install Dependencies**
@@ -65,49 +126,160 @@ Platform manajemen layanan akuntansi modern yang terintegrasi, dirancang untuk m
    ```
 
 3. **Setup Environment Variables**
-   Copy file `.env.example` ke `.env` dan sesuaikan isinya.
+   
+   Copy file `.env.example` ke `.env`:
    ```bash
-   cp .env.example .env
+   copy .env.example .env
    ```
-   Pastikan `DATABASE_URL` sudah diisi sesuai kredensial PostgreSQL Anda.
+   
+   Kemudian isi variabel berikut di file `.env`:
+   ```env
+   # Database
+   DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
+   
+   # NextAuth
+   NEXTAUTH_URL="http://localhost:3000"
+   NEXTAUTH_SECRET="your-secret-key-here"
+   
+   # Google OAuth
+   GOOGLE_CLIENT_ID="your-google-client-id"
+   GOOGLE_CLIENT_SECRET="your-google-client-secret"
+   
+   # Google Maps
+   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY="your-maps-api-key"
+   
+   # Email (MailerSend)
+   MAILERSEND_API_KEY="your-mailersend-api-key"
+   EMAIL_FROM="noreply@yourdomain.com"
+   ```
 
-4. **Setup Database**
+4. **Setup Database dengan Prisma**
    ```bash
    # Generate Prisma Client
    npm run prisma:generate
 
-   # Push schema ke database
+   # Jalankan migrasi database
    npm run prisma:migrate
 
-   # Seeding data awal (Admin user, layanan, dll)
+   # Seed database dengan data awal
    npm run prisma:seed
    ```
 
-5. **Jalankan Aplikasi**
+5. **Jalankan Development Server**
    ```bash
    npm run dev
    ```
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:3001
+   
+   Aplikasi akan berjalan di: **http://localhost:3000**
+
+6. **Login Pertama Kali**
+   
+   Setelah seeding, gunakan kredensial berikut untuk login:
+   - **Admin**: admin@risabur.com / admin123
+   - **Akuntan**: akuntan@risabur.com / akuntan123
+   - **Klien**: klien@risabur.com / klien123
 
 ## 🚀 Deployment
 
-### Backend (Railway/VPS)
-Build command:
+### Deployment ke Vercel (Recommended)
+
+1. Push kode ke GitHub repository
+2. Import project di [Vercel](https://vercel.com)
+3. Set environment variables di Vercel dashboard
+4. Deploy otomatis akan berjalan
+
+**Environment Variables yang diperlukan:**
+- `DATABASE_URL`
+- `NEXTAUTH_URL` (ubah ke domain production)
+- `NEXTAUTH_SECRET`
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`
+- `MAILERSEND_API_KEY`
+- `EMAIL_FROM`
+
+### Build untuk Production
+
 ```bash
-npm run build:server
-```
-Start command:
-```bash
-npm run start:prod
+# Build aplikasi
+npm run build
+
+# Jalankan production server
+npm start
 ```
 
-### Frontend (Vercel/Netlify)
-Build command:
-```bash
-npm run build:client
-```
+## 🔧 Scripts yang Tersedia
+
+- `npm run dev` - Menjalankan development server
+- `npm run build` - Build untuk production
+- `npm start` - Menjalankan production server
+- `npm run lint` - Menjalankan ESLint
+- `npm run format` - Format kode dengan Prettier
+- `npm run prisma:generate` - Generate Prisma Client
+- `npm run prisma:migrate` - Jalankan database migration
+- `npm run prisma:studio` - Buka Prisma Studio
+- `npm run prisma:seed` - Seed database dengan data awal
+
+## 🔐 Autentikasi & Autorisasi
+
+Aplikasi menggunakan JWT-based authentication dengan role-based access control:
+
+- **ADMIN**: Akses penuh ke semua fitur
+- **AKUNTAN**: Akses ke task management dan orderan
+- **KLIEN**: Akses ke order layanan dan tracking
+
+Login dapat dilakukan melalui:
+- Email & Password (traditional login)
+- Google OAuth 2.0
+
+## 📊 Database Schema
+
+Database menggunakan PostgreSQL dengan schema Prisma yang mencakup:
+- Users (dengan role-based system)
+- Services (layanan yang ditawarkan)
+- Orders (pesanan dari klien)
+- Payments (pembayaran)
+- Documents (upload file)
+
+## 🎨 Design System
+
+Aplikasi menggunakan design system yang konsisten:
+- **Color Palette**: Blue, Purple, Pink gradients
+- **Typography**: Inter font family
+- **Layout**: Responsive grid system
+- **Components**: Glassmorphism cards dengan backdrop blur
+- **Dark Mode**: Full dark mode support
+
+## 📱 Fitur Responsif
+
+Semua halaman fully responsive dengan breakpoints:
+- Mobile: < 768px
+- Tablet: 768px - 1024px
+- Desktop: > 1024px
+
+## 🤝 Kontribusi
+
+Untuk kontribusi, silakan:
+1. Fork repository
+2. Buat branch fitur (`git checkout -b feature/AmazingFeature`)
+3. Commit perubahan (`git commit -m 'Add some AmazingFeature'`)
+4. Push ke branch (`git push origin feature/AmazingFeature`)
+5. Buat Pull Request
 
 ## 📝 Lisensi
 
-[MIT](LICENSE)
+This project is **UNLICENSED** - Private project untuk RISA BUR.
+
+## 👥 Tim Pengembang
+
+**RISA BUR Development Team**
+
+## 📧 Kontak
+
+Untuk pertanyaan atau dukungan, hubungi:
+- Website: [RISA BUR Official](https://risabur.com)
+- Email: info@risabur.com
+
+---
+
+**Dibuat dengan ❤️ menggunakan Next.js 14 dan TypeScript**
