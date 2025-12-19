@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { CreditCard, Upload, ArrowLeft, CheckCircle, Clock, Shield } from 'lucide-react';
+import { AlertModal } from '@/client/components/Modal';
 
 export default function PaymentPage() {
     const params = useParams();
@@ -15,6 +16,7 @@ export default function PaymentPage() {
     const [file, setFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [showSuccess, setShowSuccess] = useState(false);
+    const [alertModal, setAlertModal] = useState<{ show: boolean; type: 'error' | 'warning'; title: string; message: string }>({ show: false, type: 'error', title: '', message: '' });
 
     useEffect(() => {
         if (params.id) {
@@ -42,7 +44,10 @@ export default function PaymentPage() {
 
     const handlePayment = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!file) return alert('Mohon upload bukti transfer');
+        if (!file) {
+            setAlertModal({ show: true, type: 'warning', title: 'File Kosong', message: 'Mohon upload bukti transfer terlebih dahulu.' });
+            return;
+        }
 
         setUploading(true);
 
@@ -70,7 +75,7 @@ export default function PaymentPage() {
             setShowSuccess(true);
         } catch (error: any) {
             console.error(error);
-            alert(error.response?.data?.error || 'Gagal mengirim pembayaran');
+            setAlertModal({ show: true, type: 'error', title: 'Gagal!', message: error.response?.data?.error || 'Gagal mengirim pembayaran. Silakan coba lagi.' });
         } finally {
             setUploading(false);
         }
@@ -227,6 +232,15 @@ export default function PaymentPage() {
                     </motion.div>
                 </motion.div>
             )}
+
+            {/* Alert Modal */}
+            <AlertModal
+                isOpen={alertModal.show}
+                onClose={() => setAlertModal({ ...alertModal, show: false })}
+                title={alertModal.title}
+                message={alertModal.message}
+                type={alertModal.type}
+            />
         </div>
     );
 }

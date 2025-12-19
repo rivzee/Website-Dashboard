@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { User, Mail, Lock, Save, Loader2, Shield } from 'lucide-react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { AlertModal } from '@/client/components/Modal';
 
 export default function ProfilePage() {
     const router = useRouter();
@@ -17,6 +18,7 @@ export default function ProfilePage() {
         password: '',
         confirmPassword: ''
     });
+    const [alertModal, setAlertModal] = useState<{ show: boolean; type: 'success' | 'error' | 'warning'; title: string; message: string }>({ show: false, type: 'success', title: '', message: '' });
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
@@ -41,7 +43,7 @@ export default function ProfilePage() {
         setSaving(true);
 
         if (formData.password && formData.password !== formData.confirmPassword) {
-            alert('Password dan Konfirmasi Password tidak cocok!');
+            setAlertModal({ show: true, type: 'warning', title: 'Password Tidak Cocok', message: 'Password dan Konfirmasi Password tidak cocok!' });
             setSaving(false);
             return;
         }
@@ -63,12 +65,11 @@ export default function ProfilePage() {
             localStorage.setItem('user', JSON.stringify(updatedUser));
             setUser(updatedUser);
 
-            alert('Profil berhasil diperbarui!');
+            setAlertModal({ show: true, type: 'success', title: 'Berhasil!', message: 'Profil berhasil diperbarui!' });
             setFormData(prev => ({ ...prev, password: '', confirmPassword: '' }));
-            window.location.reload(); // Reload to update sidebar and other components
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('Gagal memperbarui profil.');
+            setAlertModal({ show: true, type: 'error', title: 'Gagal!', message: 'Gagal memperbarui profil. Silakan coba lagi.' });
         } finally {
             setSaving(false);
         }
@@ -218,6 +219,15 @@ export default function ProfilePage() {
                     </div>
                 </motion.div>
             </div>
+
+            {/* Alert Modal */}
+            <AlertModal
+                isOpen={alertModal.show}
+                onClose={() => setAlertModal({ ...alertModal, show: false })}
+                title={alertModal.title}
+                message={alertModal.message}
+                type={alertModal.type}
+            />
         </div>
     );
 }

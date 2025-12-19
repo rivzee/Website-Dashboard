@@ -5,12 +5,16 @@ import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { FileText, Download, ArrowLeft, CheckCircle, Clock, AlertCircle, Play, Upload, User } from 'lucide-react';
+import { ConfirmModal, AlertModal } from '@/client/components/Modal';
 
 export default function JobDetailPage() {
     const params = useParams();
     const router = useRouter();
     const [job, setJob] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [startModal, setStartModal] = useState(false);
+    const [alertModal, setAlertModal] = useState<{ show: boolean; type: 'success' | 'error'; title: string; message: string }>({ show: false, type: 'success', title: '', message: '' });
+    const [processing, setProcessing] = useState(false);
 
     useEffect(() => {
         if (params.id) {
@@ -30,18 +34,24 @@ export default function JobDetailPage() {
     };
 
     const handleDownload = (doc: any) => {
-        // Simulate download
-        alert(`Mendownload ${doc.fileName}...`);
         window.open(doc.fileUrl, '_blank');
     };
 
     const handleStartJob = async () => {
-        if (!confirm('Mulai kerjakan tugas ini?')) return;
+        setStartModal(true);
+    };
+
+    const confirmStartJob = async () => {
+        setProcessing(true);
         try {
             await axios.put(`/api/orders/${job.id}/status`, { status: 'IN_PROGRESS' });
             setJob({ ...job, status: 'IN_PROGRESS' });
+            setStartModal(false);
         } catch (error) {
-            alert('Gagal update status');
+            setStartModal(false);
+            setAlertModal({ show: true, type: 'error', title: 'Gagal!', message: 'Gagal update status. Silakan coba lagi.' });
+        } finally {
+            setProcessing(false);
         }
     };
 
@@ -54,13 +64,21 @@ export default function JobDetailPage() {
 
             try {
                 const user = JSON.parse(localStorage.getItem('user') || '{}');
-                // Simulate upload
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                const fakeUrl = `https://storage.example.com/results/${file.name}`;
+
+                // Real upload
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('type', 'result');
+
+                const uploadRes = await axios.post('/api/upload', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+
+                const fileUrl = uploadRes.data.url;
 
                 await axios.post('/api/documents', {
                     fileName: file.name,
-                    fileUrl: fakeUrl,
+                    fileUrl: fileUrl,
                     fileType: file.type || 'application/pdf',
                     isResult: true,
                     orderId: job.id,
@@ -69,11 +87,11 @@ export default function JobDetailPage() {
 
                 await axios.put(`/api/orders/${job.id}/status`, { status: 'COMPLETED' });
                 setJob({ ...job, status: 'COMPLETED' });
-                alert('Pekerjaan selesai & laporan terkirim!');
-                fetchJob(job.id); // Refresh to see new doc
+                setAlertModal({ show: true, type: 'success', title: 'Berhasil!', message: 'Pekerjaan selesai & laporan terkirim ke klien!' });
+                fetchJob(job.id);
             } catch (error) {
                 console.error(error);
-                alert('Gagal menyelesaikan pekerjaan');
+                setAlertModal({ show: true, type: 'error', title: 'Gagal!', message: 'Gagal menyelesaikan pekerjaan. Silakan coba lagi.' });
             }
         };
         fileInput.click();
@@ -238,6 +256,28 @@ export default function JobDetailPage() {
                     </motion.div>
                 </div>
             </div>
+
+            {/* Start Job Confirmation Modal */}
+            <ConfirmModal
+                isOpen={startModal}
+                onClose={() => setStartModal(false)}
+                onConfirm={confirmStartJob}
+                title="Mulai Kerjakan Tugas?"
+                message="Anda akan memulai tugas ini. Status akan berubah menjadi 'Sedang Dikerjakan'."
+                confirmText="Mulai"
+                cancelText="Batal"
+                type="info"
+                loading={processing}
+            />
+
+            {/* Alert Modal */}
+            <AlertModal
+                isOpen={alertModal.show}
+                onClose={() => setAlertModal({ ...alertModal, show: false })}
+                title={alertModal.title}
+                message={alertModal.message}
+                type={alertModal.type}
+            />
         </div>
     );
 }

@@ -4,11 +4,15 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Search, Play, CheckCircle, Upload, FileText, Clock } from 'lucide-react';
+import { ConfirmModal, AlertModal } from '@/client/components/Modal';
 
 export default function AkuntanJobsPage() {
     const [jobs, setJobs] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('ALL');
+    const [startModal, setStartModal] = useState<{ show: boolean; jobId: string | null }>({ show: false, jobId: null });
+    const [alertModal, setAlertModal] = useState<{ show: boolean; type: 'success' | 'error'; title: string; message: string }>({ show: false, type: 'success', title: '', message: '' });
+    const [processing, setProcessing] = useState(false);
 
     useEffect(() => {
         fetchJobs();
@@ -17,9 +21,6 @@ export default function AkuntanJobsPage() {
     const fetchJobs = async () => {
         try {
             const res = await axios.get('/api/orders');
-            // Accountant only cares about PAID, IN_PROGRESS, COMPLETED
-            // But realistically, they should see all relevant to work.
-            // For now, let's show all but filter visually.
             setJobs(res.data.filter((o: any) => ['PAID', 'IN_PROGRESS', 'COMPLETED'].includes(o.status)));
         } catch (error) {
             console.error(error);
@@ -29,18 +30,26 @@ export default function AkuntanJobsPage() {
     };
 
     const handleStartJob = async (jobId: string) => {
-        if (!confirm('Mulai kerjakan tugas ini?')) return;
+        setStartModal({ show: true, jobId });
+    };
+
+    const confirmStartJob = async () => {
+        if (!startModal.jobId) return;
+        setProcessing(true);
+
         try {
-            await axios.put(`/api/orders/${jobId}/status`, { status: 'IN_PROGRESS' });
-            setJobs(jobs.map(j => j.id === jobId ? { ...j, status: 'IN_PROGRESS' } : j));
+            await axios.put(`/api/orders/${startModal.jobId}/status`, { status: 'IN_PROGRESS' });
+            setJobs(jobs.map(j => j.id === startModal.jobId ? { ...j, status: 'IN_PROGRESS' } : j));
+            setStartModal({ show: false, jobId: null });
         } catch (error) {
-            alert('Gagal update status');
+            setStartModal({ show: false, jobId: null });
+            setAlertModal({ show: true, type: 'error', title: 'Gagal!', message: 'Gagal update status. Silakan coba lagi.' });
+        } finally {
+            setProcessing(false);
         }
     };
 
     const handleFinishJob = async (jobId: string) => {
-        // In a real app, this would open a modal to upload the result file first.
-        // For now, let's simulate the upload + finish flow.
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.onchange = async (e: any) => {
@@ -48,29 +57,35 @@ export default function AkuntanJobsPage() {
             if (!file) return;
 
             try {
-                // 1. Upload Document
                 const user = JSON.parse(localStorage.getItem('user') || '{}');
-                // Simulate upload
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                const fakeUrl = `https://storage.example.com/results/${file.name}`;
+
+                // Real upload using FormData
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('type', 'result');
+
+                const uploadRes = await axios.post('/api/upload', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+
+                const fileUrl = uploadRes.data.url;
 
                 await axios.post('/api/documents', {
                     fileName: file.name,
-                    fileUrl: fakeUrl,
+                    fileUrl: fileUrl,
                     fileType: file.type || 'application/pdf',
-                    isResult: true, // IMPORTANT: This marks it as a result for the client
+                    isResult: true,
                     orderId: jobId,
                     uploaderId: user.id
                 });
 
-                // 2. Update Status to COMPLETED
                 await axios.put(`/api/orders/${jobId}/status`, { status: 'COMPLETED' });
 
                 setJobs(jobs.map(j => j.id === jobId ? { ...j, status: 'COMPLETED' } : j));
-                alert('Pekerjaan selesai & laporan terkirim!');
+                setAlertModal({ show: true, type: 'success', title: 'Berhasil!', message: 'Pekerjaan selesai & laporan terkirim ke klien!' });
             } catch (error) {
                 console.error(error);
-                alert('Gagal menyelesaikan pekerjaan');
+                setAlertModal({ show: true, type: 'error', title: 'Gagal!', message: 'Gagal menyelesaikan pekerjaan. Silakan coba lagi.' });
             }
         };
         fileInput.click();
@@ -78,7 +93,7 @@ export default function AkuntanJobsPage() {
 
     const statusColor = (status: string) => {
         switch (status) {
-            case 'PAID': return 'bg-blue-100 text-blue-700'; // Ready to start
+            case 'PAID': return 'bg-blue-100 text-blue-700';
             case 'COMPLETED': return 'bg-green-100 text-green-700';
             case 'IN_PROGRESS': return 'bg-yellow-100 text-yellow-700';
             default: return 'bg-gray-100 text-gray-700';
@@ -161,6 +176,28 @@ export default function AkuntanJobsPage() {
                     ))
                 )}
             </div>
+
+            {/* Start Job Confirmation Modal */}
+            <ConfirmModal
+                isOpen={startModal.show}
+                onClose={() => setStartModal({ show: false, jobId: null })}
+                onConfirm={confirmStartJob}
+                title="Mulai Kerjakan Tugas?"
+                message="Anda akan memulai tugas ini. Status akan berubah menjadi 'Sedang Dikerjakan'."
+                confirmText="Mulai"
+                cancelText="Batal"
+                type="info"
+                loading={processing}
+            />
+
+            {/* Alert Modal */}
+            <AlertModal
+                isOpen={alertModal.show}
+                onClose={() => setAlertModal({ ...alertModal, show: false })}
+                title={alertModal.title}
+                message={alertModal.message}
+                type={alertModal.type}
+            />
         </div>
     );
 }

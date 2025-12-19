@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { FileText, Upload, ArrowLeft, CheckCircle, X } from 'lucide-react';
+import { AlertModal } from '@/client/components/Modal';
 
 export default function UploadPage() {
     const params = useParams();
@@ -13,6 +14,7 @@ export default function UploadPage() {
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
     const [files, setFiles] = useState<File[]>([]);
+    const [alertModal, setAlertModal] = useState<{ show: boolean; type: 'success' | 'error' | 'warning'; title: string; message: string }>({ show: false, type: 'success', title: '', message: '' });
 
     useEffect(() => {
         if (params.id) {
@@ -34,33 +36,47 @@ export default function UploadPage() {
     };
 
     const handleUpload = async () => {
-        if (files.length === 0) return alert('Pilih file terlebih dahulu');
+        if (files.length === 0) {
+            setAlertModal({ show: true, type: 'warning', title: 'File Kosong', message: 'Pilih file terlebih dahulu sebelum upload.' });
+            return;
+        }
         setUploading(true);
 
         try {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-            // Process each file
+            // Process each file with real upload
             for (const file of files) {
-                // SIMULATE UPLOAD
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                const fakeUrl = `https://storage.example.com/docs/${file.name}`;
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('type', 'document');
+
+                const uploadRes = await axios.post('/api/upload', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+
+                const fileUrl = uploadRes.data.url;
 
                 await axios.post('/api/documents', {
                     fileName: file.name,
-                    fileUrl: fakeUrl,
+                    fileUrl: fileUrl,
                     fileType: file.type || 'application/pdf',
-                    isResult: false, // Client uploads are NOT results
+                    isResult: false,
                     orderId: order.id,
                     uploaderId: user.id
                 });
             }
 
-            alert('Dokumen Berhasil Diupload!');
-            router.push('/dashboard/my-orders');
+            setAlertModal({
+                show: true,
+                type: 'success',
+                title: 'Berhasil!',
+                message: `${files.length} dokumen berhasil diupload. Tim akuntan akan segera memprosesnya.`
+            });
+            setFiles([]);
         } catch (error) {
             console.error(error);
-            alert('Gagal mengupload dokumen');
+            setAlertModal({ show: true, type: 'error', title: 'Gagal!', message: 'Gagal mengupload dokumen. Silakan coba lagi.' });
         } finally {
             setUploading(false);
         }
@@ -74,6 +90,13 @@ export default function UploadPage() {
 
     const removeFile = (index: number) => {
         setFiles(files.filter((_, i) => i !== index));
+    };
+
+    const handleAlertClose = () => {
+        setAlertModal({ ...alertModal, show: false });
+        if (alertModal.type === 'success') {
+            router.push('/dashboard/my-orders');
+        }
     };
 
     if (loading) return <div className="p-8 text-center">Loading...</div>;
@@ -152,6 +175,15 @@ export default function UploadPage() {
                     </button>
                 </div>
             </motion.div>
+
+            {/* Alert Modal */}
+            <AlertModal
+                isOpen={alertModal.show}
+                onClose={handleAlertClose}
+                title={alertModal.title}
+                message={alertModal.message}
+                type={alertModal.type}
+            />
         </div>
     );
 }

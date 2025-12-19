@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserPlus, Mail, Lock, User, Phone, Eye, EyeOff, CheckCircle2, ArrowLeft, AlertCircle } from 'lucide-react';
+import { AlertModal } from '@/client/components/Modal';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({ email: '', password: '', phone: '' });
+  const [alertModal, setAlertModal] = useState<{ show: boolean; type: 'success' | 'error'; title: string; message: string }>({ show: false, type: 'success', title: '', message: '' });
 
   // Email validation
   const validateEmail = (email: string) => {
@@ -69,10 +71,12 @@ export default function RegisterPage() {
       });
 
       // Success message
-      alert(`✅ Registrasi Berhasil!\n\nSelamat datang, ${form.fullName}!\nEmail: ${form.email}\n\nSilakan login untuk melanjutkan.`);
-
-      // Redirect to login
-      router.push('/login');
+      setAlertModal({
+        show: true,
+        type: 'success',
+        title: 'Registrasi Berhasil! 🎉',
+        message: `Selamat datang, ${form.fullName}! Akun Anda telah dibuat. Silakan login untuk melanjutkan.`
+      });
     } catch (err: any) {
       console.error('Registration error:', err);
 
@@ -91,7 +95,7 @@ export default function RegisterPage() {
         errorMessage += 'Terjadi kesalahan. Silakan coba lagi.';
       }
 
-      alert('❌ ' + errorMessage);
+      setAlertModal({ show: true, type: 'error', title: 'Registrasi Gagal', message: errorMessage });
     } finally {
       setLoading(false);
     }
@@ -448,6 +452,20 @@ export default function RegisterPage() {
           </motion.p>
         </div>
       </div>
+
+      {/* Alert Modal */}
+      <AlertModal
+        isOpen={alertModal.show}
+        onClose={() => {
+          setAlertModal({ ...alertModal, show: false });
+          if (alertModal.type === 'success') {
+            router.push('/login');
+          }
+        }}
+        title={alertModal.title}
+        message={alertModal.message}
+        type={alertModal.type}
+      />
     </div>
   );
 }

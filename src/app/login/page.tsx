@@ -6,12 +6,14 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LogIn, Mail, Lock, Eye, EyeOff, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { AlertModal } from '@/client/components/Modal';
 
 export default function LoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [alertModal, setAlertModal] = useState<{ show: boolean; title: string; message: string }>({ show: false, title: '', message: '' });
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +25,7 @@ export default function LoginPage() {
       router.push('/dashboard');
     } catch (err: any) {
       console.error(err);
-      alert(err.response?.data?.error || err.response?.data?.message || 'Login gagal');
+      setAlertModal({ show: true, title: 'Login Gagal', message: err.response?.data?.error || err.response?.data?.message || 'Email atau password salah. Silakan coba lagi.' });
     } finally {
       setLoading(false);
     }
@@ -367,6 +369,15 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
+
+      {/* Alert Modal */}
+      <AlertModal
+        isOpen={alertModal.show}
+        onClose={() => setAlertModal({ ...alertModal, show: false })}
+        title={alertModal.title}
+        message={alertModal.message}
+        type="error"
+      />
     </div>
   );
 }
