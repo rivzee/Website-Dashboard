@@ -123,25 +123,19 @@ export default function MyOrdersPage() {
                                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                                     {/* Left: Order Info */}
                                     <div className="flex-1">
-                                        <div className="flex items-start justify-between mb-4">
-                                            <div>
-                                                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                                                    {order.service?.name}
-                                                </h3>
-                                                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                                                    <Calendar size={16} />
-                                                    <span>
-                                                        {new Date(order.createdAt).toLocaleDateString('id-ID', {
-                                                            day: 'numeric',
-                                                            month: 'long',
-                                                            year: 'numeric',
-                                                        })}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${status.bgColor} border ${status.borderColor}`}>
-                                                <StatusIcon size={16} className={status.textColor} />
-                                                <span className={`text-sm font-bold ${status.textColor}`}>{status.label}</span>
+                                        <div className="mb-4">
+                                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+                                                {order.service?.name}
+                                            </h3>
+                                            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                                                <Calendar size={16} />
+                                                <span>
+                                                    {new Date(order.createdAt).toLocaleDateString('id-ID', {
+                                                        day: 'numeric',
+                                                        month: 'long',
+                                                        year: 'numeric',
+                                                    })}
+                                                </span>
                                             </div>
                                         </div>
 
@@ -153,8 +147,14 @@ export default function MyOrdersPage() {
                                         </div>
                                     </div>
 
-                                    {/* Right: Actions */}
-                                    <div className="flex flex-col sm:flex-row gap-3">
+                                    {/* Right: Status & Actions - Aligned Horizontally */}
+                                    <div className="flex flex-wrap items-center gap-3">
+                                        {/* Status Badge */}
+                                        <div className={`flex items-center gap-2 px-4 py-3 rounded-xl ${status.bgColor} border ${status.borderColor}`}>
+                                            <StatusIcon size={16} className={status.textColor} />
+                                            <span className={`text-sm font-bold ${status.textColor}`}>{status.label}</span>
+                                        </div>
+
                                         {order.status === 'PENDING_PAYMENT' && !order.payment && (
                                             <Link
                                                 href={`/dashboard/my-orders/${order.id}/payment`}
