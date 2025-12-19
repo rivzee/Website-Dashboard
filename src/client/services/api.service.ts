@@ -54,7 +54,7 @@ apiClient.interceptors.request.use(
 // Response interceptor
 apiClient.interceptors.response.use(
     (response) => response,
-    async (error: AxiosError) => {
+    async (error: AxiosError<any>) => {
         const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
         // Handle 401 Unauthorized
@@ -219,9 +219,10 @@ export const apiService = {
         }
 
         if (axios.isAxiosError(error)) {
-            const message = error.response?.data?.message || error.message || 'An error occurred';
-            const statusCode = error.response?.status;
-            const data = error.response?.data;
+            const axiosError = error as AxiosError<any>;
+            const message = axiosError.response?.data?.message || axiosError.message || 'An error occurred';
+            const statusCode = axiosError.response?.status;
+            const data = axiosError.response?.data;
             return new ApiError(message, statusCode, data);
         }
 

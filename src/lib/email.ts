@@ -1,18 +1,18 @@
 import { MailerSend, EmailParams, Sender, Recipient } from 'mailersend';
 
 const mailerSend = new MailerSend({
-    apiKey: process.env.MAILERSEND_API_KEY || '',
+  apiKey: process.env.MAILERSEND_API_KEY || '',
 });
 
 const sender = new Sender(
-    process.env.MAILERSEND_SENDER_EMAIL || 'info@trial-3z0vklo0p00l7qrx.mlsender.net',
-    process.env.MAILERSEND_SENDER_NAME || 'RISA BUR'
+  process.env.MAILERSEND_SENDER_EMAIL || 'info@trial-3z0vklo0p00l7qrx.mlsender.net',
+  process.env.MAILERSEND_SENDER_NAME || 'RISA BUR'
 );
 
 export async function sendWelcomeEmail(to: string, fullName: string) {
-    const recipients = [new Recipient(to, fullName)];
+  const recipients = [new Recipient(to, fullName)];
 
-    const htmlContent = `
+  const htmlContent = `
     <!DOCTYPE html>
     <html>
     <head>
@@ -44,43 +44,43 @@ export async function sendWelcomeEmail(to: string, fullName: string) {
     </html>
   `;
 
-    const emailParams = new EmailParams()
-        .setFrom(sender)
-        .setTo(recipients)
-        .setSubject('🎉 Selamat Datang di RISA BUR!')
-        .setHtml(htmlContent);
+  const emailParams = new EmailParams()
+    .setFrom(sender)
+    .setTo(recipients)
+    .setSubject('🎉 Selamat Datang di RISA BUR!')
+    .setHtml(htmlContent);
 
-    try {
-        const response = await mailerSend.email.send(emailParams);
-        console.log('✅ Email terkirim:', response);
-        return { success: true, data: response };
-    } catch (error) {
-        console.error('❌ Gagal mengirim email:', error);
-        return { success: false, error };
-    }
+  try {
+    const response = await mailerSend.email.send(emailParams);
+    console.log('✅ Email terkirim:', response);
+    return { success: true, data: response };
+  } catch (error: any) {
+    console.error('❌ Gagal mengirim email:', error);
+    return { success: false, error };
+  }
 }
 
 export async function sendOrderNotification(to: string, orderDetails: any) {
-    const recipients = [new Recipient(to)];
+  const recipients = [new Recipient(to)];
 
-    const htmlContent = `
+  const htmlContent = `
     <h2>Order Baru Diterima</h2>
     <p>Order ID: ${orderDetails.id}</p>
     <p>Status: ${orderDetails.status}</p>
     <p>Total: Rp ${orderDetails.totalAmount}</p>
   `;
 
-    const emailParams = new EmailParams()
-        .setFrom(sender)
-        .setTo(recipients)
-        .setSubject('📦 Order Baru Diterima')
-        .setHtml(htmlContent);
+  const emailParams = new EmailParams()
+    .setFrom(sender)
+    .setTo(recipients)
+    .setSubject('📦 Order Baru Diterima')
+    .setHtml(htmlContent);
 
-    try {
-        const response = await mailerSend.email.send(emailParams);
-        return { success: true, data: response };
-    } catch (error) {
-        console.error('❌ Gagal mengirim email order:', error);
-        return { success: false, error };
-    }
+  try {
+    const response = await mailerSend.email.send(emailParams);
+    return { success: true, data: response };
+  } catch (error: any) {
+    console.error('❌ Gagal mengirim email order:', error);
+    return { success: false, error };
+  }
 }

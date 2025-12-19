@@ -64,7 +64,7 @@ export function usePreferences() {
                 const parsed = JSON.parse(stored);
                 setPreferences({ ...DEFAULT_PREFERENCES, ...parsed });
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Failed to load preferences:', error);
         } finally {
             setIsLoading(false);
@@ -77,7 +77,7 @@ export function usePreferences() {
             const updated = { ...prev, ...newPreferences };
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Failed to save preferences:', error);
             }
             return updated;
@@ -97,7 +97,7 @@ export function usePreferences() {
         setPreferences(DEFAULT_PREFERENCES);
         try {
             localStorage.removeItem(STORAGE_KEY);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Failed to reset preferences:', error);
         }
     }, []);
