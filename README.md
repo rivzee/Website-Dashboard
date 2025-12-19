@@ -112,19 +112,6 @@ Website-Dashboard/
 - PostgreSQL Database
 - Google Cloud Console account (untuk OAuth & Maps)
 
-### Langkah Setup
-
-1. **Clone Repository**
-   ```bash
-   git clone https://github.com/rivzee/Website-Dashboard.git
-   cd Website-Dashboard
-   ```
-
-2. **Install Dependencies**
-   ```bash
-   npm install
-   ```
-
 3. **Setup Environment Variables**
    
    Copy file `.env.example` ke `.env`:
