@@ -38,28 +38,18 @@ export async function POST(request: NextRequest) {
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
-        // Generate unique filename
-        const timestamp = Date.now();
-        const ext = path.extname(file.name);
-        const filename = `${type || 'file'}_${timestamp}${ext}`;
+        // Convert to Base64 Data URI
+        const base64 = buffer.toString('base64');
+        const mimeType = file.type;
+        const dataUri = `data:${mimeType};base64,${base64}`;
 
-        // Create upload directory if it doesn't exist
-        const uploadDir = path.join(process.cwd(), 'public', 'uploads', type || 'files');
-        if (!existsSync(uploadDir)) {
-            await mkdir(uploadDir, { recursive: true });
-        }
-
-        // Save file
-        const filepath = path.join(uploadDir, filename);
-        await writeFile(filepath, buffer);
-
-        // Return public URL
-        const fileUrl = `/uploads/${type || 'files'}/${filename}`;
-
+        // Return Data URI as URL
+        // Note: This stores the file in the database (via the frontend). 
+        // Ideally use Cloud Storage (Vercel Blob/Cloudinary) for production.
         return NextResponse.json({
             success: true,
-            url: fileUrl,
-            filename,
+            url: dataUri,
+            filename: file.name,
         });
     } catch (error: any) {
         console.error('Upload error:', error);
