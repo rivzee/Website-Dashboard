@@ -8,7 +8,8 @@ function AuthCallbackContent() {
     const searchParams = useSearchParams();
 
     useEffect(() => {
-        const data = searchParams.get('data');
+        // Support both 'data' and 'user' parameters (for different auth flows)
+        const data = searchParams.get('data') || searchParams.get('user');
         if (data) {
             try {
                 const userData = JSON.parse(decodeURIComponent(data));
