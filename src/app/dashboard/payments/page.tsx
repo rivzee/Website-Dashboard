@@ -10,6 +10,7 @@ import {
     Eye,
     FileText,
     User,
+    Download,
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -183,6 +184,17 @@ export default function PendingPaymentsPage() {
                                             </div>
                                         )}
                                     </div>
+                                    {/* Download Button */}
+                                    {payment.proofUrl && (
+                                        <a
+                                            href={payment.proofUrl}
+                                            download={`bukti-pembayaran-${payment.id}.jpg`}
+                                            className="flex items-center justify-center gap-2 mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition w-full"
+                                        >
+                                            <Download size={16} />
+                                            Download Bukti
+                                        </a>
+                                    )}
                                 </div>
                             </div>
 
