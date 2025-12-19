@@ -14,6 +14,7 @@ import {
     AlertTriangle,
 } from 'lucide-react';
 import axios from 'axios';
+import { AlertModal } from '@/client/components/Modal';
 
 interface PendingPayment {
     id: string;
@@ -46,6 +47,7 @@ export default function PendingPaymentsPage() {
         amount: number;
     } | null>(null);
     const [processing, setProcessing] = useState(false);
+    const [errorAlert, setErrorAlert] = useState<{ show: boolean; message: string }>({ show: false, message: '' });
 
     useEffect(() => {
         fetchPendingPayments();
@@ -97,7 +99,8 @@ export default function PendingPaymentsPage() {
             setConfirmModal(null);
             fetchPendingPayments();
         } catch (error: any) {
-            alert(error.response?.data?.error || 'Gagal memproses pembayaran');
+            setConfirmModal(null);
+            setErrorAlert({ show: true, message: error.response?.data?.error || 'Gagal memproses pembayaran. Silakan coba lagi.' });
         } finally {
             setProcessing(false);
         }
@@ -280,8 +283,8 @@ export default function PendingPaymentsPage() {
                     >
                         {/* Icon */}
                         <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${confirmModal.type === 'approve'
-                                ? 'bg-green-100 dark:bg-green-900/30'
-                                : 'bg-red-100 dark:bg-red-900/30'
+                            ? 'bg-green-100 dark:bg-green-900/30'
+                            : 'bg-red-100 dark:bg-red-900/30'
                             }`}>
                             {confirmModal.type === 'approve' ? (
                                 <CheckCircle className="w-10 h-10 text-green-600 dark:text-green-400" />
@@ -331,8 +334,8 @@ export default function PendingPaymentsPage() {
                                 onClick={confirmAction}
                                 disabled={processing}
                                 className={`flex-1 px-4 py-3 text-white rounded-xl font-medium transition flex items-center justify-center gap-2 disabled:opacity-50 ${confirmModal.type === 'approve'
-                                        ? 'bg-green-600 hover:bg-green-700'
-                                        : 'bg-red-600 hover:bg-red-700'
+                                    ? 'bg-green-600 hover:bg-green-700'
+                                    : 'bg-red-600 hover:bg-red-700'
                                     }`}
                             >
                                 {processing ? (
@@ -351,6 +354,15 @@ export default function PendingPaymentsPage() {
                     </motion.div>
                 </motion.div>
             )}
+
+            {/* Error Alert Modal */}
+            <AlertModal
+                isOpen={errorAlert.show}
+                onClose={() => setErrorAlert({ show: false, message: '' })}
+                title="Gagal!"
+                message={errorAlert.message}
+                type="error"
+            />
         </div>
     );
 }

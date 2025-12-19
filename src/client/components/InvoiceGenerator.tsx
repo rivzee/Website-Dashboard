@@ -270,7 +270,7 @@ export function InvoiceExample() {
     return (
         <InvoiceGenerator
             data={sampleInvoice}
-            onEmail={() => alert('Email invoice functionality')}
+            onEmail={() => console.log('Email invoice functionality - Coming soon')}
         />
     );
 }

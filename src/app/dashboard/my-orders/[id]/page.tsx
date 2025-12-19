@@ -30,8 +30,7 @@ export default function OrderDetailPage() {
     };
 
     const handleDownload = (doc: any) => {
-        // Simulate download
-        alert(`Mendownload ${doc.fileName}...`);
+        // Open file URL directly - browser will handle download notification
         window.open(doc.fileUrl, '_blank');
     };
 

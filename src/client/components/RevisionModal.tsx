@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { X, Send } from 'lucide-react';
 import axios from 'axios';
+import { AlertModal } from './Modal';
 
 interface RevisionModalProps {
     isOpen: boolean;
@@ -27,6 +28,7 @@ export default function RevisionModal({
         description: '',
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [alertModal, setAlertModal] = useState<{ show: boolean; type: 'success' | 'error'; title: string; message: string }>({ show: false, type: 'success', title: '', message: '' });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -42,15 +44,21 @@ export default function RevisionModal({
                 description: formData.description,
             });
 
-            alert('Permintaan revisi berhasil dikirim!');
-            onSuccess();
-            onClose();
+            setAlertModal({ show: true, type: 'success', title: 'Berhasil!', message: 'Permintaan revisi berhasil dikirim ke tim akuntan.' });
             setFormData({ title: '', description: '' });
         } catch (error: any) {
             console.error('Error submitting revision:', error);
-            alert(error.response?.data?.error || 'Gagal mengirim permintaan revisi');
+            setAlertModal({ show: true, type: 'error', title: 'Gagal!', message: error.response?.data?.error || 'Gagal mengirim permintaan revisi. Silakan coba lagi.' });
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    const handleAlertClose = () => {
+        setAlertModal({ ...alertModal, show: false });
+        if (alertModal.type === 'success') {
+            onSuccess();
+            onClose();
         }
     };
 
@@ -156,6 +164,15 @@ export default function RevisionModal({
                     </div>
                 </form>
             </motion.div>
+
+            {/* Alert Modal */}
+            <AlertModal
+                isOpen={alertModal.show}
+                onClose={handleAlertClose}
+                title={alertModal.title}
+                message={alertModal.message}
+                type={alertModal.type}
+            />
         </div>
     );
 }
