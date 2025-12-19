@@ -14,6 +14,10 @@ export async function GET(
                 service: true,
                 payment: true,
                 documents: { include: { uploader: { select: { fullName: true } } } },
+                revisions: {
+                    orderBy: { createdAt: 'desc' },
+                    include: { requester: { select: { fullName: true } } }
+                },
             },
         });
 

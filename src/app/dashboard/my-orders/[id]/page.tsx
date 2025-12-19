@@ -4,13 +4,15 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { FileText, Download, ArrowLeft, CheckCircle, Clock, AlertCircle, CreditCard } from 'lucide-react';
+import { FileText, Download, ArrowLeft, CheckCircle, Clock, AlertCircle, CreditCard, RefreshCw, AlertTriangle } from 'lucide-react';
+import RevisionModal from '@/client/components/RevisionModal';
 
 export default function OrderDetailPage() {
     const params = useParams();
     const router = useRouter();
     const [order, setOrder] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [showRevisionModal, setShowRevisionModal] = useState(false);
 
     useEffect(() => {
         if (params.id) {
@@ -204,6 +206,66 @@ export default function OrderDetailPage() {
                                 <p className="text-xs text-gray-400 mt-1">Laporan akan muncul setelah akuntan menyelesaikan pekerjaan.</p>
                             </div>
                         )}
+
+                        {/* Revision Section - Only for COMPLETED orders */}
+                        {order.status === 'COMPLETED' && (
+                            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h4 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                                        <RefreshCw size={18} className="text-orange-500" />
+                                        Ajukan Revisi
+                                    </h4>
+                                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                                        Sisa: {2 - (order.revisions?.length || 0)}x dari 2x
+                                    </span>
+                                </div>
+
+                                {(order.revisions?.length || 0) >= 2 ? (
+                                    <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800">
+                                        <div className="flex items-start gap-3">
+                                            <AlertTriangle className="text-red-500 flex-shrink-0 mt-0.5" size={18} />
+                                            <div>
+                                                <p className="text-sm font-medium text-red-700 dark:text-red-400">Kuota revisi habis</p>
+                                                <p className="text-xs text-red-600 dark:text-red-500 mt-1">
+                                                    Anda telah menggunakan 2x kesempatan revisi. Untuk revisi tambahan, silakan hubungi customer service.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                                            Tidak puas dengan hasil? Anda dapat mengajukan revisi maksimal 2 kali.
+                                        </p>
+                                        <button
+                                            onClick={() => setShowRevisionModal(true)}
+                                            className="w-full py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-semibold hover:opacity-90 transition flex items-center justify-center gap-2 shadow-lg"
+                                        >
+                                            <RefreshCw size={18} />
+                                            Ajukan Revisi ({2 - (order.revisions?.length || 0)}x tersisa)
+                                        </button>
+                                    </>
+                                )}
+
+                                {/* Revision History */}
+                                {order.revisions && order.revisions.length > 0 && (
+                                    <div className="mt-4 space-y-2">
+                                        <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Riwayat Revisi:</p>
+                                        {order.revisions.map((rev: any, idx: number) => (
+                                            <div key={rev.id || idx} className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-100 dark:border-orange-800">
+                                                <p className="text-sm font-medium text-gray-900 dark:text-white">{rev.title}</p>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{rev.description}</p>
+                                                <div className="flex items-center gap-2 mt-2">
+                                                    <span className={`text-xs px-2 py-0.5 rounded-full ${rev.status === 'COMPLETED' ? 'bg-green-100 text-green-700' : rev.status === 'IN_PROGRESS' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700'}`}>
+                                                        {rev.status === 'COMPLETED' ? 'Selesai' : rev.status === 'IN_PROGRESS' ? 'Diproses' : 'Menunggu'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </motion.div>
                 </div>
 
@@ -277,6 +339,16 @@ export default function OrderDetailPage() {
                     </motion.div>
                 </div>
             </div>
+
+            {/* Revision Modal */}
+            <RevisionModal
+                isOpen={showRevisionModal}
+                onClose={() => setShowRevisionModal(false)}
+                orderId={order.id}
+                orderTitle={order.service?.name || 'Pesanan'}
+                currentRevisionCount={order.revisions?.length || 0}
+                onSuccess={() => fetchOrder(order.id)}
+            />
         </div>
     );
 }
