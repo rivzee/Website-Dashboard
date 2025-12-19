@@ -14,15 +14,22 @@ interface AutoSyncOptions {
 export function useAutoSync({ interval = 30000, onSync, enabled = true }: AutoSyncOptions) {
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+    const savedCallback = useRef(onSync);
+
+    // Remember the latest callback
     useEffect(() => {
-        if (!enabled || !onSync) return;
+        savedCallback.current = onSync;
+    }, [onSync]);
+
+    useEffect(() => {
+        if (!enabled) return;
 
         // Initial sync
-        onSync();
+        if (savedCallback.current) savedCallback.current();
 
         // Setup interval
         intervalRef.current = setInterval(() => {
-            onSync();
+            if (savedCallback.current) savedCallback.current();
         }, interval);
 
         return () => {
@@ -30,7 +37,7 @@ export function useAutoSync({ interval = 30000, onSync, enabled = true }: AutoSy
                 clearInterval(intervalRef.current);
             }
         };
-    }, [interval, onSync, enabled]);
+    }, [interval, enabled]);
 
     // Manual sync function
     const sync = () => {
