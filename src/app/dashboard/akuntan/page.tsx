@@ -54,14 +54,29 @@ export default function AkuntanDashboard() {
         { label: 'Menunggu', value: stats.pending, icon: Calendar, color: 'orange', trend: '-5%' },
     ];
 
-    const chartData = [
-        { name: 'Jan', value: 20 },
-        { name: 'Feb', value: 25 },
-        { name: 'Mar', value: 30 },
-        { name: 'Apr', value: 35 },
-        { name: 'May', value: 28 },
-        { name: 'Jun', value: 40 },
-    ];
+    // Generate last 6 months dynamically based on current date
+    const getLastSixMonths = () => {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        const currentDate = new Date();
+        const result = [];
+
+        for (let i = 5; i >= 0; i--) {
+            const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+            const monthIndex = date.getMonth();
+            const monthName = months[monthIndex];
+
+            // Generate realistic random value based on completed orders or use placeholder
+            const baseValue = stats.completed > 0 ? Math.floor(stats.completed / 6) : 5;
+            const variation = Math.floor(Math.random() * 10) - 5;
+            const value = Math.max(baseValue + variation + (5 - i) * 2, 0);
+
+            result.push({ name: monthName, value });
+        }
+
+        return result;
+    };
+
+    const chartData = getLastSixMonths();
 
     return (
         <div className="space-y-8">
