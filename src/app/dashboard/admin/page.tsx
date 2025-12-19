@@ -122,7 +122,7 @@ export default function AdminDashboard() {
 
             setChartData(last6Months);
 
-            toast.success('Dashboard berhasil dimuat');
+            // toast.success('Dashboard berhasil dimuat');
         } catch (error: any) {
             console.error('Error fetching stats:', error);
             toast.error('Gagal memuat dashboard', error.message);
