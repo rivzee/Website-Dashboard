@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ShoppingCart, Clock, CheckCircle, Package, TrendingUp, Calendar, ArrowRight, Sparkles } from 'lucide-react';
 import axios from 'axios';
 import { EnhancedPieChart } from '@/client/components/EnhancedCharts';
+import { useAutoSync } from '@/client/hooks/useAutoSync';
 import Link from 'next/link';
 
 export default function KlienDashboard() {
@@ -16,6 +17,13 @@ export default function KlienDashboard() {
         completed: 0,
     });
     const [recentOrders, setRecentOrders] = useState<any[]>([]);
+
+    // Auto-sync every 30 seconds to keep data fresh
+    const { sync } = useAutoSync({
+        interval: 30000, // 30 seconds
+        onSync: () => user && fetchStats(user.id),
+        enabled: !!user // Only sync when user is loaded
+    });
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');

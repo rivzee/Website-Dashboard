@@ -85,13 +85,9 @@ export default function LoginPage() {
               </Link>
 
               <div className="mb-8">
-                <motion.div
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-24 h-24 bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-6 border border-white/20"
-                >
+                <div className="w-24 h-24 bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-6 border border-white/20">
                   <img src="/logo-risabur.png" alt="RISA BUR Logo" className="w-full h-full object-contain" />
-                </motion.div>
+                </div>
                 <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   RISA BUR
                 </h1>
@@ -190,14 +186,9 @@ export default function LoginPage() {
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl shadow-2xl p-8">
                 {/* Header */}
                 <div className="text-center mb-8">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 200, delay: 0.4 }}
-                    className="lg:hidden w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl p-3 mb-4 mx-auto border border-white/20"
-                  >
+                  <div className="lg:hidden w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl p-3 mb-4 mx-auto border border-white/20">
                     <img src="/logo-risabur.png" alt="RISA BUR Logo" className="w-full h-full object-contain" />
-                  </motion.div>
+                  </div>
 
                   <motion.h2
                     initial={{ y: 20, opacity: 0 }}
@@ -229,22 +220,22 @@ export default function LoginPage() {
                       Email
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                      <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none z-10" size={20} />
                       <input
                         type="email"
                         value={form.email}
                         placeholder="admin@akuntan.com"
-                        className="w-full pl-12 pr-12 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/15 transition-all duration-300"
+                        className="w-full pl-12 pr-12 py-3.5 bg-gray-900/80 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-gray-900 transition-all duration-300 backdrop-blur-sm"
                         onChange={e => setForm({ ...form, email: e.target.value })}
                         required
                       />
                       <AnimatePresence>
                         {form.email && (
                           <motion.div
-                            initial={{ scale: 0, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0, opacity: 0 }}
-                            className="absolute right-4 top-1/2 transform -translate-y-1/2"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none z-10 flex items-center justify-center"
                           >
                             <CheckCircle2 className="text-green-400" size={20} />
                           </motion.div>
@@ -263,24 +254,22 @@ export default function LoginPage() {
                       Password
                     </label>
                     <div className="relative">
-                      <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                      <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none z-10" size={20} />
                       <input
                         type={showPassword ? 'text' : 'password'}
                         value={form.password}
                         placeholder="••••••••"
-                        className="w-full pl-12 pr-12 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/15 transition-all duration-300"
+                        className="w-full pl-12 pr-12 py-3.5 bg-gray-900/80 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-gray-900 transition-all duration-300 backdrop-blur-sm"
                         onChange={e => setForm({ ...form, password: e.target.value })}
                         required
                       />
-                      <motion.button
+                      <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors z-10 flex items-center justify-center"
                       >
                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                      </motion.button>
+                      </button>
                     </div>
                   </motion.div>
 

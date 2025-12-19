@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { FileText, CheckCircle, Clock, TrendingUp, Calendar } from 'lucide-react';
 import axios from 'axios';
 import { EnhancedAreaChart } from '@/client/components/EnhancedCharts';
+import { useAutoSync } from '@/client/hooks/useAutoSync';
 
 export default function AkuntanDashboard() {
     const [stats, setStats] = useState({
@@ -38,6 +39,13 @@ export default function AkuntanDashboard() {
             console.error('Error fetching stats:', error);
         }
     };
+
+    // Auto-sync every 30 seconds to keep data fresh
+    useAutoSync({
+        interval: 30000, // 30 seconds
+        onSync: fetchStats,
+        enabled: true
+    });
 
     const statCards = [
         { label: 'Total Pekerjaan', value: stats.totalJobs, icon: FileText, color: 'green', trend: '+15%' },

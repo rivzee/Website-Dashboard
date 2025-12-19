@@ -149,14 +149,9 @@ export default function RegisterPage() {
           <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl shadow-2xl p-8">
             {/* Header */}
             <div className="text-center mb-8">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-                className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl p-3 mb-4 mx-auto border border-white/20"
-              >
+              <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl p-3 mb-4 mx-auto border border-white/20">
                 <img src="/logo-risabur.png" alt="RISA BUR Logo" className="w-full h-full object-contain" />
-              </motion.div>
+              </div>
 
               <motion.h2
                 initial={{ y: 20, opacity: 0 }}
@@ -188,22 +183,22 @@ export default function RegisterPage() {
                   Nama Lengkap
                 </label>
                 <div className="relative">
-                  <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                  <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none z-10" size={20} />
                   <input
                     type="text"
                     value={form.fullName}
                     placeholder="John Doe"
-                    className="w-full pl-12 pr-12 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/15 transition-all duration-300"
+                    className="w-full pl-12 pr-12 py-3.5 bg-gray-900/80 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-gray-900 transition-all duration-300 backdrop-blur-sm"
                     onChange={e => setForm({ ...form, fullName: e.target.value })}
                     required
                   />
                   <AnimatePresence>
                     {form.fullName && (
                       <motion.div
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0, opacity: 0 }}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none z-10 flex items-center justify-center"
                       >
                         <CheckCircle2 className="text-green-400" size={20} />
                       </motion.div>
@@ -222,12 +217,12 @@ export default function RegisterPage() {
                   Email Pribadi
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none z-10" size={20} />
                   <input
                     type="email"
                     value={form.email}
                     placeholder="john@gmail.com"
-                    className={`w-full pl-12 pr-12 py-3 bg-white/10 border ${errors.email ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/15 transition-all duration-300`}
+                    className={`w-full pl-12 pr-12 py-3.5 bg-gray-900/80 border ${errors.email ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-gray-900 transition-all duration-300 backdrop-blur-sm`}
                     onChange={e => {
                       setForm({ ...form, email: e.target.value });
                       setErrors({ ...errors, email: '' });
@@ -237,10 +232,10 @@ export default function RegisterPage() {
                   <AnimatePresence>
                     {form.email && !errors.email && validateEmail(form.email) && (
                       <motion.div
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0, opacity: 0 }}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none z-10 flex items-center justify-center"
                       >
                         <CheckCircle2 className="text-green-400" size={20} />
                       </motion.div>
@@ -269,12 +264,12 @@ export default function RegisterPage() {
                   Nomor Telepon
                 </label>
                 <div className="relative">
-                  <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                  <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none z-10" size={20} />
                   <input
                     type="tel"
                     value={form.phone}
                     placeholder="+62 812 3456 7890"
-                    className={`w-full pl-12 pr-12 py-3 bg-white/10 border ${errors.phone ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/15 transition-all duration-300`}
+                    className={`w-full pl-12 pr-12 py-3.5 bg-gray-900/80 border ${errors.phone ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-gray-900 transition-all duration-300 backdrop-blur-sm`}
                     onChange={e => {
                       setForm({ ...form, phone: e.target.value });
                       setErrors({ ...errors, phone: '' });
@@ -284,10 +279,10 @@ export default function RegisterPage() {
                   <AnimatePresence>
                     {form.phone && !errors.phone && validatePhone(form.phone) && (
                       <motion.div
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0, opacity: 0 }}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none z-10 flex items-center justify-center"
                       >
                         <CheckCircle2 className="text-green-400" size={20} />
                       </motion.div>
@@ -316,27 +311,25 @@ export default function RegisterPage() {
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none z-10" size={20} />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={form.password}
                     placeholder="Minimal 6 karakter"
-                    className={`w-full pl-12 pr-12 py-3 bg-white/10 border ${errors.password ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/15 transition-all duration-300`}
+                    className={`w-full pl-12 pr-12 py-3.5 bg-gray-900/80 border ${errors.password ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-gray-900 transition-all duration-300 backdrop-blur-sm`}
                     onChange={e => {
                       setForm({ ...form, password: e.target.value });
                       setErrors({ ...errors, password: '' });
                     }}
                     required
                   />
-                  <motion.button
+                  <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors z-10 flex items-center justify-center"
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </motion.button>
+                  </button>
                 </div>
                 {errors.password && (
                   <motion.p

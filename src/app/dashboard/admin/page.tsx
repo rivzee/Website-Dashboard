@@ -24,6 +24,7 @@ import {
 import { EnhancedLineChart, EnhancedBarChart, EnhancedPieChart } from '@/client/components/EnhancedCharts';
 import Link from 'next/link';
 import { useToast } from '@/client/hooks/useToast';
+import { useAutoSync } from '@/client/hooks/useAutoSync';
 import apiService from '@/client/services/api.service';
 import { DashboardSkeleton } from '@/client/components/Skeletons';
 
@@ -43,6 +44,13 @@ export default function AdminDashboard() {
     const [isLoading, setIsLoading] = useState(true);
     const [chartData, setChartData] = useState<any[]>([]);
     const toast = useToast();
+
+    // Auto-sync every 30 seconds to keep data fresh
+    const { sync } = useAutoSync({
+        interval: 30000, // 30 seconds
+        onSync: () => fetchStats(),
+        enabled: !isLoading // Only sync after initial load
+    });
 
     useEffect(() => {
         fetchStats();
