@@ -67,9 +67,4 @@ export async function POST(request: NextRequest) {
     }
 }
 
-// Configure to allow larger payloads
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
+
