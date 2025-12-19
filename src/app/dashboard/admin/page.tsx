@@ -45,12 +45,12 @@ export default function AdminDashboard() {
     const [chartData, setChartData] = useState<any[]>([]);
     const toast = useToast();
 
-    // Auto-sync every 30 seconds to keep data fresh
-    const { sync } = useAutoSync({
-        interval: 30000, // 30 seconds
-        onSync: () => fetchStats(),
-        enabled: !isLoading // Only sync after initial load
-    });
+    // Auto-sync disabled temporarily to fix loop
+    // const { sync } = useAutoSync({
+    //     interval: 30000,
+    //     onSync: () => fetchStats(),
+    //     enabled: !isLoading
+    // });
 
     useEffect(() => {
         fetchStats();
@@ -125,7 +125,7 @@ export default function AdminDashboard() {
             // toast.success('Dashboard berhasil dimuat');
         } catch (error: any) {
             console.error('Error fetching stats:', error);
-            toast.error('Gagal memuat dashboard', error.message);
+            // toast.error('Gagal memuat dashboard', error.message);
         } finally {
             setIsLoading(false);
         }
@@ -166,7 +166,7 @@ export default function AdminDashboard() {
                     </div>
                     <div>
                         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 animate-gradient">
-                            Dasbor Admin
+                            Dasbor Admin (Fixed)
                         </h1>
                         <p className="text-gray-600 dark:text-gray-400">RISA BUR - Kantor Jasa Akuntan</p>
                     </div>
