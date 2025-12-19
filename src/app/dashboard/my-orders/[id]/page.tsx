@@ -82,6 +82,82 @@ export default function OrderDetailPage() {
                             </div>
                         </div>
 
+                        {/* Progress Timeline */}
+                        <div className="mb-8">
+                            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Progress Pesanan</h3>
+                            <div className="flex items-center justify-between relative">
+                                {/* Progress Line Background */}
+                                <div className="absolute top-5 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+
+                                {/* Progress Line Active */}
+                                <div
+                                    className="absolute top-5 left-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-500"
+                                    style={{
+                                        width: order.status === 'PENDING_PAYMENT' ? '0%' :
+                                            order.status === 'PAID' ? '33%' :
+                                                order.status === 'IN_PROGRESS' ? '66%' :
+                                                    order.status === 'COMPLETED' ? '100%' : '0%'
+                                    }}
+                                ></div>
+
+                                {/* Step 1: Menunggu Pembayaran */}
+                                <div className="relative z-10 flex flex-col items-center">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${order.status !== 'PENDING_PAYMENT'
+                                            ? 'bg-green-500 text-white'
+                                            : 'bg-orange-500 text-white animate-pulse'
+                                        }`}>
+                                        {order.status !== 'PENDING_PAYMENT' ? <CheckCircle size={20} /> : <CreditCard size={20} />}
+                                    </div>
+                                    <span className="text-xs mt-2 text-center font-medium text-gray-600 dark:text-gray-400 max-w-[80px]">
+                                        Menunggu Pembayaran
+                                    </span>
+                                </div>
+
+                                {/* Step 2: Verifikasi Admin */}
+                                <div className="relative z-10 flex flex-col items-center">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${order.status === 'IN_PROGRESS' || order.status === 'COMPLETED'
+                                            ? 'bg-green-500 text-white'
+                                            : order.status === 'PAID'
+                                                ? 'bg-blue-500 text-white animate-pulse'
+                                                : 'bg-gray-300 dark:bg-gray-600 text-gray-500'
+                                        }`}>
+                                        {order.status === 'IN_PROGRESS' || order.status === 'COMPLETED' ? <CheckCircle size={20} /> : <Clock size={20} />}
+                                    </div>
+                                    <span className="text-xs mt-2 text-center font-medium text-gray-600 dark:text-gray-400 max-w-[80px]">
+                                        Verifikasi Admin
+                                    </span>
+                                </div>
+
+                                {/* Step 3: Sedang Dikerjakan */}
+                                <div className="relative z-10 flex flex-col items-center">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${order.status === 'COMPLETED'
+                                            ? 'bg-green-500 text-white'
+                                            : order.status === 'IN_PROGRESS'
+                                                ? 'bg-yellow-500 text-white animate-pulse'
+                                                : 'bg-gray-300 dark:bg-gray-600 text-gray-500'
+                                        }`}>
+                                        {order.status === 'COMPLETED' ? <CheckCircle size={20} /> : <Clock size={20} />}
+                                    </div>
+                                    <span className="text-xs mt-2 text-center font-medium text-gray-600 dark:text-gray-400 max-w-[80px]">
+                                        Sedang Dikerjakan
+                                    </span>
+                                </div>
+
+                                {/* Step 4: Selesai */}
+                                <div className="relative z-10 flex flex-col items-center">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${order.status === 'COMPLETED'
+                                            ? 'bg-green-500 text-white'
+                                            : 'bg-gray-300 dark:bg-gray-600 text-gray-500'
+                                        }`}>
+                                        <CheckCircle size={20} />
+                                    </div>
+                                    <span className="text-xs mt-2 text-center font-medium text-gray-600 dark:text-gray-400 max-w-[80px]">
+                                        Selesai
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
                             <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Detail Layanan</h3>
                             <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{order.service?.description}</p>
