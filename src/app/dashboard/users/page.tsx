@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { DataTable, Column } from '@/client/components/DataTable';
 import { ExportButton } from '@/client/components/ExportButton';
+import { ConfirmModal } from '@/client/components/Modal';
 import { useToast } from '@/client/hooks/useToast';
 import apiService from '@/client/services/api.service';
 import { DashboardSkeleton } from '@/client/components/Skeletons';
@@ -61,6 +62,8 @@ export default function UserManagementPage() {
         address: '',
         role: 'KLIEN',
     });
+    const [deleteModal, setDeleteModal] = useState<{ show: boolean; user: User | null }>({ show: false, user: null });
+    const [deleting, setDeleting] = useState(false);
     const toast = useToast();
 
     useEffect(() => {
@@ -123,15 +126,23 @@ export default function UserManagementPage() {
     };
 
     const handleDelete = async (user: User) => {
-        if (!confirm(`Are you sure you want to delete ${user.fullName}?`)) return;
+        setDeleteModal({ show: true, user });
+    };
+
+    const confirmDelete = async () => {
+        if (!deleteModal.user) return;
+        setDeleting(true);
 
         try {
-            await apiService.users.delete(user.id);
-            toast.success('User deleted successfully');
+            await apiService.users.delete(deleteModal.user.id);
+            toast.success('Pengguna berhasil dihapus');
+            setDeleteModal({ show: false, user: null });
             fetchUsers();
         } catch (error) {
             console.error('Error deleting user:', error);
-            toast.error('Failed to delete user');
+            toast.error('Gagal menghapus pengguna');
+        } finally {
+            setDeleting(false);
         }
     };
 
@@ -499,6 +510,19 @@ export default function UserManagementPage() {
                     </>
                 )}
             </AnimatePresence>
+
+            {/* Delete Confirmation Modal */}
+            <ConfirmModal
+                isOpen={deleteModal.show}
+                onClose={() => setDeleteModal({ show: false, user: null })}
+                onConfirm={confirmDelete}
+                title="Hapus Pengguna?"
+                message={`Apakah Anda yakin ingin menghapus ${deleteModal.user?.fullName}? Tindakan ini tidak dapat dibatalkan.`}
+                confirmText="Hapus"
+                cancelText="Batal"
+                type="danger"
+                loading={deleting}
+            />
         </div>
     );
 }

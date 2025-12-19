@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { DataTable, Column } from '@/client/components/DataTable';
 import { ExportButton } from '@/client/components/ExportButton';
+import { ConfirmModal } from '@/client/components/Modal';
 import { useToast } from '@/client/hooks/useToast';
 import apiService from '@/client/services/api.service';
 import { DashboardSkeleton } from '@/client/components/Skeletons';
@@ -70,6 +71,8 @@ export default function ServiceManagementPage() {
     category: 'Pembukuan',
     isActive: true,
   });
+  const [deleteModal, setDeleteModal] = useState<{ show: boolean; service: Service | null }>({ show: false, service: null });
+  const [deleting, setDeleting] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
@@ -133,15 +136,23 @@ export default function ServiceManagementPage() {
   };
 
   const handleDelete = async (service: Service) => {
-    if (!confirm(`Are you sure you want to delete ${service.name}?`)) return;
+    setDeleteModal({ show: true, service });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteModal.service) return;
+    setDeleting(true);
 
     try {
-      await apiService.services.delete(service.id);
-      toast.success('Service deleted successfully');
+      await apiService.services.delete(deleteModal.service.id);
+      toast.success('Layanan berhasil dihapus');
+      setDeleteModal({ show: false, service: null });
       fetchServices();
     } catch (error) {
       console.error('Error deleting service:', error);
-      toast.error('Failed to delete service');
+      toast.error('Gagal menghapus layanan');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -540,6 +551,19 @@ export default function ServiceManagementPage() {
           </>
         )}
       </AnimatePresence>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={deleteModal.show}
+        onClose={() => setDeleteModal({ show: false, service: null })}
+        onConfirm={confirmDelete}
+        title="Hapus Layanan?"
+        message={`Apakah Anda yakin ingin menghapus "${deleteModal.service?.name}"? Tindakan ini tidak dapat dibatalkan.`}
+        confirmText="Hapus"
+        cancelText="Batal"
+        type="danger"
+        loading={deleting}
+      />
     </div>
   );
 }
