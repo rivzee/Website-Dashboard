@@ -168,7 +168,6 @@ export default function AdminDashboard() {
                         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 whitespace-nowrap">
                             Dashboard Admin
                         </h1>
-                        <p className="text-gray-600 dark:text-gray-400 text-sm">Risa bur - kantor jasa akuntansi</p>
                     </div>
                 </div>
 
