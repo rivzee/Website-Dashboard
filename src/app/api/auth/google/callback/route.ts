@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validateGoogleUser } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
@@ -60,18 +60,34 @@ export async function GET(request: NextRequest) {
             return NextResponse.redirect(`${baseUrl}/login?error=no_email`);
         }
 
-        // Validate/create user in our system
-        const user = await validateGoogleUser({
-            email: googleUser.email,
-            firstName: googleUser.given_name || googleUser.name?.split(' ')[0] || 'User',
-            lastName: googleUser.family_name || googleUser.name?.split(' ').slice(1).join(' ') || '',
+        // Check if user already exists in database
+        const existingUser = await prisma.user.findUnique({
+            where: { email: googleUser.email }
         });
 
-        // Encode user data to pass to frontend
-        const userData = encodeURIComponent(JSON.stringify(user));
+        if (existingUser) {
+            // User exists - log them in directly
+            const token = Buffer.from(`${existingUser.id}:${existingUser.email}:${Date.now()}`).toString('base64');
 
-        // Redirect to callback page with user data
-        return NextResponse.redirect(`${baseUrl}/auth/callback?user=${userData}`);
+            const { password: _, ...userWithoutPassword } = existingUser;
+            const userData = encodeURIComponent(JSON.stringify({
+                ...userWithoutPassword,
+                token,
+                hasPassword: true,
+            }));
+
+            return NextResponse.redirect(`${baseUrl}/auth/callback?user=${userData}`);
+        } else {
+            // New user - redirect to complete registration page
+            const fullName = googleUser.given_name
+                ? `${googleUser.given_name} ${googleUser.family_name || ''}`.trim()
+                : googleUser.name || 'User';
+
+            const email = encodeURIComponent(googleUser.email);
+            const name = encodeURIComponent(fullName);
+
+            return NextResponse.redirect(`${baseUrl}/auth/complete-registration?email=${email}&name=${name}`);
+        }
 
     } catch (error: any) {
         console.error('Google OAuth error:', error);
