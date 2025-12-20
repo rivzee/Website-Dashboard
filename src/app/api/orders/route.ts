@@ -14,6 +14,10 @@ export async function GET(request: NextRequest) {
                 client: { select: { fullName: true, email: true } },
                 service: true,
                 payment: true,
+                revisions: {
+                    orderBy: { createdAt: 'desc' },
+                    include: { requester: { select: { fullName: true } } }
+                },
             },
             orderBy: { createdAt: 'desc' },
         });

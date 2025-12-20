@@ -61,11 +61,26 @@ export async function PATCH(
             where: { id: params.id },
             data: updateData,
             include: {
-                order: true,
+                order: {
+                    include: {
+                        service: true,
+                        client: true,
+                    },
+                },
                 requester: true,
                 assignee: true,
             },
         });
+
+        // Send email notification to client when revision status changes
+        if (status && revision.requester?.email) {
+            try {
+                const { sendRevisionStatusUpdateEmail } = await import('@/lib/email');
+                await sendRevisionStatusUpdateEmail(revision.requester.email, revision);
+            } catch (emailError) {
+                console.error('⚠️ Failed to send revision status update email:', emailError);
+            }
+        }
 
         return NextResponse.json(revision);
     } catch (error: any) {

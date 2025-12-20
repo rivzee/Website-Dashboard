@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FileEdit, Clock, CheckCircle, XCircle, AlertCircle, User } from 'lucide-react';
+import { FileEdit, Clock, CheckCircle, XCircle, AlertCircle, User, RefreshCw } from 'lucide-react';
 import axios from 'axios';
 import Link from 'next/link';
 import { CompactLoading } from '@/client/components/LoadingSpinner';
+import { useAutoSync } from '@/client/hooks/useAutoSync';
 
 interface Revision {
     id: string;
@@ -34,17 +35,37 @@ export default function RevisionsPage() {
     const [revisions, setRevisions] = useState<Revision[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [filter, setFilter] = useState<string>('ALL');
+    const [user, setUser] = useState<any>(null);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     useEffect(() => {
-        fetchRevisions();
+        const userData = JSON.parse(localStorage.getItem('user') || '{}');
+        setUser(userData);
+        if (userData.id) {
+            fetchRevisions(userData);
+        }
     }, []);
 
-    const fetchRevisions = async () => {
+    // Auto-sync every 15 seconds for real-time updates
+    const { sync } = useAutoSync({
+        interval: 15000, // 15 seconds
+        onSync: () => user && fetchRevisions(user),
+        enabled: !!user
+    });
+
+    const handleManualRefresh = async () => {
+        if (!user) return;
+        setIsRefreshing(true);
+        await fetchRevisions(user);
+        setTimeout(() => setIsRefreshing(false), 500);
+    };
+
+    const fetchRevisions = async (userData?: any) => {
         try {
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const currentUser = userData || JSON.parse(localStorage.getItem('user') || '{}');
             const params = new URLSearchParams({
-                userId: user.id,
-                role: user.role,
+                userId: currentUser.id,
+                role: currentUser.role,
             });
 
             const response = await axios.get(`/api/revisions?${params}`);
@@ -94,11 +115,27 @@ export default function RevisionsPage() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Kelola Revisi</h1>
-                <p className="text-gray-600 dark:text-gray-400 mt-1">
-                    Daftar permintaan revisi dokumen
-                </p>
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Kelola Revisi</h1>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                        Daftar permintaan revisi dokumen
+                    </p>
+                </div>
+                <div className="flex items-center gap-3">
+                    <span className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1">
+                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        Auto-sync aktif
+                    </span>
+                    <button
+                        onClick={handleManualRefresh}
+                        disabled={isRefreshing}
+                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-xl text-sm font-medium transition shadow-md"
+                    >
+                        <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
+                        {isRefreshing ? 'Menyegarkan...' : 'Refresh'}
+                    </button>
+                </div>
             </div>
 
             {/* Filters */}

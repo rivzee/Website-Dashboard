@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FileText, CheckCircle, Clock, TrendingUp, Calendar } from 'lucide-react';
+import { FileText, CheckCircle, Clock, TrendingUp, Calendar, RefreshCw } from 'lucide-react';
 import axios from 'axios';
 import { EnhancedAreaChart } from '@/client/components/EnhancedCharts';
 import { useAutoSync } from '@/client/hooks/useAutoSync';
@@ -13,8 +13,10 @@ export default function AkuntanDashboard() {
         inProgress: 0,
         completed: 0,
         pending: 0,
+        pendingRevisions: 0,
     });
     const [priorityJobs, setPriorityJobs] = useState<any[]>([]);
+    const [pendingRevisions, setPendingRevisions] = useState<any[]>([]);
 
     useEffect(() => {
         fetchStats();
@@ -22,18 +24,27 @@ export default function AkuntanDashboard() {
 
     const fetchStats = async () => {
         try {
-            const orders = await axios.get('/api/orders');
-            const data = orders.data;
+            const [ordersRes, revisionsRes] = await Promise.all([
+                axios.get('/api/orders'),
+                axios.get('/api/revisions?role=AKUNTAN')
+            ]);
+            const data = ordersRes.data;
+            const revisions = revisionsRes.data;
 
             // Filter jobs that are PAID (ready to start) or IN_PROGRESS
             const activeJobs = data.filter((o: any) => o.status === 'PAID' || o.status === 'IN_PROGRESS');
             setPriorityJobs(activeJobs.slice(0, 5));
+
+            // Get pending revisions
+            const pending = revisions.filter((r: any) => r.status === 'PENDING');
+            setPendingRevisions(pending.slice(0, 3));
 
             setStats({
                 totalJobs: data.length,
                 inProgress: data.filter((o: any) => o.status === 'PAID' || o.status === 'IN_PROGRESS').length,
                 completed: data.filter((o: any) => o.status === 'COMPLETED').length,
                 pending: data.filter((o: any) => o.status === 'PENDING_PAYMENT').length,
+                pendingRevisions: pending.length,
             });
         } catch (error) {
             console.error('Error fetching stats:', error);
@@ -51,7 +62,7 @@ export default function AkuntanDashboard() {
         { label: 'Total Pekerjaan', value: stats.totalJobs, icon: FileText, color: 'green' },
         { label: 'Sedang Dikerjakan', value: stats.inProgress, icon: Clock, color: 'yellow' },
         { label: 'Selesai', value: stats.completed, icon: CheckCircle, color: 'emerald' },
-        { label: 'Menunggu', value: stats.pending, icon: Calendar, color: 'orange' },
+        { label: 'Revisi Menunggu', value: stats.pendingRevisions, icon: RefreshCw, color: 'orange' },
     ];
 
     // Generate last 6 months dynamically based on current date
@@ -162,6 +173,53 @@ export default function AkuntanDashboard() {
                     )}
                 </div>
             </motion.div>
+
+            {/* Pending Revisions Alert */}
+            {pendingRevisions.length > 0 && (
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                    className="backdrop-blur-xl bg-orange-50/80 dark:bg-orange-900/20 rounded-3xl p-6 border border-orange-200/50 dark:border-orange-700/50 shadow-lg"
+                >
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                            <RefreshCw className="text-orange-500" />
+                            Revisi Menunggu Tindakan
+                        </h3>
+                        <a
+                            href="/dashboard/revisions"
+                            className="text-sm text-orange-600 hover:text-orange-700 font-medium"
+                        >
+                            Lihat Semua →
+                        </a>
+                    </div>
+                    <div className="space-y-3">
+                        {pendingRevisions.map((rev: any) => (
+                            <a
+                                key={rev.id}
+                                href={`/dashboard/akuntan/jobs/${rev.orderId}`}
+                                className="flex items-center justify-between p-4 bg-white/80 dark:bg-gray-700/50 rounded-xl hover:bg-orange-100/50 dark:hover:bg-orange-900/30 transition cursor-pointer border border-orange-100 dark:border-orange-800/50"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                                        <RefreshCw className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                                    </div>
+                                    <div>
+                                        <p className="font-semibold text-gray-900 dark:text-white">{rev.title}</p>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            {rev.order?.service?.name} - {rev.requester?.fullName}
+                                        </p>
+                                    </div>
+                                </div>
+                                <span className="px-3 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-300">
+                                    Menunggu
+                                </span>
+                            </a>
+                        ))}
+                    </div>
+                </motion.div>
+            )}
         </div>
     );
 }

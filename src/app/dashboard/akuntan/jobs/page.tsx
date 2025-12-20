@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Search, Play, CheckCircle, Upload, FileText, Clock } from 'lucide-react';
+import { Search, Play, CheckCircle, Upload, FileText, Clock, RefreshCw } from 'lucide-react';
 import { ConfirmModal, AlertModal } from '@/client/components/Modal';
 
 export default function AkuntanJobsPage() {
@@ -133,10 +133,21 @@ export default function AkuntanJobsPage() {
                                     </span>
                                 </div>
                                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{job.service?.name}</h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                                     Klien: {job.client?.fullName}
                                 </p>
-                                <div className="flex items-center gap-2 text-xs text-gray-400 mb-6">
+
+                                {/* Revision Indicator */}
+                                {job.revisions && job.revisions.filter((r: any) => r.status === 'PENDING').length > 0 && (
+                                    <div className="flex items-center gap-2 mb-3 p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+                                        <RefreshCw size={14} className="text-orange-500" />
+                                        <span className="text-xs font-medium text-orange-700 dark:text-orange-300">
+                                            {job.revisions.filter((r: any) => r.status === 'PENDING').length} revisi menunggu
+                                        </span>
+                                    </div>
+                                )}
+
+                                <div className="flex items-center gap-2 text-xs text-gray-400 mb-4">
                                     <Clock size={14} />
                                     {new Date(job.createdAt).toLocaleDateString()}
                                 </div>

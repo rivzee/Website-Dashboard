@@ -400,3 +400,106 @@ export async function sendRevisionNotificationEmail(to: string, revisionDetails:
     return { success: false, error: error.message };
   }
 }
+
+// Send Revision Status Update Email (to Client)
+export async function sendRevisionStatusUpdateEmail(to: string, revisionDetails: any) {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.warn('⚠️ Email credentials not configured. Skipping revision status update email.');
+    return { success: false, error: 'Email not configured' };
+  }
+
+  const statusLabels: Record<string, { label: string; emoji: string; color: string; bgColor: string }> = {
+    'IN_PROGRESS': { label: 'Sedang Diproses', emoji: '🔄', color: '#1d4ed8', bgColor: '#dbeafe' },
+    'COMPLETED': { label: 'Selesai', emoji: '✅', color: '#15803d', bgColor: '#dcfce7' },
+    'REJECTED': { label: 'Ditolak', emoji: '❌', color: '#dc2626', bgColor: '#fee2e2' },
+  };
+
+  const statusInfo = statusLabels[revisionDetails.status] || { label: revisionDetails.status, emoji: '📋', color: '#6b7280', bgColor: '#f3f4f6' };
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Update Status Revisi - RISA BUR</title>
+    </head>
+    <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7fa;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 16px 16px 0 0; padding: 40px; text-align: center;">
+                <h1 style="color: white; margin: 0; font-size: 28px;">${statusInfo.emoji} Update Status Revisi</h1>
+            </div>
+            
+            <!-- Content -->
+            <div style="background: white; padding: 40px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <h2 style="color: #1f2937; margin: 0 0 20px 0;">Status Revisi Anda Diperbarui</h2>
+                
+                <div style="background: ${statusInfo.bgColor}; border-left: 4px solid ${statusInfo.color}; border-radius: 8px; padding: 16px; margin: 20px 0;">
+                    <p style="margin: 0; color: ${statusInfo.color}; font-weight: bold;">Status: ${statusInfo.label}</p>
+                </div>
+                
+                <div style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin: 20px 0;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Judul Revisi:</td>
+                            <td style="padding: 8px 0; color: #1f2937; font-weight: bold; text-align: right;">${revisionDetails.title || 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Layanan:</td>
+                            <td style="padding: 8px 0; color: #1f2937; font-weight: bold; text-align: right;">${revisionDetails.order?.service?.name || 'N/A'}</td>
+                        </tr>
+                        ${revisionDetails.assignee ? `
+                        <tr>
+                            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Ditangani oleh:</td>
+                            <td style="padding: 8px 0; color: #1f2937; font-weight: bold; text-align: right;">${revisionDetails.assignee?.fullName || 'N/A'}</td>
+                        </tr>
+                        ` : ''}
+                    </table>
+                </div>
+                
+                ${revisionDetails.status === 'COMPLETED' ? `
+                <p style="color: #4b5563; line-height: 1.6; margin: 20px 0;">
+                    Revisi Anda telah selesai dikerjakan. Silakan cek dashboard untuk melihat dan mengunduh hasil revisi.
+                </p>
+                ` : revisionDetails.status === 'IN_PROGRESS' ? `
+                <p style="color: #4b5563; line-height: 1.6; margin: 20px 0;">
+                    Tim akuntan kami sedang mengerjakan revisi Anda. Kami akan memberitahu Anda ketika sudah selesai.
+                </p>
+                ` : ''}
+                
+                <!-- CTA Button -->
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="https://website-kja.vercel.app/dashboard/my-orders/${revisionDetails.orderId || revisionDetails.order?.id || ''}" 
+                       style="display: inline-block; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: white; text-decoration: none; padding: 14px 40px; border-radius: 10px; font-weight: bold; font-size: 16px;">
+                        Lihat Detail Pesanan →
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div style="text-align: center; padding: 20px; color: #9ca3af; font-size: 12px;">
+                <p style="margin: 0;">© 2024 RISA BUR. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+
+  try {
+    const transporter = createTransporter();
+
+    await transporter.sendMail({
+      from: `"RISA BUR" <${process.env.EMAIL_USER}>`,
+      to: to,
+      subject: `${statusInfo.emoji} Update Status Revisi - RISA BUR`,
+      html: htmlContent,
+    });
+
+    console.log('✅ Revision status update email sent to:', to);
+    return { success: true };
+  } catch (error: any) {
+    console.error('❌ Failed to send revision status update email:', error);
+    return { success: false, error: error.message };
+  }
+}

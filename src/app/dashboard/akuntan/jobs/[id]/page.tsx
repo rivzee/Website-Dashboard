@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { FileText, Download, ArrowLeft, CheckCircle, Clock, AlertCircle, Play, Upload, User } from 'lucide-react';
+import { FileText, Download, ArrowLeft, CheckCircle, Clock, AlertCircle, Play, Upload, User, RefreshCw } from 'lucide-react';
 import { ConfirmModal, AlertModal } from '@/client/components/Modal';
 import { CompactLoading } from '@/client/components/LoadingSpinner';
 
@@ -202,6 +202,111 @@ export default function JobDetailPage() {
                             </div>
                         )}
                     </motion.div>
+
+                    {/* Revisions Section - Sync with Client */}
+                    {job.revisions && job.revisions.length > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.15 }}
+                            className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700"
+                        >
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                    <RefreshCw className="text-orange-500" />
+                                    Permintaan Revisi dari Klien
+                                </h3>
+                                <span className="text-sm bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 px-3 py-1 rounded-full font-medium">
+                                    {job.revisions.filter((r: any) => r.status === 'PENDING').length} menunggu
+                                </span>
+                            </div>
+
+                            <div className="space-y-4">
+                                {job.revisions.map((revision: any) => {
+                                    const revStatusConfig: Record<string, { bg: string; text: string; label: string }> = {
+                                        'PENDING': { bg: 'bg-orange-100 dark:bg-orange-900/30', text: 'text-orange-700 dark:text-orange-300', label: 'Menunggu' },
+                                        'IN_PROGRESS': { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-700 dark:text-blue-300', label: 'Diproses' },
+                                        'COMPLETED': { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-700 dark:text-green-300', label: 'Selesai' },
+                                        'REJECTED': { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-700 dark:text-red-300', label: 'Ditolak' },
+                                    };
+                                    const revConfig = revStatusConfig[revision.status] || revStatusConfig['PENDING'];
+
+                                    return (
+                                        <div key={revision.id} className="p-4 bg-orange-50 dark:bg-orange-900/10 rounded-xl border border-orange-200 dark:border-orange-800">
+                                            <div className="flex items-start justify-between gap-4 mb-3">
+                                                <div className="flex-1">
+                                                    <h4 className="font-semibold text-gray-900 dark:text-white">{revision.title}</h4>
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{revision.description}</p>
+                                                    <div className="flex items-center gap-3 mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                                        <span className="flex items-center gap-1">
+                                                            <User size={12} />
+                                                            {revision.requester?.fullName || 'Klien'}
+                                                        </span>
+                                                        <span className="flex items-center gap-1">
+                                                            <Clock size={12} />
+                                                            {new Date(revision.createdAt).toLocaleDateString('id-ID')}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <span className={`px-3 py-1 rounded-full text-xs font-bold ${revConfig.bg} ${revConfig.text}`}>
+                                                    {revConfig.label}
+                                                </span>
+                                            </div>
+
+                                            {/* Action Buttons for Revision */}
+                                            <div className="flex gap-2 mt-3 pt-3 border-t border-orange-200 dark:border-orange-800">
+                                                {revision.status === 'PENDING' && (
+                                                    <button
+                                                        onClick={async () => {
+                                                            try {
+                                                                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                                                                await axios.patch(`/api/revisions/${revision.id}`, {
+                                                                    status: 'IN_PROGRESS',
+                                                                    assignedTo: user.id,
+                                                                });
+                                                                setAlertModal({ show: true, type: 'success', title: 'Berhasil!', message: 'Revisi mulai diproses. Klien akan mendapat notifikasi.' });
+                                                                fetchJob(job.id);
+                                                            } catch (error) {
+                                                                console.error(error);
+                                                                setAlertModal({ show: true, type: 'error', title: 'Gagal!', message: 'Gagal memproses revisi.' });
+                                                            }
+                                                        }}
+                                                        className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition flex items-center justify-center gap-2"
+                                                    >
+                                                        <Play size={14} /> Mulai Kerjakan
+                                                    </button>
+                                                )}
+                                                {revision.status === 'IN_PROGRESS' && (
+                                                    <button
+                                                        onClick={async () => {
+                                                            try {
+                                                                await axios.patch(`/api/revisions/${revision.id}`, {
+                                                                    status: 'COMPLETED',
+                                                                });
+                                                                setAlertModal({ show: true, type: 'success', title: 'Berhasil!', message: 'Revisi selesai! Klien akan mendapat notifikasi.' });
+                                                                fetchJob(job.id);
+                                                            } catch (error) {
+                                                                console.error(error);
+                                                                setAlertModal({ show: true, type: 'error', title: 'Gagal!', message: 'Gagal menyelesaikan revisi.' });
+                                                            }
+                                                        }}
+                                                        className="flex-1 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition flex items-center justify-center gap-2"
+                                                    >
+                                                        <CheckCircle size={14} /> Selesaikan Revisi
+                                                    </button>
+                                                )}
+                                                {revision.status === 'COMPLETED' && (
+                                                    <div className="flex-1 py-2 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-lg text-sm font-medium flex items-center justify-center gap-2">
+                                                        <CheckCircle size={14} /> Sudah Selesai
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </motion.div>
+                    )}
                 </div>
 
                 {/* Right Column: Actions */}
