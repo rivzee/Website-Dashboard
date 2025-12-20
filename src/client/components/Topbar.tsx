@@ -128,18 +128,21 @@ export default function Topbar({ user, isDarkMode, toggleDarkMode }: TopbarProps
                                                 </button>
                                             </Link>
 
-                                            <Link href="/dashboard/settings">
-                                                <button
-                                                    onClick={() => setIsProfileOpen(false)}
-                                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
-                                                >
-                                                    <Settings size={18} className="text-gray-600 dark:text-gray-400" />
-                                                    <div>
-                                                        <p className="text-sm font-medium text-gray-900 dark:text-white">Pengaturan</p>
-                                                        <p className="text-xs text-gray-500 dark:text-gray-400">Preferensi</p>
-                                                    </div>
-                                                </button>
-                                            </Link>
+                                            {/* Settings - Admin Only */}
+                                            {user?.role === 'ADMIN' && (
+                                                <Link href="/dashboard/settings">
+                                                    <button
+                                                        onClick={() => setIsProfileOpen(false)}
+                                                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+                                                    >
+                                                        <Settings size={18} className="text-gray-600 dark:text-gray-400" />
+                                                        <div>
+                                                            <p className="text-sm font-medium text-gray-900 dark:text-white">Pengaturan</p>
+                                                            <p className="text-xs text-gray-500 dark:text-gray-400">Preferensi</p>
+                                                        </div>
+                                                    </button>
+                                                </Link>
+                                            )}
 
                                             <div className="my-2 border-t border-gray-200 dark:border-gray-700"></div>
 

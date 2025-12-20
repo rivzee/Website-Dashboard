@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
     Building,
@@ -13,14 +14,54 @@ import {
     Eye,
     EyeOff,
     Copy,
-    RefreshCw
+    RefreshCw,
+    ShieldAlert
 } from 'lucide-react';
 import { useToast } from '@/client/hooks/useToast';
 
 export default function SettingsPage() {
+    const router = useRouter();
     const [activeTab, setActiveTab] = useState('company');
     const [showApiKey, setShowApiKey] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [loading, setLoading] = useState(true);
     const toast = useToast();
+
+    // Check if user is Admin
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            const user = JSON.parse(storedUser);
+            if (user.role === 'ADMIN') {
+                setIsAdmin(true);
+            } else {
+                // Redirect non-admin users
+                router.push('/dashboard');
+            }
+        } else {
+            router.push('/login');
+        }
+        setLoading(false);
+    }, [router]);
+
+    // Show loading or access denied
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+            </div>
+        );
+    }
+
+    if (!isAdmin) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+                <ShieldAlert size={64} className="text-red-500 mb-4" />
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Akses Ditolak</h2>
+                <p className="text-gray-500 dark:text-gray-400">Halaman ini hanya bisa diakses oleh Admin.</p>
+            </div>
+        );
+    }
 
     // Company Settings
     const [companySettings, setCompanySettings] = useState({
