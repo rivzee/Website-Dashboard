@@ -30,7 +30,9 @@ export default function MyOrdersPage() {
         }
     };
 
-    const statusConfig = (status: string) => {
+    const statusConfig = (status: string, payment?: any) => {
+        const isPendingVerification = payment?.status === 'PENDING_APPROVAL';
+
         switch (status) {
             case 'PAID':
                 return { color: 'blue', bgColor: 'bg-blue-500/10', textColor: 'text-blue-600 dark:text-blue-400', borderColor: 'border-blue-200 dark:border-blue-500/30', icon: CheckCircle, label: 'Menunggu Verifikasi' };
@@ -38,6 +40,11 @@ export default function MyOrdersPage() {
                 return { color: 'green', bgColor: 'bg-emerald-500/10', textColor: 'text-emerald-600 dark:text-emerald-400', borderColor: 'border-emerald-200 dark:border-emerald-500/30', icon: CheckCircle, label: 'Selesai' };
             case 'IN_PROGRESS':
                 return { color: 'yellow', bgColor: 'bg-yellow-500/10', textColor: 'text-yellow-600 dark:text-yellow-400', borderColor: 'border-yellow-200 dark:border-yellow-500/30', icon: Clock, label: 'Sedang Dikerjakan' };
+            case 'PENDING_PAYMENT':
+                if (isPendingVerification) {
+                    return { color: 'blue', bgColor: 'bg-blue-500/10', textColor: 'text-blue-600 dark:text-blue-400', borderColor: 'border-blue-200 dark:border-blue-500/30', icon: Clock, label: 'Menunggu Verifikasi Admin' };
+                }
+                return { color: 'orange', bgColor: 'bg-orange-500/10', textColor: 'text-orange-600 dark:text-orange-400', borderColor: 'border-orange-200 dark:border-orange-500/30', icon: AlertCircle, label: 'Menunggu Pembayaran' };
             default:
                 return { color: 'orange', bgColor: 'bg-orange-500/10', textColor: 'text-orange-600 dark:text-orange-400', borderColor: 'border-orange-200 dark:border-orange-500/30', icon: AlertCircle, label: 'Menunggu Pembayaran' };
         }
@@ -109,7 +116,7 @@ export default function MyOrdersPage() {
                     </motion.div>
                 ) : (
                     orders.map((order, idx) => {
-                        const status = statusConfig(order.status);
+                        const status = statusConfig(order.status, order.payment);
                         const StatusIcon = status.icon;
 
                         return (

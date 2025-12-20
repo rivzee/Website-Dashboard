@@ -13,6 +13,7 @@ export async function GET(request: NextRequest) {
             include: {
                 client: { select: { fullName: true, email: true } },
                 service: true,
+                payment: true,
             },
             orderBy: { createdAt: 'desc' },
         });
