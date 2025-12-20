@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendWelcomeEmail } from '@/lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,6 +37,13 @@ export async function POST(request: NextRequest) {
                 role: 'KLIEN',
             },
         });
+
+        // Send welcome email
+        try {
+            await sendWelcomeEmail(user.email, user.fullName);
+        } catch (emailError) {
+            console.error('⚠️ Failed to send welcome email, but registration succeeded:', emailError);
+        }
 
         // Generate token
         const token = Buffer.from(`${user.id}:${user.email}:${Date.now()}`).toString('base64');

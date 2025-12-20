@@ -1,86 +1,172 @@
-import { MailerSend, EmailParams, Sender, Recipient } from 'mailersend';
+import nodemailer from 'nodemailer';
 
-const mailerSend = new MailerSend({
-  apiKey: process.env.MAILERSEND_API_KEY || '',
-});
+// Create Gmail transporter
+const createTransporter = () => {
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+};
 
-const sender = new Sender(
-  process.env.MAILERSEND_SENDER_EMAIL || 'info@trial-3z0vklo0p00l7qrx.mlsender.net',
-  process.env.MAILERSEND_SENDER_NAME || 'RISA BUR'
-);
-
+// Send Welcome Email
 export async function sendWelcomeEmail(to: string, fullName: string) {
-  const recipients = [new Recipient(to, fullName)];
+  // Check if email credentials are configured
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.warn('⚠️ Email credentials not configured. Skipping welcome email.');
+    return { success: false, error: 'Email not configured' };
+  }
 
   const htmlContent = `
     <!DOCTYPE html>
     <html>
     <head>
-      <style>
-        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-        .button { display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 12px; }
-        .feature { background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #667eea; border-radius: 5px; }
-      </style>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Selamat Datang di RISA BUR</title>
     </head>
-    <body>
-      <div class="header">
-        <h1>🎉 Selamat Datang!</h1>
-        <p>Terima kasih telah bergabung dengan RISA BUR</p>
-      </div>
-      <div class="content">
-        <h2>Halo, ${fullName}! 👋</h2>
-        <p>Selamat! Akun Anda telah berhasil dibuat.</p>
-        <center>
-          <a href="http://localhost:3000/login" class="button">🚀 Masuk ke Dashboard</a>
-        </center>
-      </div>
-      <div class="footer">
-        <p>© 2024 RISA BUR - Kantor Jasa Akuntan Profesional</p>
-      </div>
+    <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7fa;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 16px 16px 0 0; padding: 40px; text-align: center;">
+                <h1 style="color: white; margin: 0; font-size: 28px;">🎉 Selamat Datang!</h1>
+                <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0;">RISA BUR - Kantor Jasa Akuntan</p>
+            </div>
+            
+            <!-- Content -->
+            <div style="background: white; padding: 40px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <h2 style="color: #1f2937; margin: 0 0 20px 0;">Halo, ${fullName}! 👋</h2>
+                
+                <p style="color: #4b5563; line-height: 1.6; margin: 0 0 20px 0;">
+                    Terima kasih telah mendaftar di <strong>RISA BUR</strong>. Akun Anda telah berhasil dibuat dan siap digunakan.
+                </p>
+                
+                <p style="color: #4b5563; line-height: 1.6; margin: 0 0 20px 0;">
+                    Dengan akun ini, Anda dapat:
+                </p>
+                
+                <ul style="color: #4b5563; line-height: 1.8; margin: 0 0 30px 20px; padding: 0;">
+                    <li>📋 Memesan layanan akuntansi profesional</li>
+                    <li>📁 Upload dokumen dengan aman</li>
+                    <li>📊 Memantau progress pekerjaan</li>
+                    <li>💬 Berkomunikasi dengan tim akuntan</li>
+                    <li>📄 Download laporan yang sudah selesai</li>
+                </ul>
+                
+                <!-- CTA Button -->
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="https://website-kja.vercel.app/login" 
+                       style="display: inline-block; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: white; text-decoration: none; padding: 14px 40px; border-radius: 10px; font-weight: bold; font-size: 16px;">
+                        Login Sekarang →
+                    </a>
+                </div>
+                
+                <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 30px 0 0 0; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                    Jika Anda memiliki pertanyaan, jangan ragu untuk menghubungi kami di 
+                    <a href="mailto:info@risabur.com" style="color: #3b82f6;">info@risabur.com</a>
+                </p>
+            </div>
+            
+            <!-- Footer -->
+            <div style="text-align: center; padding: 20px; color: #9ca3af; font-size: 12px;">
+                <p style="margin: 0;">© 2024 RISA BUR. All rights reserved.</p>
+                <p style="margin: 5px 0 0 0;">Kantor Jasa Akuntan Profesional</p>
+            </div>
+        </div>
     </body>
     </html>
-  `;
-
-  const emailParams = new EmailParams()
-    .setFrom(sender)
-    .setTo(recipients)
-    .setSubject('🎉 Selamat Datang di RISA BUR!')
-    .setHtml(htmlContent);
+    `;
 
   try {
-    const response = await mailerSend.email.send(emailParams);
-    console.log('✅ Email terkirim:', response);
-    return { success: true, data: response };
+    const transporter = createTransporter();
+
+    await transporter.sendMail({
+      from: `"RISA BUR" <${process.env.EMAIL_USER}>`,
+      to: to,
+      subject: '🎉 Selamat Datang di RISA BUR!',
+      html: htmlContent,
+    });
+
+    console.log('✅ Welcome email sent to:', to);
+    return { success: true };
   } catch (error: any) {
-    console.error('❌ Gagal mengirim email:', error);
-    return { success: false, error };
+    console.error('❌ Failed to send welcome email:', error);
+    return { success: false, error: error.message };
   }
 }
 
+// Send Order Notification Email
 export async function sendOrderNotification(to: string, orderDetails: any) {
-  const recipients = [new Recipient(to)];
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.warn('⚠️ Email credentials not configured. Skipping order notification.');
+    return { success: false, error: 'Email not configured' };
+  }
 
   const htmlContent = `
-    <h2>Order Baru Diterima</h2>
-    <p>Order ID: ${orderDetails.id}</p>
-    <p>Status: ${orderDetails.status}</p>
-    <p>Total: Rp ${orderDetails.totalAmount}</p>
-  `;
-
-  const emailParams = new EmailParams()
-    .setFrom(sender)
-    .setTo(recipients)
-    .setSubject('📦 Order Baru Diterima')
-    .setHtml(htmlContent);
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pesanan Berhasil - RISA BUR</title>
+    </head>
+    <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7fa;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #10b981, #059669); border-radius: 16px 16px 0 0; padding: 40px; text-align: center;">
+                <h1 style="color: white; margin: 0; font-size: 28px;">✅ Pesanan Diterima!</h1>
+            </div>
+            
+            <!-- Content -->
+            <div style="background: white; padding: 40px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <h2 style="color: #1f2937; margin: 0 0 20px 0;">Pesanan Anda Berhasil Dibuat!</h2>
+                
+                <div style="background: #f9fafb; border-radius: 12px; padding: 20px; margin: 20px 0;">
+                    <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">Order ID</p>
+                    <p style="margin: 0 0 20px 0; color: #1f2937; font-weight: bold;">#${orderDetails.id?.slice(0, 8) || 'N/A'}</p>
+                    
+                    <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">Total</p>
+                    <p style="margin: 0; color: #1f2937; font-weight: bold;">Rp ${Number(orderDetails.totalAmount || 0).toLocaleString('id-ID')}</p>
+                </div>
+                
+                <p style="color: #4b5563; line-height: 1.6; margin: 20px 0;">
+                    Langkah selanjutnya: Silakan lakukan pembayaran untuk memproses pesanan Anda.
+                </p>
+                
+                <!-- CTA Button -->
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="https://website-kja.vercel.app/dashboard/my-orders" 
+                       style="display: inline-block; background: linear-gradient(135deg, #10b981, #059669); color: white; text-decoration: none; padding: 14px 40px; border-radius: 10px; font-weight: bold; font-size: 16px;">
+                        Lihat Pesanan →
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div style="text-align: center; padding: 20px; color: #9ca3af; font-size: 12px;">
+                <p style="margin: 0;">© 2024 RISA BUR. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
 
   try {
-    const response = await mailerSend.email.send(emailParams);
-    return { success: true, data: response };
+    const transporter = createTransporter();
+
+    await transporter.sendMail({
+      from: `"RISA BUR" <${process.env.EMAIL_USER}>`,
+      to: to,
+      subject: '📦 Pesanan Anda Berhasil Dibuat - RISA BUR',
+      html: htmlContent,
+    });
+
+    console.log('✅ Order notification email sent to:', to);
+    return { success: true };
   } catch (error: any) {
-    console.error('❌ Gagal mengirim email order:', error);
-    return { success: false, error };
+    console.error('❌ Failed to send order notification email:', error);
+    return { success: false, error: error.message };
   }
 }
