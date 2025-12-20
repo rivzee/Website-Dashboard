@@ -48,6 +48,12 @@ export default function ProfilePage() {
             return;
         }
 
+        if (formData.password && formData.password.length < 6) {
+            setAlertModal({ show: true, type: 'warning', title: 'Password Terlalu Pendek', message: 'Password minimal 6 karakter!' });
+            setSaving(false);
+            return;
+        }
+
         try {
             const updateData: any = {
                 fullName: formData.fullName,
@@ -61,11 +67,15 @@ export default function ProfilePage() {
             const response = await axios.put(`/api/users/${user.id}`, updateData);
 
             // Update local storage
-            const updatedUser = { ...user, ...response.data };
+            const updatedUser = { ...user, ...response.data, hasPassword: formData.password ? true : user.hasPassword };
             localStorage.setItem('user', JSON.stringify(updatedUser));
             setUser(updatedUser);
 
-            setAlertModal({ show: true, type: 'success', title: 'Berhasil!', message: 'Profil berhasil diperbarui!' });
+            const successMessage = formData.password
+                ? 'Profil dan password berhasil diperbarui! Sekarang Anda bisa login dengan email dan password.'
+                : 'Profil berhasil diperbarui!';
+
+            setAlertModal({ show: true, type: 'success', title: 'Berhasil!', message: successMessage });
             setFormData(prev => ({ ...prev, password: '', confirmPassword: '' }));
         } catch (error) {
             console.error('Error updating profile:', error);
@@ -90,6 +100,26 @@ export default function ProfilePage() {
                     </p>
                 </div>
             </div>
+
+            {/* Google OAuth User Banner - Show hint to set password */}
+            {user?.token && !user?.hasPassword && (
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-200 dark:border-blue-800 rounded-2xl p-4 flex items-start gap-4"
+                >
+                    <div className="p-2 bg-blue-500 rounded-xl">
+                        <Shield size={20} className="text-white" />
+                    </div>
+                    <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900 dark:text-white">Login dengan Google Terdeteksi</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            Anda login menggunakan Google. Untuk bisa login dengan email dan password biasa,
+                            silakan <strong>set password</strong> di bagian Keamanan di bawah.
+                        </p>
+                    </div>
+                </motion.div>
+            )}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Profile Card */}
