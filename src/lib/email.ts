@@ -320,3 +320,83 @@ export async function sendOrderCompletedEmail(to: string, orderDetails: any) {
     return { success: false, error: error.message };
   }
 }
+
+// Send Revision Request Notification Email (to Accountant)
+export async function sendRevisionNotificationEmail(to: string, revisionDetails: any) {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.warn('⚠️ Email credentials not configured. Skipping revision notification email.');
+    return { success: false, error: 'Email not configured' };
+  }
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Permintaan Revisi Baru - RISA BUR</title>
+    </head>
+    <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7fa;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: 16px 16px 0 0; padding: 40px; text-align: center;">
+                <h1 style="color: white; margin: 0; font-size: 28px;">📝 Permintaan Revisi Baru</h1>
+            </div>
+            
+            <!-- Content -->
+            <div style="background: white; padding: 40px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <h2 style="color: #1f2937; margin: 0 0 20px 0;">Ada Revisi yang Perlu Ditangani</h2>
+                
+                <div style="background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 16px; margin: 20px 0;">
+                    <p style="margin: 0; color: #92400e; font-weight: bold;">📋 ${revisionDetails.title || 'Permintaan Revisi'}</p>
+                    <p style="margin: 10px 0 0 0; color: #b45309; font-size: 14px;">${revisionDetails.description || 'Silakan cek dashboard untuk detail.'}</p>
+                </div>
+                
+                <div style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin: 20px 0;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Klien:</td>
+                            <td style="padding: 8px 0; color: #1f2937; font-weight: bold; text-align: right;">${revisionDetails.requester?.fullName || 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Layanan:</td>
+                            <td style="padding: 8px 0; color: #1f2937; font-weight: bold; text-align: right;">${revisionDetails.order?.service?.name || 'N/A'}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <!-- CTA Button -->
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="https://website-kja.vercel.app/dashboard/revisions" 
+                       style="display: inline-block; background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; text-decoration: none; padding: 14px 40px; border-radius: 10px; font-weight: bold; font-size: 16px;">
+                        Lihat & Tangani Revisi →
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div style="text-align: center; padding: 20px; color: #9ca3af; font-size: 12px;">
+                <p style="margin: 0;">© 2024 RISA BUR. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+
+  try {
+    const transporter = createTransporter();
+
+    await transporter.sendMail({
+      from: `"RISA BUR" <${process.env.EMAIL_USER}>`,
+      to: to,
+      subject: '📝 Permintaan Revisi Baru - RISA BUR',
+      html: htmlContent,
+    });
+
+    console.log('✅ Revision notification email sent to:', to);
+    return { success: true };
+  } catch (error: any) {
+    console.error('❌ Failed to send revision notification email:', error);
+    return { success: false, error: error.message };
+  }
+}

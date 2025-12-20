@@ -27,9 +27,15 @@ export async function GET(request: NextRequest) {
 
         // Filter based on role
         if (role === 'KLIEN' && userId) {
+            // Klien only sees their own revision requests
             query.where = { requestedBy: userId };
-        } else if (role === 'AKUNTAN' && userId) {
-            query.where = { assignedTo: userId };
+        } else if (role === 'AKUNTAN') {
+            // Akuntan sees ALL revisions (so they can pick up and handle them)
+            // This ensures client revision requests are visible to accountants
+            query.where = {}; // No filter - show all revisions
+        } else if (role === 'ADMIN') {
+            // Admin sees all revisions
+            query.where = {};
         }
 
         // Filter by order if provided
@@ -60,7 +66,10 @@ export async function POST(request: NextRequest) {
         // Check order revision count
         const order = await prisma.order.findUnique({
             where: { id: orderId },
-            include: { revisions: true },
+            include: {
+                revisions: true,
+                service: true,
+            },
         });
 
         if (!order) {
@@ -85,7 +94,11 @@ export async function POST(request: NextRequest) {
                 status: 'PENDING',
             },
             include: {
-                order: true,
+                order: {
+                    include: {
+                        service: true,
+                    }
+                },
                 requester: true,
             },
         });
@@ -99,6 +112,23 @@ export async function POST(request: NextRequest) {
                 },
             },
         });
+
+        // Send email notification to all accountants
+        try {
+            const { sendRevisionNotificationEmail } = await import('@/lib/email');
+            const accountants = await prisma.user.findMany({
+                where: { role: 'AKUNTAN' },
+                select: { email: true },
+            });
+
+            for (const accountant of accountants) {
+                if (accountant.email) {
+                    await sendRevisionNotificationEmail(accountant.email, revision);
+                }
+            }
+        } catch (emailError) {
+            console.error('⚠️ Failed to send revision notification emails:', emailError);
+        }
 
         return NextResponse.json(revision, { status: 201 });
     } catch (error: any) {
