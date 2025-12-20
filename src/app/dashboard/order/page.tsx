@@ -75,7 +75,7 @@ export default function OrderPage() {
 
             <button
               onClick={() => handleOrder(s)}
-              className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all ${index === 1 ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-200' : 'bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600'}`}
+              className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all ${index === 1 ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-500/30 dark:shadow-indigo-500/20' : 'bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600'}`}
             >
               Pilih Paket Ini
             </button>
