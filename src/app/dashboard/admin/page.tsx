@@ -166,7 +166,7 @@ export default function AdminDashboard() {
                     </div>
                     <div>
                         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 animate-gradient">
-                            Dasbor Admin (Fixed)
+                            Dasbor Admin
                         </h1>
                         <p className="text-gray-600 dark:text-gray-400">RISA BUR - Kantor Jasa Akuntan</p>
                     </div>
