@@ -131,7 +131,6 @@ export default function KlienDashboard() {
                             whileHover={{ y: -5, scale: 1.02 }}
                             className="relative group overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-6 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-2xl transition-all duration-300"
                         >
-                            <div className={`absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br ${stat.gradient} opacity-10 rounded-full group-hover:scale-150 transition-transform duration-500`} />
 
                             <div className="flex items-center justify-between mb-4 relative z-10">
                                 <div className={`p-3 rounded-2xl bg-gradient-to-br ${stat.gradient} text-white shadow-lg shadow-${stat.color}-500/30`}>

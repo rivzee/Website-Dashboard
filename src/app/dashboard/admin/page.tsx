@@ -212,7 +212,6 @@ export default function AdminDashboard() {
                             whileHover={{ y: -5, scale: 1.02 }}
                             className="relative group overflow-hidden backdrop-blur-xl bg-white/60 dark:bg-gray-800/40 rounded-3xl p-6 border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300"
                         >
-                            <div className={`absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br ${stat.gradient} opacity-10 rounded-full group-hover:scale-150 transition-transform duration-500`} />
 
                             <div className="flex items-center justify-between mb-4 relative z-10">
                                 <div className={`p-3 rounded-2xl bg-gradient-to-br ${stat.gradient} text-white shadow-lg`}>
