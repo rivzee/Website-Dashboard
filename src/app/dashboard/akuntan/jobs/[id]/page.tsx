@@ -279,20 +279,55 @@ export default function JobDetailPage() {
                                                 {revision.status === 'IN_PROGRESS' && (
                                                     <button
                                                         onClick={async () => {
-                                                            try {
-                                                                await axios.patch(`/api/revisions/${revision.id}`, {
-                                                                    status: 'COMPLETED',
-                                                                });
-                                                                setAlertModal({ show: true, type: 'success', title: 'Berhasil!', message: 'Revisi selesai! Klien akan mendapat notifikasi.' });
-                                                                fetchJob(job.id);
-                                                            } catch (error) {
-                                                                console.error(error);
-                                                                setAlertModal({ show: true, type: 'error', title: 'Gagal!', message: 'Gagal menyelesaikan revisi.' });
-                                                            }
+                                                            // Create file input for uploading revision result
+                                                            const fileInput = document.createElement('input');
+                                                            fileInput.type = 'file';
+                                                            fileInput.accept = '.pdf,.doc,.docx,.xls,.xlsx,.zip,.rar';
+                                                            fileInput.onchange = async (e: any) => {
+                                                                const file = e.target.files[0];
+                                                                if (!file) return;
+
+                                                                try {
+                                                                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+                                                                    // Upload file
+                                                                    const formData = new FormData();
+                                                                    formData.append('file', file);
+                                                                    formData.append('type', 'revision');
+
+                                                                    const uploadRes = await axios.post('/api/upload', formData, {
+                                                                        headers: { 'Content-Type': 'multipart/form-data' }
+                                                                    });
+
+                                                                    const fileUrl = uploadRes.data.url;
+
+                                                                    // Save document as revision result
+                                                                    await axios.post('/api/documents', {
+                                                                        fileName: `[REVISI] ${file.name}`,
+                                                                        fileUrl: fileUrl,
+                                                                        fileType: file.type || 'application/pdf',
+                                                                        isResult: true,
+                                                                        orderId: job.id,
+                                                                        uploaderId: user.id
+                                                                    });
+
+                                                                    // Update revision status to COMPLETED
+                                                                    await axios.patch(`/api/revisions/${revision.id}`, {
+                                                                        status: 'COMPLETED',
+                                                                    });
+
+                                                                    setAlertModal({ show: true, type: 'success', title: 'Berhasil!', message: 'Dokumen revisi berhasil diupload! Klien akan mendapat notifikasi.' });
+                                                                    fetchJob(job.id);
+                                                                } catch (error) {
+                                                                    console.error(error);
+                                                                    setAlertModal({ show: true, type: 'error', title: 'Gagal!', message: 'Gagal mengupload dokumen revisi. Silakan coba lagi.' });
+                                                                }
+                                                            };
+                                                            fileInput.click();
                                                         }}
                                                         className="flex-1 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition flex items-center justify-center gap-2"
                                                     >
-                                                        <CheckCircle size={14} /> Selesaikan Revisi
+                                                        <Upload size={14} /> Upload & Selesaikan Revisi
                                                     </button>
                                                 )}
                                                 {revision.status === 'COMPLETED' && (
