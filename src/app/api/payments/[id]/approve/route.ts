@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendPaymentVerifiedEmail } from '@/lib/email';
 
 // PATCH /api/payments/:id/approve - Admin approve payment
 export async function PATCH(
@@ -16,7 +17,13 @@ export async function PATCH(
 
         const payment = await prisma.payment.findUnique({
             where: { id: params.id },
-            include: { order: true },
+            include: {
+                order: {
+                    include: {
+                        client: { select: { email: true, fullName: true } }
+                    }
+                }
+            },
         });
 
         if (!payment) {
@@ -51,6 +58,15 @@ export async function PATCH(
                 status: orderStatus,
             },
         });
+
+        // Send email notification to client when payment is approved
+        if (action === 'approve' && payment.order?.client?.email) {
+            try {
+                await sendPaymentVerifiedEmail(payment.order.client.email, payment.order);
+            } catch (emailError) {
+                console.error('⚠️ Failed to send payment verified email:', emailError);
+            }
+        }
 
         return NextResponse.json({
             message: action === 'approve' ? 'Pembayaran berhasil disetujui' : 'Pembayaran ditolak',

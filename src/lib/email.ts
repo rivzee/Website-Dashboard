@@ -170,3 +170,153 @@ export async function sendOrderNotification(to: string, orderDetails: any) {
     return { success: false, error: error.message };
   }
 }
+
+// Send Payment Verified Email
+export async function sendPaymentVerifiedEmail(to: string, orderDetails: any) {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.warn('⚠️ Email credentials not configured. Skipping payment verified email.');
+    return { success: false, error: 'Email not configured' };
+  }
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pembayaran Terverifikasi - RISA BUR</title>
+    </head>
+    <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7fa;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 16px 16px 0 0; padding: 40px; text-align: center;">
+                <h1 style="color: white; margin: 0; font-size: 28px;">💳 Pembayaran Terverifikasi!</h1>
+            </div>
+            
+            <!-- Content -->
+            <div style="background: white; padding: 40px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <h2 style="color: #1f2937; margin: 0 0 20px 0;">Pembayaran Anda Telah Dikonfirmasi!</h2>
+                
+                <p style="color: #4b5563; line-height: 1.6; margin: 0 0 20px 0;">
+                    Terima kasih! Pembayaran untuk pesanan <strong>#${orderDetails.id?.slice(0, 8) || 'N/A'}</strong> telah berhasil diverifikasi.
+                </p>
+                
+                <div style="background: #f0fdf4; border-left: 4px solid #22c55e; border-radius: 8px; padding: 16px; margin: 20px 0;">
+                    <p style="margin: 0; color: #15803d; font-weight: bold;">✅ Status: Pembayaran Diterima</p>
+                    <p style="margin: 10px 0 0 0; color: #166534; font-size: 14px;">Tim akuntan kami akan segera memproses pesanan Anda.</p>
+                </div>
+                
+                <!-- CTA Button -->
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="https://website-kja.vercel.app/dashboard/my-orders/${orderDetails.id}" 
+                       style="display: inline-block; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; text-decoration: none; padding: 14px 40px; border-radius: 10px; font-weight: bold; font-size: 16px;">
+                        Lihat Detail Pesanan →
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div style="text-align: center; padding: 20px; color: #9ca3af; font-size: 12px;">
+                <p style="margin: 0;">© 2024 RISA BUR. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+
+  try {
+    const transporter = createTransporter();
+
+    await transporter.sendMail({
+      from: `"RISA BUR" <${process.env.EMAIL_USER}>`,
+      to: to,
+      subject: '💳 Pembayaran Terverifikasi - RISA BUR',
+      html: htmlContent,
+    });
+
+    console.log('✅ Payment verified email sent to:', to);
+    return { success: true };
+  } catch (error: any) {
+    console.error('❌ Failed to send payment verified email:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Send Order Completed Email
+export async function sendOrderCompletedEmail(to: string, orderDetails: any) {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.warn('⚠️ Email credentials not configured. Skipping order completed email.');
+    return { success: false, error: 'Email not configured' };
+  }
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pesanan Selesai - RISA BUR</title>
+    </head>
+    <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7fa;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); border-radius: 16px 16px 0 0; padding: 40px; text-align: center;">
+                <h1 style="color: white; margin: 0; font-size: 28px;">🎉 Pesanan Selesai!</h1>
+            </div>
+            
+            <!-- Content -->
+            <div style="background: white; padding: 40px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <h2 style="color: #1f2937; margin: 0 0 20px 0;">Pekerjaan Anda Telah Diselesaikan!</h2>
+                
+                <p style="color: #4b5563; line-height: 1.6; margin: 0 0 20px 0;">
+                    Kabar baik! Pesanan <strong>#${orderDetails.id?.slice(0, 8) || 'N/A'}</strong> telah selesai dikerjakan oleh tim akuntan kami.
+                </p>
+                
+                <div style="background: #faf5ff; border-left: 4px solid #8b5cf6; border-radius: 8px; padding: 16px; margin: 20px 0;">
+                    <p style="margin: 0; color: #7c3aed; font-weight: bold;">📄 Laporan Tersedia</p>
+                    <p style="margin: 10px 0 0 0; color: #6b21a8; font-size: 14px;">Anda dapat mengunduh laporan dari dashboard.</p>
+                </div>
+                
+                <p style="color: #4b5563; line-height: 1.6; margin: 20px 0;">
+                    Jika ada revisi yang diperlukan, Anda memiliki kesempatan untuk mengajukan revisi maksimal 2 kali.
+                </p>
+                
+                <!-- CTA Button -->
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="https://website-kja.vercel.app/dashboard/my-orders/${orderDetails.id}" 
+                       style="display: inline-block; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; text-decoration: none; padding: 14px 40px; border-radius: 10px; font-weight: bold; font-size: 16px;">
+                        Lihat & Download Laporan →
+                    </a>
+                </div>
+                
+                <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 30px 0 0 0; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center;">
+                    ⭐ Puas dengan layanan kami? Berikan rating dan review Anda!
+                </p>
+            </div>
+            
+            <!-- Footer -->
+            <div style="text-align: center; padding: 20px; color: #9ca3af; font-size: 12px;">
+                <p style="margin: 0;">© 2024 RISA BUR. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+
+  try {
+    const transporter = createTransporter();
+
+    await transporter.sendMail({
+      from: `"RISA BUR" <${process.env.EMAIL_USER}>`,
+      to: to,
+      subject: '🎉 Pesanan Selesai - Laporan Tersedia - RISA BUR',
+      html: htmlContent,
+    });
+
+    console.log('✅ Order completed email sent to:', to);
+    return { success: true };
+  } catch (error: any) {
+    console.error('❌ Failed to send order completed email:', error);
+    return { success: false, error: error.message };
+  }
+}
