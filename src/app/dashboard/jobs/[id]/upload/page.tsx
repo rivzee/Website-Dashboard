@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { Upload, FileText, CheckCircle, X, AlertCircle, User, Calendar, DollarSign, Package } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 import toast from 'react-hot-toast';
+import { CompactLoading } from '@/client/components/LoadingSpinner';
 
 export default function UploadResultPage() {
     const router = useRouter();
@@ -88,11 +89,7 @@ export default function UploadResultPage() {
     };
 
     if (!order) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            </div>
-        );
+        return <CompactLoading message="Memuat detail pesanan..." />;
     }
 
     const formatFileSize = (bytes: number) => {

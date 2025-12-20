@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { FileEdit, Clock, CheckCircle, XCircle, AlertCircle, User } from 'lucide-react';
 import axios from 'axios';
 import Link from 'next/link';
+import { CompactLoading } from '@/client/components/LoadingSpinner';
 
 interface Revision {
     id: string;
@@ -87,11 +88,7 @@ export default function RevisionsPage() {
     });
 
     if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-[400px]">
-                <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-            </div>
-        );
+        return <CompactLoading message="Memuat data revisi..." />;
     }
 
     return (
@@ -111,8 +108,8 @@ export default function RevisionsPage() {
                         key={status}
                         onClick={() => setFilter(status)}
                         className={`px-4 py-2 rounded-lg font-medium transition ${filter === status
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                             }`}
                     >
                         {status === 'ALL' ? 'Semua' : getStatusConfig(status).label}

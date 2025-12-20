@@ -6,6 +6,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { FileText, Download, ArrowLeft, CheckCircle, Clock, AlertCircle, CreditCard, RefreshCw, AlertTriangle } from 'lucide-react';
 import RevisionModal from '@/client/components/RevisionModal';
+import { CompactLoading } from '@/client/components/LoadingSpinner';
 
 export default function OrderDetailPage() {
     const params = useParams();
@@ -36,7 +37,7 @@ export default function OrderDetailPage() {
         window.open(doc.fileUrl, '_blank');
     };
 
-    if (loading) return <div className="p-8 text-center">Loading...</div>;
+    if (loading) return <CompactLoading message="Memuat detail pesanan..." />;
     if (!order) return <div className="p-8 text-center">Order tidak ditemukan</div>;
 
     const clientDocs = order.documents?.filter((d: any) => !d.isResult) || [];

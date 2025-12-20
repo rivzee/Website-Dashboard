@@ -6,6 +6,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { CreditCard, Upload, ArrowLeft, CheckCircle, Clock, Shield } from 'lucide-react';
 import { AlertModal } from '@/client/components/Modal';
+import { CompactLoading } from '@/client/components/LoadingSpinner';
 
 export default function PaymentPage() {
     const params = useParams();
@@ -81,7 +82,7 @@ export default function PaymentPage() {
         }
     };
 
-    if (loading) return <div className="p-8 text-center">Loading...</div>;
+    if (loading) return <CompactLoading message="Memuat halaman pembayaran..." />;
     if (!order) return <div className="p-8 text-center">Order tidak ditemukan</div>;
 
     return (

@@ -18,6 +18,7 @@ import {
     ShieldAlert
 } from 'lucide-react';
 import { useToast } from '@/client/hooks/useToast';
+import { CompactLoading } from '@/client/components/LoadingSpinner';
 
 export default function SettingsPage() {
     const router = useRouter();
@@ -46,11 +47,7 @@ export default function SettingsPage() {
 
     // Show loading or access denied
     if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-[400px]">
-                <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-            </div>
-        );
+        return <CompactLoading message="Memeriksa akses..." />;
     }
 
     if (!isAdmin) {

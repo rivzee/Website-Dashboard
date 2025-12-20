@@ -6,6 +6,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { FileText, Upload, ArrowLeft, CheckCircle, X } from 'lucide-react';
 import { AlertModal } from '@/client/components/Modal';
+import { CompactLoading } from '@/client/components/LoadingSpinner';
 
 export default function UploadPage() {
     const params = useParams();
@@ -99,7 +100,7 @@ export default function UploadPage() {
         }
     };
 
-    if (loading) return <div className="p-8 text-center">Loading...</div>;
+    if (loading) return <CompactLoading message="Memuat halaman upload..." />;
     if (!order) return <div className="p-8 text-center">Order tidak ditemukan</div>;
 
     return (

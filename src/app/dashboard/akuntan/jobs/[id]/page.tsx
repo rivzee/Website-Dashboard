@@ -6,6 +6,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { FileText, Download, ArrowLeft, CheckCircle, Clock, AlertCircle, Play, Upload, User } from 'lucide-react';
 import { ConfirmModal, AlertModal } from '@/client/components/Modal';
+import { CompactLoading } from '@/client/components/LoadingSpinner';
 
 export default function JobDetailPage() {
     const params = useParams();
@@ -97,7 +98,7 @@ export default function JobDetailPage() {
         fileInput.click();
     };
 
-    if (loading) return <div className="p-8 text-center">Loading...</div>;
+    if (loading) return <CompactLoading message="Memuat detail pekerjaan..." />;
     if (!job) return <div className="p-8 text-center">Pekerjaan tidak ditemukan</div>;
 
     const clientDocs = job.documents?.filter((d: any) => !d.isResult) || [];
