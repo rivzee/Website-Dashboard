@@ -53,10 +53,10 @@ export default function KlienDashboard() {
     };
 
     const statCards = [
-        { label: 'Total Pesanan', value: stats.totalOrders, icon: ShoppingCart, color: 'blue', gradient: 'from-blue-500 to-indigo-500', trend: '+10%' },
-        { label: 'Menunggu Pembayaran', value: stats.pending, icon: Clock, color: 'orange', gradient: 'from-orange-500 to-red-500', trend: '+5%' },
-        { label: 'Sedang Diproses', value: stats.inProgress, icon: Package, color: 'purple', gradient: 'from-purple-500 to-pink-500', trend: '+12%' },
-        { label: 'Selesai', value: stats.completed, icon: CheckCircle, color: 'emerald', gradient: 'from-emerald-500 to-teal-500', trend: '+20%' },
+        { label: 'Total Pesanan', value: stats.totalOrders, icon: ShoppingCart, color: 'blue', gradient: 'from-blue-500 to-indigo-500' },
+        { label: 'Menunggu Pembayaran', value: stats.pending, icon: Clock, color: 'orange', gradient: 'from-orange-500 to-red-500' },
+        { label: 'Sedang Diproses', value: stats.inProgress, icon: Package, color: 'purple', gradient: 'from-purple-500 to-pink-500' },
+        { label: 'Selesai', value: stats.completed, icon: CheckCircle, color: 'emerald', gradient: 'from-emerald-500 to-teal-500' },
     ];
 
     const chartData = [
@@ -136,10 +136,6 @@ export default function KlienDashboard() {
                             <div className="flex items-center justify-between mb-4 relative z-10">
                                 <div className={`p-3 rounded-2xl bg-gradient-to-br ${stat.gradient} text-white shadow-lg shadow-${stat.color}-500/30`}>
                                     <Icon className="w-6 h-6" />
-                                </div>
-                                <div className="flex items-center gap-1 text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded-lg text-xs font-bold">
-                                    <TrendingUp size={14} />
-                                    {stat.trend}
                                 </div>
                             </div>
                             <div className="relative z-10">

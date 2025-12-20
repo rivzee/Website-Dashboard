@@ -132,10 +132,10 @@ export default function AdminDashboard() {
     };
 
     const statCards = [
-        { label: 'Total Pengguna', value: stats.totalUsers, icon: Users, color: 'purple', gradient: 'from-purple-500 to-pink-500', trend: '+12%' },
-        { label: 'Total Layanan', value: stats.totalServices, icon: Package, color: 'blue', gradient: 'from-blue-500 to-cyan-500', trend: '+5%' },
-        { label: 'Total Pesanan', value: stats.totalOrders, icon: FileText, color: 'green', gradient: 'from-emerald-500 to-teal-500', trend: '+23%' },
-        { label: 'Pendapatan', value: `Rp ${stats.revenue.toLocaleString()}`, icon: DollarSign, color: 'orange', gradient: 'from-orange-500 to-red-500', trend: '+18%' },
+        { label: 'Total Pengguna', value: stats.totalUsers, icon: Users, color: 'purple', gradient: 'from-purple-500 to-pink-500' },
+        { label: 'Total Layanan', value: stats.totalServices, icon: Package, color: 'blue', gradient: 'from-blue-500 to-cyan-500' },
+        { label: 'Total Pesanan', value: stats.totalOrders, icon: FileText, color: 'green', gradient: 'from-emerald-500 to-teal-500' },
+        { label: 'Pendapatan', value: `Rp ${stats.revenue.toLocaleString()}`, icon: DollarSign, color: 'orange', gradient: 'from-orange-500 to-red-500' },
     ];
 
     const quickActions = [
@@ -217,10 +217,6 @@ export default function AdminDashboard() {
                             <div className="flex items-center justify-between mb-4 relative z-10">
                                 <div className={`p-3 rounded-2xl bg-gradient-to-br ${stat.gradient} text-white shadow-lg`}>
                                     <Icon className="w-6 h-6" />
-                                </div>
-                                <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-sm font-semibold bg-emerald-500/10 px-2 py-1 rounded-lg">
-                                    <TrendingUp size={16} />
-                                    {stat.trend}
                                 </div>
                             </div>
                             <p className="text-sm text-gray-500 dark:text-gray-400 mb-1 relative z-10">{stat.label}</p>

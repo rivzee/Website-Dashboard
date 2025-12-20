@@ -48,10 +48,10 @@ export default function AkuntanDashboard() {
     });
 
     const statCards = [
-        { label: 'Total Pekerjaan', value: stats.totalJobs, icon: FileText, color: 'green', trend: '+15%' },
-        { label: 'Sedang Dikerjakan', value: stats.inProgress, icon: Clock, color: 'yellow', trend: '+8%' },
-        { label: 'Selesai', value: stats.completed, icon: CheckCircle, color: 'emerald', trend: '+22%' },
-        { label: 'Menunggu', value: stats.pending, icon: Calendar, color: 'orange', trend: '-5%' },
+        { label: 'Total Pekerjaan', value: stats.totalJobs, icon: FileText, color: 'green' },
+        { label: 'Sedang Dikerjakan', value: stats.inProgress, icon: Clock, color: 'yellow' },
+        { label: 'Selesai', value: stats.completed, icon: CheckCircle, color: 'emerald' },
+        { label: 'Menunggu', value: stats.pending, icon: Calendar, color: 'orange' },
     ];
 
     // Generate last 6 months dynamically based on current date
@@ -97,7 +97,6 @@ export default function AkuntanDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {statCards.map((stat, idx) => {
                     const Icon = stat.icon;
-                    const isNegative = stat.trend.startsWith('-');
 
                     return (
                         <motion.div
@@ -111,10 +110,6 @@ export default function AkuntanDashboard() {
                             <div className="flex items-center justify-between mb-4">
                                 <div className={`p-3 rounded-2xl bg-${stat.color}-500/10`}>
                                     <Icon className={`w-6 h-6 text-${stat.color}-600 dark:text-${stat.color}-400`} />
-                                </div>
-                                <div className={`flex items-center gap-1 ${isNegative ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'} text-sm font-semibold`}>
-                                    <TrendingUp size={16} className={isNegative ? 'rotate-180' : ''} />
-                                    {stat.trend}
                                 </div>
                             </div>
                             <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{stat.label}</p>
