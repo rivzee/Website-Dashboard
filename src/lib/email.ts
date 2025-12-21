@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { prisma } from './prisma';
 
 // Create Gmail transporter
 const createTransporter = () => {
@@ -10,6 +11,27 @@ const createTransporter = () => {
     },
   });
 };
+
+// Get notification preferences from database
+async function getNotificationPrefs() {
+  try {
+    const setting = await prisma.settings.findUnique({
+      where: { key: 'notifications' }
+    });
+    if (setting) {
+      return JSON.parse(setting.value);
+    }
+  } catch (error) {
+    console.warn('⚠️ Could not fetch notification preferences, using defaults');
+  }
+  // Default: all notifications enabled
+  return {
+    newOrderNotification: true,
+    paymentNotification: true,
+    revisionNotification: true,
+    orderCompletedNotification: true
+  };
+}
 
 // Send Welcome Email
 export async function sendWelcomeEmail(to: string, fullName: string) {
@@ -104,6 +126,13 @@ export async function sendOrderNotification(to: string, orderDetails: any) {
     return { success: false, error: 'Email not configured' };
   }
 
+  // Check if this notification type is enabled
+  const prefs = await getNotificationPrefs();
+  if (!prefs.newOrderNotification) {
+    console.log('📧 New order notification is disabled in settings, skipping.');
+    return { success: true, skipped: true };
+  }
+
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -178,6 +207,13 @@ export async function sendPaymentVerifiedEmail(to: string, orderDetails: any) {
     return { success: false, error: 'Email not configured' };
   }
 
+  // Check if this notification type is enabled
+  const prefs = await getNotificationPrefs();
+  if (!prefs.paymentNotification) {
+    console.log('📧 Payment notification is disabled in settings, skipping.');
+    return { success: true, skipped: true };
+  }
+
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -247,6 +283,13 @@ export async function sendOrderCompletedEmail(to: string, orderDetails: any) {
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     console.warn('⚠️ Email credentials not configured. Skipping order completed email.');
     return { success: false, error: 'Email not configured' };
+  }
+
+  // Check if this notification type is enabled
+  const prefs = await getNotificationPrefs();
+  if (!prefs.orderCompletedNotification) {
+    console.log('📧 Order completed notification is disabled in settings, skipping.');
+    return { success: true, skipped: true };
   }
 
   const htmlContent = `
@@ -406,6 +449,13 @@ export async function sendRevisionStatusUpdateEmail(to: string, revisionDetails:
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     console.warn('⚠️ Email credentials not configured. Skipping revision status update email.');
     return { success: false, error: 'Email not configured' };
+  }
+
+  // Check if this notification type is enabled
+  const prefs = await getNotificationPrefs();
+  if (!prefs.revisionNotification) {
+    console.log('📧 Revision notification is disabled in settings, skipping.');
+    return { success: true, skipped: true };
   }
 
   const statusLabels: Record<string, { label: string; emoji: string; color: string; bgColor: string }> = {

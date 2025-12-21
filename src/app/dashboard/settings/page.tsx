@@ -27,31 +27,29 @@ export default function SettingsPage() {
     // ALL useState MUST be declared before any conditional returns (React Hooks rule)
     const [companySettings, setCompanySettings] = useState({
         name: 'RISA BUR',
-        legalName: 'PT. RISA BUR Konsultan',
-        address: 'Jl. Contoh No. 123, Jakarta',
-        phone: '+62 21 1234 5678',
+        legalName: 'KJA Risa Burhanudin',
+        address: 'Jl. Pemuda 43E, Olo, Padang Barat, Padang, Sumbar 25117',
+        phone: '+62 812 3456 7890',
         email: 'info@risabur.com',
-        website: 'www.risabur.com',
-        npwp: '12.345.678.9-012.000',
-        logo: '/logo-risabur.png'
+        website: 'www.risabur.com'
     });
 
-
     const [emailTemplates, setEmailTemplates] = useState({
-        invoiceSubject: 'Invoice #{invoiceNumber} from RISA BUR',
-        invoiceBody: 'Dear {clientName},\n\nPlease find attached your invoice #{invoiceNumber}.\n\nThank you for your business!',
-        reminderSubject: 'Payment Reminder - Invoice #{invoiceNumber}',
-        reminderBody: 'Dear {clientName},\n\nThis is a friendly reminder about invoice #{invoiceNumber}.'
+        newOrderSubject: 'Pesanan Baru #{orderNumber} - RISA BUR',
+        newOrderBody: 'Halo {clientName},\n\nTerima kasih atas pesanan Anda #{orderNumber}.\n\nSilakan lakukan pembayaran untuk memproses pesanan Anda.',
+        paymentConfirmSubject: 'Pembayaran Dikonfirmasi #{orderNumber} - RISA BUR',
+        paymentConfirmBody: 'Halo {clientName},\n\nPembayaran Anda untuk pesanan #{orderNumber} telah kami terima.\n\nPesanan Anda sedang diproses oleh tim kami.',
+        revisionUpdateSubject: 'Status Revisi Diperbarui - RISA BUR',
+        revisionUpdateBody: 'Halo {clientName},\n\nStatus revisi Anda telah diperbarui menjadi: {status}.\n\nSilakan cek dashboard untuk detail lebih lanjut.',
+        orderCompletedSubject: 'Pesanan Selesai #{orderNumber} - RISA BUR',
+        orderCompletedBody: 'Halo {clientName},\n\nPesanan Anda #{orderNumber} telah selesai dikerjakan.\n\nSilakan cek dashboard untuk mengunduh hasil pekerjaan.'
     });
 
     const [notificationPrefs, setNotificationPrefs] = useState({
-        emailNotifications: true,
-        pushNotifications: true,
-        newOrderEmail: true,
-        paymentReceivedEmail: true,
-        deadlineReminder: true,
-        weeklyReport: false,
-        monthlyReport: true
+        newOrderNotification: true,
+        paymentNotification: true,
+        revisionNotification: true,
+        orderCompletedNotification: true
     });
 
 
@@ -199,7 +197,7 @@ export default function SettingsPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Company Name
+                                            Nama Perusahaan
                                         </label>
                                         <input
                                             type="text"
@@ -211,7 +209,7 @@ export default function SettingsPage() {
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Legal Name
+                                            Nama Resmi
                                         </label>
                                         <input
                                             type="text"
@@ -223,19 +221,19 @@ export default function SettingsPage() {
 
                                     <div className="md:col-span-2">
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Address
+                                            Alamat
                                         </label>
                                         <textarea
                                             value={companySettings.address}
                                             onChange={(e) => setCompanySettings({ ...companySettings, address: e.target.value })}
-                                            rows={3}
+                                            rows={2}
                                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
                                         />
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Phone
+                                            Telepon
                                         </label>
                                         <input
                                             type="tel"
@@ -268,31 +266,6 @@ export default function SettingsPage() {
                                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
                                         />
                                     </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            NPWP
-                                        </label>
-                                        <input
-                                            type="text"
-                                            value={companySettings.npwp}
-                                            onChange={(e) => setCompanySettings({ ...companySettings, npwp: e.target.value })}
-                                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
-                                        />
-                                    </div>
-
-                                    <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Company Logo
-                                        </label>
-                                        <div className="flex items-center gap-4">
-                                            <img src={companySettings.logo} alt="Logo" className="w-16 h-16 object-contain" />
-                                            <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                                                <Upload size={18} />
-                                                Upload New Logo
-                                            </button>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <button
@@ -300,7 +273,7 @@ export default function SettingsPage() {
                                     className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
                                 >
                                     <Save size={18} />
-                                    Save Changes
+                                    Simpan Perubahan
                                 </button>
                             </motion.div>
                         )}
@@ -312,56 +285,114 @@ export default function SettingsPage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 className="space-y-6"
                             >
-                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Email Templates</h2>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Template Email</h2>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Available variables: {'{clientName}'}, {'{invoiceNumber}'}, {'{amount}'}, {'{dueDate}'}
+                                    Variabel yang tersedia: {'{clientName}'}, {'{orderNumber}'}, {'{status}'}
                                 </p>
 
-                                <div className="space-y-6">
+                                {/* New Order Email */}
+                                <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl space-y-4">
+                                    <h3 className="font-semibold text-gray-900 dark:text-white">📦 Email Pesanan Baru</h3>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Invoice Email Subject
+                                            Subjek
                                         </label>
                                         <input
                                             type="text"
-                                            value={emailTemplates.invoiceSubject}
-                                            onChange={(e) => setEmailTemplates({ ...emailTemplates, invoiceSubject: e.target.value })}
+                                            value={emailTemplates.newOrderSubject}
+                                            onChange={(e) => setEmailTemplates({ ...emailTemplates, newOrderSubject: e.target.value })}
                                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
                                         />
                                     </div>
-
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Invoice Email Body
+                                            Isi Pesan
                                         </label>
                                         <textarea
-                                            value={emailTemplates.invoiceBody}
-                                            onChange={(e) => setEmailTemplates({ ...emailTemplates, invoiceBody: e.target.value })}
-                                            rows={6}
+                                            value={emailTemplates.newOrderBody}
+                                            onChange={(e) => setEmailTemplates({ ...emailTemplates, newOrderBody: e.target.value })}
+                                            rows={4}
                                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
                                         />
                                     </div>
+                                </div>
 
+                                {/* Payment Confirmation Email */}
+                                <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl space-y-4">
+                                    <h3 className="font-semibold text-gray-900 dark:text-white">💳 Email Konfirmasi Pembayaran</h3>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Payment Reminder Subject
+                                            Subjek
                                         </label>
                                         <input
                                             type="text"
-                                            value={emailTemplates.reminderSubject}
-                                            onChange={(e) => setEmailTemplates({ ...emailTemplates, reminderSubject: e.target.value })}
+                                            value={emailTemplates.paymentConfirmSubject}
+                                            onChange={(e) => setEmailTemplates({ ...emailTemplates, paymentConfirmSubject: e.target.value })}
                                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
                                         />
                                     </div>
-
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Payment Reminder Body
+                                            Isi Pesan
                                         </label>
                                         <textarea
-                                            value={emailTemplates.reminderBody}
-                                            onChange={(e) => setEmailTemplates({ ...emailTemplates, reminderBody: e.target.value })}
-                                            rows={6}
+                                            value={emailTemplates.paymentConfirmBody}
+                                            onChange={(e) => setEmailTemplates({ ...emailTemplates, paymentConfirmBody: e.target.value })}
+                                            rows={4}
+                                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Revision Update Email */}
+                                <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl space-y-4">
+                                    <h3 className="font-semibold text-gray-900 dark:text-white">🔄 Email Update Revisi</h3>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Subjek
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={emailTemplates.revisionUpdateSubject}
+                                            onChange={(e) => setEmailTemplates({ ...emailTemplates, revisionUpdateSubject: e.target.value })}
+                                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Isi Pesan
+                                        </label>
+                                        <textarea
+                                            value={emailTemplates.revisionUpdateBody}
+                                            onChange={(e) => setEmailTemplates({ ...emailTemplates, revisionUpdateBody: e.target.value })}
+                                            rows={4}
+                                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Order Completed Email */}
+                                <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl space-y-4">
+                                    <h3 className="font-semibold text-gray-900 dark:text-white">✅ Email Pesanan Selesai</h3>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Subjek
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={emailTemplates.orderCompletedSubject}
+                                            onChange={(e) => setEmailTemplates({ ...emailTemplates, orderCompletedSubject: e.target.value })}
+                                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Isi Pesan
+                                        </label>
+                                        <textarea
+                                            value={emailTemplates.orderCompletedBody}
+                                            onChange={(e) => setEmailTemplates({ ...emailTemplates, orderCompletedBody: e.target.value })}
+                                            rows={4}
                                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
                                         />
                                     </div>
@@ -372,7 +403,7 @@ export default function SettingsPage() {
                                     className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
                                 >
                                     <Save size={18} />
-                                    Save Email Templates
+                                    Simpan Template
                                 </button>
                             </motion.div>
                         )}
@@ -384,30 +415,83 @@ export default function SettingsPage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 className="space-y-6"
                             >
-                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Notification Preferences</h2>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Preferensi Notifikasi</h2>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    Atur jenis notifikasi email yang akan dikirim ke klien
+                                </p>
 
                                 <div className="space-y-4">
-                                    {Object.entries(notificationPrefs).map(([key, value]) => (
-                                        <div key={key} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-xl">
-                                            <div>
-                                                <p className="font-medium text-gray-900 dark:text-white">
-                                                    {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                                                </p>
-                                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                    Receive notifications for this event
-                                                </p>
-                                            </div>
-                                            <label className="relative inline-flex items-center cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={value}
-                                                    onChange={(e) => setNotificationPrefs({ ...notificationPrefs, [key]: e.target.checked })}
-                                                    className="sr-only peer"
-                                                />
-                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                                            </label>
+                                    <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-xl">
+                                        <div>
+                                            <p className="font-medium text-gray-900 dark:text-white">📦 Notifikasi Pesanan Baru</p>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                Kirim email saat ada pesanan baru dibuat
+                                            </p>
                                         </div>
-                                    ))}
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={notificationPrefs.newOrderNotification}
+                                                onChange={(e) => setNotificationPrefs({ ...notificationPrefs, newOrderNotification: e.target.checked })}
+                                                className="sr-only peer"
+                                            />
+                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                        </label>
+                                    </div>
+
+                                    <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-xl">
+                                        <div>
+                                            <p className="font-medium text-gray-900 dark:text-white">💳 Notifikasi Pembayaran</p>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                Kirim email saat pembayaran dikonfirmasi
+                                            </p>
+                                        </div>
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={notificationPrefs.paymentNotification}
+                                                onChange={(e) => setNotificationPrefs({ ...notificationPrefs, paymentNotification: e.target.checked })}
+                                                className="sr-only peer"
+                                            />
+                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                        </label>
+                                    </div>
+
+                                    <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-xl">
+                                        <div>
+                                            <p className="font-medium text-gray-900 dark:text-white">🔄 Notifikasi Revisi</p>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                Kirim email saat ada update status revisi
+                                            </p>
+                                        </div>
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={notificationPrefs.revisionNotification}
+                                                onChange={(e) => setNotificationPrefs({ ...notificationPrefs, revisionNotification: e.target.checked })}
+                                                className="sr-only peer"
+                                            />
+                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                        </label>
+                                    </div>
+
+                                    <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-xl">
+                                        <div>
+                                            <p className="font-medium text-gray-900 dark:text-white">✅ Notifikasi Pesanan Selesai</p>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                Kirim email saat pesanan selesai dikerjakan
+                                            </p>
+                                        </div>
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={notificationPrefs.orderCompletedNotification}
+                                                onChange={(e) => setNotificationPrefs({ ...notificationPrefs, orderCompletedNotification: e.target.checked })}
+                                                className="sr-only peer"
+                                            />
+                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                        </label>
+                                    </div>
                                 </div>
 
                                 <button
@@ -415,7 +499,7 @@ export default function SettingsPage() {
                                     className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
                                 >
                                     <Save size={18} />
-                                    Save Preferences
+                                    Simpan Preferensi
                                 </button>
                             </motion.div>
                         )}
