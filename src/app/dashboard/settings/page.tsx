@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 import {
     Building,
     DollarSign,
@@ -15,7 +16,8 @@ import {
     EyeOff,
     Copy,
     RefreshCw,
-    ShieldAlert
+    ShieldAlert,
+    Loader2
 } from 'lucide-react';
 import { useToast } from '@/client/hooks/useToast';
 import { CompactLoading } from '@/client/components/LoadingSpinner';
@@ -26,6 +28,7 @@ export default function SettingsPage() {
     const [showApiKey, setShowApiKey] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
     const toast = useToast();
 
     // Check if user is Admin
@@ -35,19 +38,36 @@ export default function SettingsPage() {
             const user = JSON.parse(storedUser);
             if (user.role === 'ADMIN') {
                 setIsAdmin(true);
+                fetchSettings();
             } else {
-                // Redirect non-admin users
                 router.push('/dashboard');
             }
         } else {
             router.push('/login');
         }
-        setLoading(false);
     }, [router]);
+
+    // Fetch settings from API
+    const fetchSettings = async () => {
+        try {
+            const res = await axios.get('/api/settings');
+            const data = res.data;
+
+            if (data.company) setCompanySettings(data.company);
+            if (data.tax) setTaxSettings(data.tax);
+            if (data.email) setEmailTemplates(data.email);
+            if (data.notifications) setNotificationPrefs(data.notifications);
+            if (data.apiKeys) setApiKeys(data.apiKeys);
+        } catch (error) {
+            console.error('Error fetching settings:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // Show loading or access denied
     if (loading) {
-        return <CompactLoading message="Memeriksa akses..." />;
+        return <CompactLoading message="Memuat pengaturan..." />;
     }
 
     if (!isAdmin) {
@@ -103,40 +123,80 @@ export default function SettingsPage() {
 
     // API Keys
     const [apiKeys, setApiKeys] = useState([
-        { id: '1', name: 'Production API', key: 'sk_live_1234567890abcdef', created: new Date(), lastUsed: new Date() },
-        { id: '2', name: 'Development API', key: 'sk_test_abcdef1234567890', created: new Date(), lastUsed: null }
+        { id: '1', name: 'Production API', key: 'sk_live_1234567890abcdef', created: new Date().toISOString(), lastUsed: new Date().toISOString() },
+        { id: '2', name: 'Development API', key: 'sk_test_abcdef1234567890', created: new Date().toISOString(), lastUsed: null }
     ]);
 
-    const handleSaveCompany = () => {
-        // Save company settings
-        toast.success('Company settings saved successfully!');
+    const handleSaveCompany = async () => {
+        setSaving(true);
+        try {
+            await axios.post('/api/settings', { key: 'company', value: companySettings });
+            toast.success('Pengaturan perusahaan berhasil disimpan!');
+        } catch (error) {
+            console.error(error);
+            toast.error('Gagal menyimpan pengaturan perusahaan');
+        } finally {
+            setSaving(false);
+        }
     };
 
-    const handleSaveTax = () => {
-        // Save tax settings
-        toast.success('Tax settings saved successfully!');
+    const handleSaveTax = async () => {
+        setSaving(true);
+        try {
+            await axios.post('/api/settings', { key: 'tax', value: taxSettings });
+            toast.success('Pengaturan pajak berhasil disimpan!');
+        } catch (error) {
+            console.error(error);
+            toast.error('Gagal menyimpan pengaturan pajak');
+        } finally {
+            setSaving(false);
+        }
     };
 
-    const handleSaveEmail = () => {
-        // Save email templates
-        toast.success('Email templates saved successfully!');
+    const handleSaveEmail = async () => {
+        setSaving(true);
+        try {
+            await axios.post('/api/settings', { key: 'email', value: emailTemplates });
+            toast.success('Template email berhasil disimpan!');
+        } catch (error) {
+            console.error(error);
+            toast.error('Gagal menyimpan template email');
+        } finally {
+            setSaving(false);
+        }
     };
 
-    const handleSaveNotifications = () => {
-        // Save notification preferences
-        toast.success('Notification preferences saved successfully!');
+    const handleSaveNotifications = async () => {
+        setSaving(true);
+        try {
+            await axios.post('/api/settings', { key: 'notifications', value: notificationPrefs });
+            toast.success('Preferensi notifikasi berhasil disimpan!');
+        } catch (error) {
+            console.error(error);
+            toast.error('Gagal menyimpan preferensi notifikasi');
+        } finally {
+            setSaving(false);
+        }
     };
 
-    const generateApiKey = () => {
+    const generateApiKey = async () => {
         const newKey = {
             id: Date.now().toString(),
             name: 'New API Key',
             key: 'sk_live_' + Math.random().toString(36).substr(2, 24),
-            created: new Date(),
+            created: new Date().toISOString(),
             lastUsed: null
         };
-        setApiKeys([...apiKeys, newKey]);
-        toast.success('New API key generated!');
+        const updatedKeys = [...apiKeys, newKey];
+        setApiKeys(updatedKeys);
+
+        try {
+            await axios.post('/api/settings', { key: 'apiKeys', value: updatedKeys });
+            toast.success('API key baru berhasil dibuat!');
+        } catch (error) {
+            console.error(error);
+            toast.error('Gagal menyimpan API key');
+        }
     };
 
     const copyApiKey = (key: string) => {
@@ -562,8 +622,8 @@ export default function SettingsPage() {
                                                 </code>
                                             </div>
                                             <div className="flex gap-4 text-sm text-gray-600 dark:text-gray-400">
-                                                <span>Created: {apiKey.created.toLocaleDateString()}</span>
-                                                <span>Last used: {apiKey.lastUsed ? apiKey.lastUsed.toLocaleDateString() : 'Never'}</span>
+                                                <span>Created: {new Date(apiKey.created).toLocaleDateString('id-ID')}</span>
+                                                <span>Last used: {apiKey.lastUsed ? new Date(apiKey.lastUsed).toLocaleDateString('id-ID') : 'Never'}</span>
                                             </div>
                                         </div>
                                     ))}
