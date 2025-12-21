@@ -3,7 +3,9 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import ErrorBoundary from '@/client/components/ErrorBoundary';
 import { ToastProvider } from '@/client/hooks/useToast';
+import { Suspense } from 'react';
 import { ThemeProvider } from '@/client/context/ThemeContext';
+import { NavigationProgress } from '@/client/components/PageTransition';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,6 +28,9 @@ export default function RootLayout({
         <ErrorBoundary>
           <ThemeProvider>
             <ToastProvider>
+              <Suspense fallback={null}>
+                <NavigationProgress />
+              </Suspense>
               {children}
             </ToastProvider>
           </ThemeProvider>
