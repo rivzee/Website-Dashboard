@@ -121,6 +121,9 @@ export default function ActivityLogPage() {
             }
         ];
 
+        // Simulate network delay so loading animation is visible
+        await new Promise(resolve => setTimeout(resolve, 800));
+
         setLogs(sampleLogs);
         setLoading(false);
     };
