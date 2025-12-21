@@ -31,6 +31,49 @@ export default function SettingsPage() {
     const [saving, setSaving] = useState(false);
     const toast = useToast();
 
+    // ALL useState MUST be declared before any conditional returns (React Hooks rule)
+    const [companySettings, setCompanySettings] = useState({
+        name: 'RISA BUR',
+        legalName: 'PT. RISA BUR Konsultan',
+        address: 'Jl. Contoh No. 123, Jakarta',
+        phone: '+62 21 1234 5678',
+        email: 'info@risabur.com',
+        website: 'www.risabur.com',
+        npwp: '12.345.678.9-012.000',
+        logo: '/logo-risabur.png'
+    });
+
+    const [taxSettings, setTaxSettings] = useState({
+        vatRate: 11,
+        incomeTaxRate: 25,
+        taxYear: 2024,
+        fiscalYearStart: '01-01',
+        fiscalYearEnd: '12-31',
+        taxIdNumber: '12.345.678.9-012.000'
+    });
+
+    const [emailTemplates, setEmailTemplates] = useState({
+        invoiceSubject: 'Invoice #{invoiceNumber} from RISA BUR',
+        invoiceBody: 'Dear {clientName},\n\nPlease find attached your invoice #{invoiceNumber}.\n\nThank you for your business!',
+        reminderSubject: 'Payment Reminder - Invoice #{invoiceNumber}',
+        reminderBody: 'Dear {clientName},\n\nThis is a friendly reminder about invoice #{invoiceNumber}.'
+    });
+
+    const [notificationPrefs, setNotificationPrefs] = useState({
+        emailNotifications: true,
+        pushNotifications: true,
+        newOrderEmail: true,
+        paymentReceivedEmail: true,
+        deadlineReminder: true,
+        weeklyReport: false,
+        monthlyReport: true
+    });
+
+    const [apiKeys, setApiKeys] = useState<any[]>([
+        { id: '1', name: 'Production API', key: 'sk_live_1234567890abcdef', created: new Date().toISOString(), lastUsed: new Date().toISOString() },
+        { id: '2', name: 'Development API', key: 'sk_test_abcdef1234567890', created: new Date().toISOString(), lastUsed: null }
+    ]);
+
     // Check if user is Admin
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
@@ -40,9 +83,11 @@ export default function SettingsPage() {
                 setIsAdmin(true);
                 fetchSettings();
             } else {
+                setLoading(false);
                 router.push('/dashboard');
             }
         } else {
+            setLoading(false);
             router.push('/login');
         }
     }, [router]);
@@ -79,53 +124,6 @@ export default function SettingsPage() {
             </div>
         );
     }
-
-    // Company Settings
-    const [companySettings, setCompanySettings] = useState({
-        name: 'RISA BUR',
-        legalName: 'PT. RISA BUR Konsultan',
-        address: 'Jl. Contoh No. 123, Jakarta',
-        phone: '+62 21 1234 5678',
-        email: 'info@risabur.com',
-        website: 'www.risabur.com',
-        npwp: '12.345.678.9-012.000',
-        logo: '/logo-risabur.png'
-    });
-
-    // Tax Settings
-    const [taxSettings, setTaxSettings] = useState({
-        vatRate: 11,
-        incomeTaxRate: 25,
-        taxYear: 2024,
-        fiscalYearStart: '01-01',
-        fiscalYearEnd: '12-31',
-        taxIdNumber: '12.345.678.9-012.000'
-    });
-
-    // Email Templates
-    const [emailTemplates, setEmailTemplates] = useState({
-        invoiceSubject: 'Invoice #{invoiceNumber} from RISA BUR',
-        invoiceBody: 'Dear {clientName},\n\nPlease find attached your invoice #{invoiceNumber}.\n\nThank you for your business!',
-        reminderSubject: 'Payment Reminder - Invoice #{invoiceNumber}',
-        reminderBody: 'Dear {clientName},\n\nThis is a friendly reminder about invoice #{invoiceNumber}.'
-    });
-
-    // Notification Preferences
-    const [notificationPrefs, setNotificationPrefs] = useState({
-        emailNotifications: true,
-        pushNotifications: true,
-        newOrderEmail: true,
-        paymentReceivedEmail: true,
-        deadlineReminder: true,
-        weeklyReport: false,
-        monthlyReport: true
-    });
-
-    // API Keys
-    const [apiKeys, setApiKeys] = useState([
-        { id: '1', name: 'Production API', key: 'sk_live_1234567890abcdef', created: new Date().toISOString(), lastUsed: new Date().toISOString() },
-        { id: '2', name: 'Development API', key: 'sk_test_abcdef1234567890', created: new Date().toISOString(), lastUsed: null }
-    ]);
 
     const handleSaveCompany = async () => {
         setSaving(true);
