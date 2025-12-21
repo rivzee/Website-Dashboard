@@ -25,7 +25,7 @@ export default function LoadingSpinner({ message = 'Memuat...', fullScreen = tru
               scale: [1, 1.2, 1]
             }}
             transition={{
-              duration: 8,
+              duration: 3,
               repeat: Infinity,
               ease: 'easeInOut'
             }}
@@ -38,7 +38,7 @@ export default function LoadingSpinner({ message = 'Memuat...', fullScreen = tru
               scale: [1, 1.3, 1]
             }}
             transition={{
-              duration: 10,
+              duration: 3,
               repeat: Infinity,
               ease: 'easeInOut'
             }}
@@ -54,39 +54,30 @@ export default function LoadingSpinner({ message = 'Memuat...', fullScreen = tru
           <motion.div
             className="absolute inset-0 w-24 h-24 border-4 border-transparent border-t-blue-600 border-r-purple-600 rounded-full"
             animate={{ rotate: 360 }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+            transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
           />
 
           {/* Middle ring */}
           <motion.div
             className="absolute inset-2 w-20 h-20 border-4 border-transparent border-b-pink-500 border-l-indigo-500 rounded-full"
             animate={{ rotate: -360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
           />
 
           {/* Inner ring */}
           <motion.div
             className="absolute inset-4 w-16 h-16 border-4 border-transparent border-t-cyan-400 border-r-emerald-400 rounded-full"
             animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+            transition={{ duration: 0.6, repeat: Infinity, ease: 'linear' }}
           />
 
           {/* Center pulsing dot */}
           <motion.div
             className="absolute inset-0 flex items-center justify-center"
             animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 1, repeat: Infinity }}
+            transition={{ duration: 0.6, repeat: Infinity }}
           >
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg shadow-purple-500/30" />
-          </motion.div>
-
-          {/* Logo text */}
-          <motion.div
-            className="absolute inset-0 flex items-center justify-center"
-            animate={{ opacity: [0.8, 1, 0.8] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            <span className="text-xs font-bold text-white">RB</span>
           </motion.div>
         </div>
 
@@ -104,9 +95,9 @@ export default function LoadingSpinner({ message = 'Memuat...', fullScreen = tru
                 scale: [1, 1.2, 1],
               }}
               transition={{
-                duration: 0.6,
+                duration: 0.5,
                 repeat: Infinity,
-                delay: i * 0.1,
+                delay: i * 0.08,
               }}
             />
           ))}
@@ -116,7 +107,7 @@ export default function LoadingSpinner({ message = 'Memuat...', fullScreen = tru
         <motion.div
           className="text-center"
           animate={{ opacity: [0.6, 1, 0.6] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          transition={{ duration: 1.5, repeat: Infinity }}
         >
           <p className="text-lg font-semibold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
             {message}
@@ -127,7 +118,7 @@ export default function LoadingSpinner({ message = 'Memuat...', fullScreen = tru
             <motion.div
               className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full"
               animate={{ x: ['-100%', '100%'] }}
-              transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+              transition={{ duration: 0.8, repeat: Infinity, ease: 'easeInOut' }}
               style={{ width: '50%' }}
             />
           </motion.div>
@@ -145,18 +136,18 @@ export function CompactLoading({ message = 'Memuat...' }: { message?: string }) 
         <motion.div
           className="absolute inset-0 border-4 border-transparent border-t-blue-500 border-r-purple-500 rounded-full"
           animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 0.6, repeat: Infinity, ease: 'linear' }}
         />
         <motion.div
           className="absolute inset-1 border-4 border-transparent border-b-pink-400 border-l-indigo-400 rounded-full"
           animate={{ rotate: -360 }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
         />
       </div>
       <motion.p
         className="text-sm text-gray-500 dark:text-gray-400 font-medium"
         animate={{ opacity: [0.5, 1, 0.5] }}
-        transition={{ duration: 1.5, repeat: Infinity }}
+        transition={{ duration: 1, repeat: Infinity }}
       >
         {message}
       </motion.p>
