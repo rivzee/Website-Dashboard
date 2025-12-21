@@ -5,7 +5,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Clock, CheckCircle, AlertCircle, Search, Filter, Eye, Calendar, User, Package } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { TableSkeleton } from '@/client/components/Skeletons';
+import LoadingSpinner from '@/client/components/LoadingSpinner';
 
 interface Order {
   id: string;
@@ -135,7 +135,7 @@ export default function JobsPage() {
 
       {/* Table */}
       {loading ? (
-        <TableSkeleton rows={5} />
+        <LoadingSpinner message="Memuat Daftar Pesanan..." fullScreen={false} />
       ) : filteredOrders.length === 0 ? (
         <div className="backdrop-blur-xl bg-white/60 dark:bg-gray-800/40 rounded-3xl p-12 text-center border border-gray-200/50 dark:border-gray-700/50">
           <Package className="mx-auto mb-4 text-gray-300 dark:text-gray-600" size={64} />

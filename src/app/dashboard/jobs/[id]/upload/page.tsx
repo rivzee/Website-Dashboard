@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import { Upload, FileText, CheckCircle, X, AlertCircle, User, Calendar, DollarSign, Package } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 import toast from 'react-hot-toast';
-import { CompactLoading } from '@/client/components/LoadingSpinner';
+import LoadingSpinner from '@/client/components/LoadingSpinner';
 
 export default function UploadResultPage() {
     const router = useRouter();
@@ -89,7 +89,7 @@ export default function UploadResultPage() {
     };
 
     if (!order) {
-        return <CompactLoading message="Memuat detail pesanan..." />;
+        return <LoadingSpinner message="Memuat Detail Pesanan..." fullScreen={false} />;
     }
 
     const formatFileSize = (bytes: number) => {

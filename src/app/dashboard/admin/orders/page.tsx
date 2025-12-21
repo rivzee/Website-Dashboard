@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { DataTable } from '@/client/components/DataTable';
 import { FileText, DollarSign, Users, TrendingUp, Download } from 'lucide-react';
 import axios from 'axios';
-import { CompactLoading } from '@/client/components/LoadingSpinner';
+import LoadingSpinner from '@/client/components/LoadingSpinner';
 
 export default function OrdersPage() {
     const [orders, setOrders] = useState([]);
@@ -123,7 +123,7 @@ export default function OrdersPage() {
     };
 
     if (loading) {
-        return <CompactLoading message="Memuat data pesanan..." />;
+        return <LoadingSpinner message="Memuat Data Pesanan..." fullScreen={false} />;
     }
 
     return (

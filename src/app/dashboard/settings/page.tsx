@@ -14,7 +14,7 @@ import {
     Loader2
 } from 'lucide-react';
 import { useToast } from '@/client/hooks/useToast';
-import { CompactLoading } from '@/client/components/LoadingSpinner';
+import LoadingSpinner from '@/client/components/LoadingSpinner';
 
 export default function SettingsPage() {
     const router = useRouter();
@@ -89,7 +89,7 @@ export default function SettingsPage() {
 
     // Show loading or access denied
     if (loading) {
-        return <CompactLoading message="Memuat pengaturan..." />;
+        return <LoadingSpinner message="Memuat Pengaturan..." fullScreen={false} />;
     }
 
     if (!isAdmin) {

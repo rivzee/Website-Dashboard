@@ -19,7 +19,7 @@ import {
     Info,
     CheckCircle
 } from 'lucide-react';
-import { CompactLoading } from '@/client/components/LoadingSpinner';
+import LoadingSpinner from '@/client/components/LoadingSpinner';
 
 interface ActivityLog {
     id: string;
@@ -257,7 +257,7 @@ export default function ActivityLogPage() {
     };
 
     if (loading) {
-        return <CompactLoading message="Memuat log aktivitas..." />;
+        return <LoadingSpinner message="Memuat Log Aktivitas..." fullScreen={false} />;
     }
 
     return (

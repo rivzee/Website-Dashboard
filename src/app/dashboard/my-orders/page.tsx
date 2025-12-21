@@ -4,7 +4,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Clock, CheckCircle, AlertCircle, FileText, CreditCard, Package, TrendingUp, Calendar } from 'lucide-react';
-import { CompactLoading } from '@/client/components/LoadingSpinner';
+import LoadingSpinner from '@/client/components/LoadingSpinner';
 
 export default function MyOrdersPage() {
     const [orders, setOrders] = useState<any[]>([]);
@@ -52,7 +52,7 @@ export default function MyOrdersPage() {
     };
 
     if (loading) {
-        return <CompactLoading message="Memuat pesanan..." />;
+        return <LoadingSpinner message="Memuat Pesanan Saya..." fullScreen={false} />;
     }
 
     return (
