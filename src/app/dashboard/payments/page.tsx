@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import { AlertModal } from '@/client/components/Modal';
-import { CompactLoading } from '@/client/components/LoadingSpinner';
+import LoadingSpinner from '@/client/components/LoadingSpinner';
 
 interface PendingPayment {
     id: string;
@@ -108,7 +108,7 @@ export default function PendingPaymentsPage() {
     };
 
     if (isLoading) {
-        return <CompactLoading message="Memuat data pembayaran..." />;
+        return <LoadingSpinner message="Memuat Data Pembayaran..." fullScreen={false} />;
     }
 
     return (

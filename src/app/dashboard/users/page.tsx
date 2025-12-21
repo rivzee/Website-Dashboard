@@ -27,7 +27,7 @@ import { ExportButton } from '@/client/components/ExportButton';
 import { ConfirmModal } from '@/client/components/Modal';
 import { useToast } from '@/client/hooks/useToast';
 import apiService from '@/client/services/api.service';
-import { DashboardSkeleton } from '@/client/components/Skeletons';
+import LoadingSpinner from '@/client/components/LoadingSpinner';
 
 interface User {
     id: string;
@@ -227,7 +227,7 @@ export default function UserManagementPage() {
     ];
 
     if (isLoading) {
-        return <DashboardSkeleton />;
+        return <LoadingSpinner message="Memuat Data Pengguna..." fullScreen={false} />;
     }
 
     return (

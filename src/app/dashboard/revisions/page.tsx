@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { FileEdit, Clock, CheckCircle, XCircle, AlertCircle, User, RefreshCw } from 'lucide-react';
 import axios from 'axios';
 import Link from 'next/link';
-import { CompactLoading } from '@/client/components/LoadingSpinner';
+import LoadingSpinner from '@/client/components/LoadingSpinner';
 import { useAutoSync } from '@/client/hooks/useAutoSync';
 
 interface Revision {
@@ -109,7 +109,7 @@ export default function RevisionsPage() {
     });
 
     if (isLoading) {
-        return <CompactLoading message="Memuat data revisi..." />;
+        return <LoadingSpinner message="Memuat Data Revisi..." fullScreen={false} />;
     }
 
     return (
