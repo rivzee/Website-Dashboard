@@ -84,7 +84,6 @@ export default function ServiceManagementPage() {
     try {
       const data = await apiService.services.getAll();
       setServices(data);
-      toast.success('Layanan berhasil dimuat');
     } catch (error) {
       console.error('Error fetching services:', error);
       toast.error('Gagal memuat layanan');

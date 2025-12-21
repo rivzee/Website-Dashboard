@@ -75,7 +75,6 @@ export default function UserManagementPage() {
         try {
             const data = await apiService.users.getAll();
             setUsers(data);
-            toast.success('Pengguna berhasil dimuat');
         } catch (error) {
             console.error('Error fetching users:', error);
             toast.error('Gagal memuat pengguna');
