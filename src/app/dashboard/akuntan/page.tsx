@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FileText, CheckCircle, Clock, TrendingUp, Calendar, RefreshCw } from 'lucide-react';
+import { FileText, CheckCircle, Clock, RefreshCw } from 'lucide-react';
 import axios from 'axios';
 import { EnhancedAreaChart } from '@/client/components/EnhancedCharts';
 import { useAutoSync } from '@/client/hooks/useAutoSync';

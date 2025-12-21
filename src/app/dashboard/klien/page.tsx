@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Clock, CheckCircle, Package, TrendingUp, Calendar, ArrowRight, Sparkles } from 'lucide-react';
+import { ShoppingCart, Clock, CheckCircle, Package, Calendar, ArrowRight, Sparkles } from 'lucide-react';
 import axios from 'axios';
 import { EnhancedPieChart } from '@/client/components/EnhancedCharts';
 import { useAutoSync } from '@/client/hooks/useAutoSync';

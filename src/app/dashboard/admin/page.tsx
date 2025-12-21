@@ -7,21 +7,15 @@ import {
     Package,
     FileText,
     Activity,
-    TrendingUp,
     Clock,
     Plus,
     UserPlus,
-    Settings,
-    Bell,
-    Calendar,
     DollarSign,
     CheckCircle,
-    XCircle,
-    AlertCircle,
     Star,
     ArrowRight
 } from 'lucide-react';
-import { EnhancedLineChart, EnhancedBarChart, EnhancedPieChart } from '@/client/components/EnhancedCharts';
+import { EnhancedLineChart, EnhancedPieChart } from '@/client/components/EnhancedCharts';
 import Link from 'next/link';
 import { useToast } from '@/client/hooks/useToast';
 import { useAutoSync } from '@/client/hooks/useAutoSync';
