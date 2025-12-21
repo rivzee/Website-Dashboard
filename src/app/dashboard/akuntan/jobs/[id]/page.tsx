@@ -35,7 +35,19 @@ export default function JobDetailPage() {
     };
 
     const handleDownload = (doc: any) => {
-        window.open(doc.fileUrl, '_blank');
+        // Check if it's a Data URI (base64 encoded)
+        if (doc.fileUrl.startsWith('data:')) {
+            // Create a download link for Data URI
+            const link = document.createElement('a');
+            link.href = doc.fileUrl;
+            link.download = doc.fileName || 'download';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } else {
+            // Regular URL - open in new tab
+            window.open(doc.fileUrl, '_blank');
+        }
     };
 
     const handleStartJob = async () => {

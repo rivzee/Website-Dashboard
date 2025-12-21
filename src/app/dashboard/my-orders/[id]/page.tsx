@@ -33,8 +33,19 @@ export default function OrderDetailPage() {
     };
 
     const handleDownload = (doc: any) => {
-        // Open file URL directly - browser will handle download notification
-        window.open(doc.fileUrl, '_blank');
+        // Check if it's a Data URI (base64 encoded)
+        if (doc.fileUrl.startsWith('data:')) {
+            // Create a download link for Data URI
+            const link = document.createElement('a');
+            link.href = doc.fileUrl;
+            link.download = doc.fileName || 'download';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } else {
+            // Regular URL - open in new tab
+            window.open(doc.fileUrl, '_blank');
+        }
     };
 
     if (loading) return <LoadingSpinner message="Memuat Detail Pesanan..." fullScreen={false} />;

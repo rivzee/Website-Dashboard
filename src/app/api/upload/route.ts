@@ -16,20 +16,44 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
-        // Validate file type
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
-        if (!allowedTypes.includes(file.type)) {
+        // Validate file type - expanded to include common document formats
+        const allowedTypes = [
+            'image/jpeg',
+            'image/png',
+            'image/jpg',
+            'application/pdf',
+            // Microsoft Office
+            'application/vnd.ms-excel', // .xls
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+            'application/msword', // .doc
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+            'application/vnd.ms-powerpoint', // .ppt
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation', // .pptx
+            // Archives
+            'application/zip',
+            'application/x-rar-compressed',
+            'application/x-7z-compressed',
+            // Text
+            'text/plain',
+            'text/csv',
+        ];
+
+        // Also check by file extension as fallback
+        const allowedExtensions = ['.jpg', '.jpeg', '.png', '.pdf', '.xls', '.xlsx', '.doc', '.docx', '.ppt', '.pptx', '.zip', '.rar', '.7z', '.txt', '.csv'];
+        const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+
+        if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
             return NextResponse.json(
-                { error: 'Invalid file type. Only JPG, PNG, and PDF are allowed.' },
+                { error: 'Invalid file type. Allowed: Images, PDF, Excel, Word, PowerPoint, ZIP, RAR.' },
                 { status: 400 }
             );
         }
 
-        // Validate file size (max 5MB)
-        const maxSize = 5 * 1024 * 1024; // 5MB
+        // Validate file size (max 10MB for documents)
+        const maxSize = 10 * 1024 * 1024; // 10MB
         if (file.size > maxSize) {
             return NextResponse.json(
-                { error: 'File too large. Maximum size is 5MB.' },
+                { error: 'File too large. Maximum size is 10MB.' },
                 { status: 400 }
             );
         }
