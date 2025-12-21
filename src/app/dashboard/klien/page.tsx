@@ -7,6 +7,7 @@ import axios from 'axios';
 import { EnhancedPieChart } from '@/client/components/EnhancedCharts';
 import { useAutoSync } from '@/client/hooks/useAutoSync';
 import Link from 'next/link';
+import LoadingSpinner from '@/client/components/LoadingSpinner';
 
 export default function KlienDashboard() {
     const [user, setUser] = useState<any>(null);
@@ -17,6 +18,7 @@ export default function KlienDashboard() {
         completed: 0,
     });
     const [recentOrders, setRecentOrders] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Auto-sync every 30 seconds to keep data fresh
     const { sync } = useAutoSync({
@@ -31,10 +33,13 @@ export default function KlienDashboard() {
             const userData = JSON.parse(storedUser);
             setUser(userData);
             fetchStats(userData.id);
+        } else {
+            setIsLoading(false);
         }
     }, []);
 
     const fetchStats = async (clientId: string) => {
+        setIsLoading(true);
         try {
             const orders = await axios.get(`/api/orders/my/${clientId}`);
             const data = orders.data;
@@ -49,6 +54,8 @@ export default function KlienDashboard() {
             });
         } catch (error) {
             console.error('Error fetching stats:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -79,6 +86,11 @@ export default function KlienDashboard() {
         hidden: { opacity: 0, y: 20 },
         show: { opacity: 1, y: 0 }
     };
+
+    // Show modern loading animation
+    if (isLoading) {
+        return <LoadingSpinner message="Memuat Data Dashboard..." fullScreen={false} />;
+    }
 
     return (
         <motion.div

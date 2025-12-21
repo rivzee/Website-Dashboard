@@ -7,6 +7,8 @@ import axios from 'axios';
 import { EnhancedAreaChart } from '@/client/components/EnhancedCharts';
 import { useAutoSync } from '@/client/hooks/useAutoSync';
 
+import LoadingSpinner from '@/client/components/LoadingSpinner';
+
 export default function AkuntanDashboard() {
     const [stats, setStats] = useState({
         totalJobs: 0,
@@ -17,12 +19,14 @@ export default function AkuntanDashboard() {
     });
     const [priorityJobs, setPriorityJobs] = useState<any[]>([]);
     const [pendingRevisions, setPendingRevisions] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         fetchStats();
     }, []);
 
     const fetchStats = async () => {
+        setIsLoading(true);
         try {
             const [ordersRes, revisionsRes] = await Promise.all([
                 axios.get('/api/orders'),
@@ -48,6 +52,8 @@ export default function AkuntanDashboard() {
             });
         } catch (error) {
             console.error('Error fetching stats:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -88,6 +94,11 @@ export default function AkuntanDashboard() {
     };
 
     const chartData = getLastSixMonths();
+
+    // Show modern loading animation
+    if (isLoading) {
+        return <LoadingSpinner message="Memuat Data Dashboard..." fullScreen={false} />;
+    }
 
     return (
         <div className="space-y-8">

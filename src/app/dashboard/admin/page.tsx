@@ -26,7 +26,7 @@ import Link from 'next/link';
 import { useToast } from '@/client/hooks/useToast';
 import { useAutoSync } from '@/client/hooks/useAutoSync';
 import apiService from '@/client/services/api.service';
-import { DashboardSkeleton } from '@/client/components/Skeletons';
+import LoadingSpinner from '@/client/components/LoadingSpinner';
 
 export default function AdminDashboard() {
     const [stats, setStats] = useState({
@@ -151,9 +151,9 @@ export default function AdminDashboard() {
         { name: 'Diproses', value: stats.totalOrders - stats.completedOrders - stats.pendingOrders },
     ];
 
-    // Show loading skeleton
+    // Show modern loading animation
     if (isLoading) {
-        return <DashboardSkeleton />;
+        return <LoadingSpinner message="Memuat Data Dashboard..." fullScreen={false} />;
     }
 
     return (
