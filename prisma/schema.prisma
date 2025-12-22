@@ -106,13 +106,18 @@ model Revision {
 }
 
 model ActivityLog {
-  id          String   @id @default(uuid())
-  action      String
-  description String?
-  ipAddress   String?
-  timestamp   DateTime @default(now())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
+  id         String   @id @default(uuid())
+  action     String
+  type       String   @default("INFO") // CREATE, UPDATE, DELETE, LOGIN, etc.
+  resource   String   @default("SYSTEM") // Order, User, Service, etc.
+  resourceId String?
+  details    Json?    // Flexible JSON for extra details
+  severity   String   @default("INFO") // INFO, WARNING, ERROR, CRITICAL
+  ipAddress  String?
+  userAgent  String?
+  timestamp  DateTime @default(now())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
 }
 
 model Settings {

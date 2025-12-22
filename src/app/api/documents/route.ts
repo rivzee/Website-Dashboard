@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { logActivity } from '@/lib/activity';
 
 // POST /api/documents
 export async function POST(request: NextRequest) {
@@ -9,6 +10,17 @@ export async function POST(request: NextRequest) {
 
         const document = await prisma.document.create({
             data: { fileName, fileUrl, fileType, isResult, orderId, uploaderId },
+        });
+
+        // Log activity
+        await logActivity({
+            userId: uploaderId,
+            action: isResult ? 'Mengunggah hasil pekerjaan' : 'Mengunggah dokumen pendukung',
+            type: 'CREATE',
+            resource: 'Dokumen',
+            resourceId: document.id,
+            details: { fileName, orderId, isResult },
+            req: request
         });
 
         return NextResponse.json(document);

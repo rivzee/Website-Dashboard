@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Search, Play, CheckCircle, Upload, FileText, Clock, RefreshCw } from 'lucide-react';
@@ -154,12 +155,12 @@ export default function AkuntanJobsPage() {
                             </div>
 
                             <div className="pt-4 border-t border-gray-100 dark:border-gray-700 space-y-3">
-                                <a
+                                <Link
                                     href={`/dashboard/akuntan/jobs/${job.id}`}
                                     className="w-full py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg font-medium transition flex items-center justify-center gap-2"
                                 >
                                     <FileText size={16} /> Lihat Detail & Dokumen
-                                </a>
+                                </Link>
 
                                 {job.status === 'PAID' && (
                                     <button

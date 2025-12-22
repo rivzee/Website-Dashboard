@@ -42,91 +42,29 @@ export default function ActivityLogPage() {
     const [filter, setFilter] = useState<'all' | 'security' | 'data' | 'user'>('all');
     const [loading, setLoading] = useState(true);
 
+    const fetchLogs = async () => {
+        try {
+            setLoading(true);
+            const queryParams = new URLSearchParams();
+            if (filter !== 'all') {
+                queryParams.append('type', filter);
+            }
+
+            const response = await fetch(`/api/activity?${queryParams.toString()}`);
+            if (!response.ok) throw new Error('Failed to fetch logs');
+
+            const data = await response.json();
+            setLogs(data);
+        } catch (error) {
+            console.error('Error fetching logs:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchLogs();
-    }, []);
-
-    const fetchLogs = async () => {
-        // Simulate API call
-        const sampleLogs: ActivityLog[] = [
-            {
-                id: '1',
-                userId: '1',
-                userName: 'Admin User',
-                userRole: 'ADMIN',
-                action: 'Membuat pesanan baru',
-                type: 'CREATE',
-                resource: 'Pesanan',
-                resourceId: 'ORD-001',
-                ipAddress: '192.168.1.1',
-                userAgent: 'Mozilla/5.0...',
-                timestamp: new Date(),
-                severity: 'INFO'
-            },
-            {
-                id: '2',
-                userId: '2',
-                userName: 'John Doe',
-                userRole: 'KLIEN',
-                action: 'Memperbarui informasi profil',
-                type: 'UPDATE',
-                resource: 'Pengguna',
-                resourceId: '2',
-                ipAddress: '192.168.1.2',
-                userAgent: 'Mozilla/5.0...',
-                timestamp: new Date(Date.now() - 3600000),
-                severity: 'INFO'
-            },
-            {
-                id: '3',
-                userId: '1',
-                userName: 'Admin User',
-                userRole: 'ADMIN',
-                action: 'Menghapus layanan',
-                type: 'DELETE',
-                resource: 'Layanan',
-                resourceId: 'SRV-005',
-                ipAddress: '192.168.1.1',
-                userAgent: 'Mozilla/5.0...',
-                timestamp: new Date(Date.now() - 7200000),
-                severity: 'WARNING',
-                details: { serviceName: 'Old Service' }
-            },
-            {
-                id: '4',
-                userId: '3',
-                userName: 'Jane Smith',
-                userRole: 'AKUNTAN',
-                action: 'Masuk ke sistem',
-                type: 'LOGIN',
-                resource: 'Auth',
-                ipAddress: '192.168.1.3',
-                userAgent: 'Mozilla/5.0...',
-                timestamp: new Date(Date.now() - 10800000),
-                severity: 'INFO'
-            },
-            {
-                id: '5',
-                userId: 'unknown',
-                userName: 'Unknown',
-                userRole: 'UNKNOWN',
-                action: 'Gagal masuk',
-                type: 'LOGIN',
-                resource: 'Auth',
-                ipAddress: '192.168.1.100',
-                userAgent: 'Mozilla/5.0...',
-                timestamp: new Date(Date.now() - 14400000),
-                severity: 'CRITICAL',
-                details: { reason: 'Invalid credentials', attempts: 5 }
-            }
-        ];
-
-        // Simulate network delay so loading animation is visible
-        await new Promise(resolve => setTimeout(resolve, 800));
-
-        setLogs(sampleLogs);
-        setLoading(false);
-    };
+    }, [filter]);
 
     const getActionIcon = (type: string) => {
         switch (type) {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { sendOrderNotification } from '@/lib/email';
+import { logActivity } from '@/lib/activity';
 
 export const dynamic = 'force-dynamic';
 
@@ -61,6 +62,17 @@ export async function POST(request: NextRequest) {
         } catch (error) {
             console.error('Gagal mengirim email notifikasi order:', error);
         }
+
+        // Log activity
+        await logActivity({
+            userId: clientId,
+            action: 'Membuat pesanan baru',
+            type: 'CREATE',
+            resource: 'Pesanan',
+            resourceId: order.id,
+            details: { serviceName: service.name, amount: service.price },
+            req: request
+        });
 
         return NextResponse.json(order);
     } catch (error: any) {
